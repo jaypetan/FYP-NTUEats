@@ -1,7 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
-import { useAppContext } from "../AppContext";
 
 interface RecipeAboutProps {
   desc: string;
@@ -9,7 +8,6 @@ interface RecipeAboutProps {
 }
 
 const RecipeAbout: React.FC<RecipeAboutProps> = ({ desc, ingredients }) => {
-  const { returnToPreviousPage } = useAppContext();
   return (
     <>
       <View className="flex-row items-center gap-2">

@@ -1,9 +1,12 @@
+import { useAppContext } from "@/app/components/AppContext";
 import { useUser } from "@clerk/clerk-expo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const HomeProfile = () => {
   const { user } = useUser();
+  const appContext = useAppContext();
+ 
 
   return (
     <View className="flex-row h-64 rounded-2xl p-4 bg-green/50">
@@ -41,7 +44,7 @@ const HomeProfile = () => {
             2 new likes on your review!
           </Text>
         </ScrollView>
-        <TouchableOpacity className="self-end mt-4 flex-row gap-2 items-center">
+        <TouchableOpacity className="self-end mt-4 flex-row gap-2 items-center" onPress={() => appContext.setCurrentPage("profile-page")}>
           <Text className="font-inter text-blue text-lg ">Go To Profile</Text>
           <MaterialCommunityIcons name="arrow-right" size={20} color="black" />
         </TouchableOpacity>
