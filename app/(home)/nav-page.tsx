@@ -10,7 +10,7 @@ interface NavPageProps {
 export default function NavPage({ closeDrawer }: NavPageProps) {
   const appContext = useAppContext();
 
-  const NavButton = (page: string, text: string) => {
+  const NavDirectButton = (page: string, text: string) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -32,9 +32,10 @@ export default function NavPage({ closeDrawer }: NavPageProps) {
         Looking for What?
       </Text>
 
-      {NavButton("home-page", "Home")}
-      {NavButton("eat-what", "EatWHAT")}
-      {NavButton("cook-what", "CookWHAT")}
+      {NavDirectButton("home-page", "Home")}
+      {NavDirectButton("eat-what", "EatWHAT")}
+      {NavDirectButton("cook-what", "CookWHAT")}
+      {NavDirectButton("profile-page", "Profile")}
 
       <SignOutButton />
     </View>

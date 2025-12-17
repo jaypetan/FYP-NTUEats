@@ -9,6 +9,8 @@ import { useAppContext } from "../components/AppContext";
 // Internal Components
 import SignInScreen from "../(auth)/sign-in";
 import MainPage from "./main-page";
+import ProfilePage from "./profile-page";
+import RecipePage from "./recipe-page";
 import StallPage from "./stall-page";
 
 // Navigation Component
@@ -23,12 +25,11 @@ import NavPage from "./nav-page";
 
 import Animated, { FadeOutRight, SlideInDown } from "react-native-reanimated";
 import NavButton from "../components/Nav/NavButton";
-import RecipePage from "./recipe-page";
 
 export default function Page() {
   const { currentPage } = useAppContext();
   const [content, setContent] = useState(<MainPage />);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1); // used to trigger re-render for animation
 
   const drawerRef = useRef<DrawerLayoutMethods>(null);
   const tapGesture = Gesture.Tap()
@@ -37,6 +38,7 @@ export default function Page() {
 
   const closeDrawer = () => drawerRef.current?.closeDrawer();
 
+  // Update page shown based on currentPage
   useEffect(() => {
     switch (currentPage) {
       case "home-page":
@@ -49,6 +51,10 @@ export default function Page() {
         break;
       case "recipe-page":
         setContent(<RecipePage />);
+        setPage(2);
+        break;
+      case "profile-page":
+        setContent(<ProfilePage />);
         setPage(2);
         break;
       default:
