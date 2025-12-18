@@ -18,6 +18,7 @@ export default function RecipePage() {
   }, [page]);
 
   const sampleData = {
+    name: "Spaghetti Carbonara",
     desc: "Classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
     ingredients: [
       "200g spaghetti",
@@ -73,7 +74,7 @@ export default function RecipePage() {
     <View className="mt-4 flex-col">
       <RecipeHeader
         recipeImage={carbonaraImage}
-        recipeName="carbonara"
+        recipeName={sampleData.name}
         page={page}
         setPage={setPage}
       />
