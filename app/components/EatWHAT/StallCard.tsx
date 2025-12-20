@@ -23,7 +23,7 @@ const StallCard: React.FC<StallCardProps> = ({
     <View className="mt-8">
       <TouchableScale onPress={() => setCurrentPage("stall-page")}>
         <Image
-          source={imageSource}
+          source={{ uri: imageSource }}
           resizeMode="cover"
           className="w-full h-48 rounded-2xl"
         />

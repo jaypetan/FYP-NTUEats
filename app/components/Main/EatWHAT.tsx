@@ -9,6 +9,12 @@ import SearchBar from "../EatWHAT/SearchBar";
 import StallCard from "../EatWHAT/StallCard";
 import HomeNav from "../Home/HomeNav";
 
+import { useEffect, useState } from "react";
+
+// Firebase imports
+import { db } from "@/utils/firebase";
+import { collection, getDocs } from "firebase/firestore";
+
 interface EatWhatProps {
   backgroundColor: string;
   backgroundColorHex: string;
@@ -21,6 +27,26 @@ export default function EatWhat({
   widthClass,
 }: EatWhatProps) {
   const { currentPage, setCurrentPage } = useAppContext();
+
+  // Fetch stall data from Firebase Firestore
+  const [stallData, setStallData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const fetchStallData = async () => {
+    try {
+      setLoading(true);
+      const querySnapshot = await getDocs(collection(db, "stalls"));
+      const stallsData = querySnapshot.docs.map((doc) => doc.data());
+      setStallData(stallsData);
+    } catch (error) {
+      console.error("Error fetching stall data: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStallData();
+  }, []);
 
   // TODO: Add search bar functionality
 
@@ -79,6 +105,16 @@ export default function EatWhat({
               What are we eating today?
             </Text>
             <SearchBar />
+            {stallData.map((stall, index) => (
+              <StallCard
+                key={index}
+                imageSource={stall.stall_pic}
+                title={stall.name}
+                location={stall.location}
+                description={stall.description}
+                priceSymbol={stall.priceSymbol}
+              />
+            ))}
             {stalls.map((stall, index) => (
               <StallCard
                 key={index}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "452074784691",
+    "project_id": "fyp-backend-14bf3",
+    "storage_bucket": "fyp-backend-14bf3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452074784691:android:cb10e11c80c4bc0e2d2dc6",
+        "android_client_info": {
+          "package_name": "fyp.ntueats"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb0HHHmBpKMl9Ew7B7NOGNtV5WdcNDo7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
