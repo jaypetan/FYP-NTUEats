@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { getApp, getApps, initializeApp } from "firebase/app"; // Core Firebase app functionsimport { getAnalytics } from "firebase/analytics"; // Analytics service
+import { getApp, getApps, initializeApp } from "firebase/app"; // Analytics service
 import { getFirestore } from "firebase/firestore"; // Firestore service
 import { getStorage } from "firebase/storage"; // Cloud Storage service
 // TODO: Add SDKs for Firebase products that you want to use
