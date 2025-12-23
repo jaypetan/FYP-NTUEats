@@ -11,9 +11,8 @@ import HomeNav from "../Home/HomeNav";
 
 import { useEffect, useState } from "react";
 
-// Firebase imports
-import { db } from "@/utils/firebase";
-import { collection, getDocs } from "firebase/firestore";
+// Firebase Services
+import { fetchStallData } from "@/utils/stallServices";
 
 interface EatWhatProps {
   backgroundColor: string;
@@ -30,22 +29,12 @@ export default function EatWhat({
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const fetchStallData = async () => {
-    try {
-      setLoading(true);
-      const querySnapshot = await getDocs(collection(db, "stalls"));
-      const stallsData = querySnapshot.docs.map((doc) => doc.data());
-      setStallData(stallsData);
-    } catch (error) {
-      console.error("Error fetching stall data: ", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchStallData();
+    fetchStallData()
+      .then(setStallData)
+      .finally(() => setLoading(false));
   }, []);
 
   // TODO: Add search bar functionality
