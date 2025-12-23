@@ -3,6 +3,11 @@ import SignOutButton from "@/app/components/SignOutButton";
 import { Text, TouchableOpacity, View } from "react-native";
 import NavImage from "../components/Nav/NavImage";
 
+// Admin Component
+import { fetchUserByClerkId } from "@/utils/userServices";
+import { useUser } from "@clerk/clerk-expo";
+import { useEffect, useState } from "react";
+
 interface NavPageProps {
   closeDrawer: () => void;
 }
@@ -25,6 +30,18 @@ export default function NavPage({ closeDrawer }: NavPageProps) {
     );
   };
 
+  // Check if user is admin
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { user } = useUser();
+  useEffect(() => {
+    if (!user || !user.id) return; // Wait until user is loaded
+    console.log("Checking admin status for user:", user.id);
+    fetchUserByClerkId(user.id).then((data) => {
+      setIsAdmin(data?.role === "admin");
+      console.log(data?.role);
+    });
+  }, [user]);
+
   return (
     <View className="h-full w-full flex-col px-8 gap-2 pt-24">
       <NavImage />
@@ -36,6 +53,7 @@ export default function NavPage({ closeDrawer }: NavPageProps) {
       {NavDirectButton("eat-what", "EatWHAT")}
       {NavDirectButton("cook-what", "CookWHAT")}
       {NavDirectButton("profile-page", "Profile")}
+      {isAdmin && NavDirectButton("admin-page", "Admin Panel")}
 
       <SignOutButton />
     </View>

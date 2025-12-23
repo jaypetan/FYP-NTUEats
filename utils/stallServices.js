@@ -31,6 +31,7 @@ const addNewStall = async (stallData) => {
     return false;
   }
 };
+
 // Function to update stall data
 const updateStallData = async (stallId, updatedData) => {
   try {

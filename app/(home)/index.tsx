@@ -7,6 +7,7 @@ import { View } from "react-native";
 import { useAppContext } from "../components/AppContext";
 
 // Internal Components
+import AdminPage from "../(admin)/admin-page";
 import SignInScreen from "../(auth)/sign-in";
 import MainPage from "./main-page";
 import ProfilePage from "./profile-page";
@@ -25,14 +26,9 @@ import Animated, { FadeOutRight, SlideInDown } from "react-native-reanimated";
 import NavButton from "../components/Nav/NavButton";
 import NavPage from "./nav-page";
 
-// Admin Component
-import { fetchUserByClerkId } from "@/utils/userServices";
-import { useUser } from "@clerk/clerk-expo";
-
 export default function Page() {
   const { currentPage } = useAppContext();
   const [content, setContent] = useState(<MainPage />);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [page, setPage] = useState(1); // used to trigger re-render for animation
 
   // Drawer reference and gesture
@@ -41,17 +37,6 @@ export default function Page() {
     .runOnJS(true)
     .onStart(() => drawerRef.current?.openDrawer());
   const closeDrawer = () => drawerRef.current?.closeDrawer();
-
-  // Check if user is admin
-  const { user } = useUser();
-  useEffect(() => {
-    if (!user || !user.id) return; // Wait until user is loaded
-    console.log("Checking admin status for user:", user.id);
-    fetchUserByClerkId(user.id).then((data) => {
-      setIsAdmin(data?.role === "admin");
-      console.log(data?.role);
-    });
-  }, [user]);
 
   // Update page shown based on currentPage
   useEffect(() => {
@@ -72,6 +57,10 @@ export default function Page() {
         setContent(<ProfilePage />);
         setPage(2);
         break;
+      case "admin-page":
+        setContent(<AdminPage />);
+        setPage(3);
+        break;
       default:
         // home-page, eat-what, and cook-what will set to default
         setContent(<MainPage />);
@@ -84,6 +73,7 @@ export default function Page() {
       {/* if signed in */}
       <SignedIn>
         {/* if admin, show admin page */}
+
         <View className="bg-red h-screen realtive pt-4">
           <ReanimatedDrawerLayout
             ref={drawerRef}
