@@ -30,7 +30,7 @@ export default function AdminPage() {
 
   return (
     <View className="h-full w-full items-center bg-cream mt-4 rounded-3xl relative">
-      <Text className="font-koulen text-3xl pt-4 mt-8 text-blue">
+      <Text className="font-koulen text-3xl pt-4 px-4 mt-8 mb-4 text-blue border-b-2 border-blue">
         Admin Page
       </Text>
       {adminCurrentPage !== "default" && (
