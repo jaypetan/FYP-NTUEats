@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Keyboard, Text, TouchableWithoutFeedback, View } from "react-native";
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 import TouchableScale from "../components/TouchableScale";
 
@@ -29,26 +29,28 @@ export default function AdminPage() {
   }, [adminCurrentPage]);
 
   return (
-    <View className="h-full w-full items-center bg-cream mt-4 rounded-3xl relative">
-      <Text className="font-koulen text-3xl pt-4 px-4 mt-8 mb-4 text-blue border-b-2 border-blue">
-        Admin Page
-      </Text>
-      {adminCurrentPage !== "default" && (
-        <TouchableScale
-          onPress={() => setAdminCurrentPage("default")}
-          className="absolute top-6 left-8"
-        >
-          <FontAwesome
-            name="reply"
-            size={24}
-            color="black"
-            className="rounded-full p-2 border-blue border-2"
-          />
-        </TouchableScale>
-      )}
-      <Animated.View key={page} entering={FadeInLeft} exiting={FadeOutRight}>
-        {content}
-      </Animated.View>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View className="h-full w-full items-center bg-cream mt-4 rounded-3xl relative">
+        <Text className="font-koulen text-3xl pt-4 px-4 mt-8 mb-4 text-blue border-b-2 border-blue">
+          Admin Page
+        </Text>
+        {adminCurrentPage !== "default" && (
+          <TouchableScale
+            onPress={() => setAdminCurrentPage("default")}
+            className="absolute top-6 left-8"
+          >
+            <FontAwesome
+              name="reply"
+              size={24}
+              color="black"
+              className="rounded-full p-2 border-blue border-2"
+            />
+          </TouchableScale>
+        )}
+        <Animated.View key={page} entering={FadeInLeft} exiting={FadeOutRight}>
+          {content}
+        </Animated.View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }

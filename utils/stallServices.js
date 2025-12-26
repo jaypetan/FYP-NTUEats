@@ -23,6 +23,7 @@ const fetchStallData = async () => {
 // Function to add a new stall
 const addNewStall = async (stallData) => {
   try {
+    console.log("Adding new stall with data: ", stallData);
     const stallsCollection = collection(db, "stalls");
     await addDoc(stallsCollection, stallData);
     return true;
