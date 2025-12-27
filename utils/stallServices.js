@@ -1,5 +1,5 @@
 // Firebase imports
-import { db } from "@/utils/firebase";
+import { db, uploadImageAsync } from "@/utils/firebase";
 import {
   addDoc,
   collection,
@@ -23,6 +23,13 @@ const fetchStallData = async () => {
 // Function to add a new stall
 const addNewStall = async (stallData) => {
   try {
+    // Upload stall image and get URL
+    const location = stallData.location.toLowerCase().replace(/\s+/g, ""); // remove spaces
+    const name = stallData.name.toLowerCase().replace(/\s+/g, ""); // remove spaces
+    const path = `eatWHAT/stall-${location}-${name}.jpeg`;
+    const imageUrl = await uploadImageAsync(stallData.stall_pic, path);
+    stallData.stall_pic = imageUrl;
+
     console.log("Adding new stall with data: ", stallData);
     const stallsCollection = collection(db, "stalls");
     await addDoc(stallsCollection, stallData);

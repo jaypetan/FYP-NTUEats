@@ -1,9 +1,12 @@
-import TouchableScale from "@/app/components/TouchableScale";
-import { addNewStall } from "@/utils/stallServices";
+// React and React Native core imports
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+
+// Project component
+import TouchableScale from "@/app/components/TouchableScale";
+import { addNewStall } from "@/utils/stallServices";
 import { LabeledInput } from "../components/LabelInput";
 import { PriceRangeInput } from "../components/PriceRangeInput";
 
@@ -11,9 +14,9 @@ const StallAdd = () => {
   const [details, setDetails] = useState({
     name: "",
     description: "",
-    canteen: "",
+    location: "",
     priceSymbol: "",
-    image: "",
+    stall_pic: "",
   });
 
   const pickImage = async () => {
@@ -25,22 +28,47 @@ const StallAdd = () => {
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      setDetails({ ...details, image: result.assets[0].uri });
+      setDetails({ ...details, stall_pic: result.assets[0].uri });
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Validate inputs
     if (
       !details.name.trim() ||
-      !details.canteen.trim() ||
+      !details.location.trim() ||
       !details.description.trim() ||
       !details.priceSymbol ||
-      !details.image
+      !details.stall_pic
     ) {
       Alert.alert("Missing Detail Information");
       return;
     }
-    addNewStall(details);
+
+    // convert priceSymbol number to string of $
+    const priceSymbolSign = "$".repeat(Number(details.priceSymbol));
+
+    // Get timestamp
+    const timestamp = new Date().toISOString();
+
+    // Prepare updated details
+    const updatedDetails = {
+      ...details,
+      priceSymbol: priceSymbolSign,
+      created_at: timestamp,
+    };
+
+    addNewStall(updatedDetails);
+    Alert.alert("Stall Added Successfully");
+
+    // Reset form
+    setDetails({
+      name: "",
+      description: "",
+      location: "",
+      priceSymbol: "",
+      stall_pic: "",
+    });
   };
 
   return (
@@ -58,11 +86,11 @@ const StallAdd = () => {
             placeholder="stall name"
           />
           <LabeledInput
-            label="Canteen"
+            label="Location"
             maxLength={30}
-            value={details.canteen}
-            onChangeText={(text) => setDetails({ ...details, canteen: text })}
-            placeholder="canteen name"
+            value={details.location}
+            onChangeText={(text) => setDetails({ ...details, location: text })}
+            placeholder="location name"
           />
           <LabeledInput
             label="Description"
@@ -87,10 +115,10 @@ const StallAdd = () => {
             onPress={pickImage}
             className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
           >
-            {details.image ? (
+            {details.stall_pic ? (
               <Image
                 className="w-64 h-64 border-2 border-blue"
-                source={{ uri: details.image }}
+                source={{ uri: details.stall_pic }}
               />
             ) : (
               <Text> Pick A Stall Image</Text>
