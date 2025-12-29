@@ -35,7 +35,6 @@ export default function NavPage({ closeDrawer }: NavPageProps) {
   const { user } = useUser();
   useEffect(() => {
     if (!user || !user.id) return; // Wait until user is loaded
-    console.log("Checking admin status for user:", user.id);
     fetchUserByClerkId(user.id).then((data) => {
       setIsAdmin(data?.role === "admin");
       console.log(data?.role);

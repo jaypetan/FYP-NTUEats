@@ -37,7 +37,6 @@ const fetchStallData = async () => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("Fetched stall data: ", stallsData);
     return stallsData;
   } catch (error) {
     console.error("Error fetching stall data: ", error);

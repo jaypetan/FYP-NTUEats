@@ -9,6 +9,7 @@ interface StallCardProps {
   location: string;
   description: string;
   priceSymbol: string;
+  onImageLoad?: () => void;
 }
 
 const StallCard: React.FC<StallCardProps> = ({
@@ -17,6 +18,7 @@ const StallCard: React.FC<StallCardProps> = ({
   location,
   description,
   priceSymbol,
+  onImageLoad,
 }) => {
   const { setCurrentPage } = useAppContext();
   return (
@@ -26,6 +28,7 @@ const StallCard: React.FC<StallCardProps> = ({
           source={{ uri: imageSource }}
           resizeMode="cover"
           className="w-full h-48 rounded-2xl"
+          onLoad={onImageLoad}
         />
         <View className="absolute bottom-0 w-full px-4 pt-2 bg-green/70 rounded-b-2xl flex-col justify-end">
           <View className="flex-row justify-between">

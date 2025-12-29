@@ -23,7 +23,6 @@ interface UserData {
 // Function to fetch a single user by clerk_id field
 const fetchUserByClerkId = async (clerk_id: string) => {
   try {
-    console.log("Fetching user with clerk_id:", clerk_id);
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("clerk_id", "==", clerk_id));
     const querySnapshot = await getDocs(q);

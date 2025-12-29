@@ -1,8 +1,5 @@
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
-import Stall3 from "@/assets/sample-data/eat/stall-can11-malayfood.jpeg";
-import Stall1 from "@/assets/sample-data/eat/stall-can11-sichuanmeishi.jpeg";
-import Stall2 from "@/assets/sample-data/eat/stall-can9-jiulixiang.jpeg";
-import Stall4 from "@/assets/sample-data/eat/stall-can9-localspecialties.jpeg";
+import { useRef } from "react";
 import { Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
 import SearchBar from "../EatWHAT/SearchBar";
@@ -13,6 +10,7 @@ import { useEffect, useState } from "react";
 
 // Firebase Services
 import { fetchStallData } from "@/utils/stallServices";
+import Loader from "../Loader";
 
 interface EatWhatProps {
   backgroundColor: string;
@@ -29,48 +27,31 @@ export default function EatWhat({
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStallData()
-      .then(setStallData)
-      .finally(() => setLoading(false));
-  }, []);
+    if (currentPage !== "eat-what") return;
+    setLoading(true);
+    imagesLoaded.current = 0;
+    console.log("Fetching stall data...");
+    fetchStallData().then((data) => {
+      setStallData(data);
+      if (data.length === 0) setLoading(false);
+    });
+  }, [currentPage]);
+
+  // Handle image load for all stall cards
+  const imagesLoaded = useRef(0);
+
+  const handleImageLoad = () => {
+    imagesLoaded.current += 1;
+    if (imagesLoaded.current >= stallData.length) {
+      console.log("All images loaded");
+      setLoading(false);
+    }
+  };
 
   // TODO: Add search bar functionality
-
-  // TODO: Replace with actual data
-  const stalls = [
-    {
-      imageSource: Stall1,
-      title: "Si Chuan Mei Shi",
-      location: "CAN 11",
-      description: "sour fish soup, double cooked pork ...",
-      price_symbol: "$$",
-    },
-    {
-      imageSource: Stall2,
-      title: "Jiu Li Xiang",
-      location: "CAN 9",
-      description: "braised pork rice, oyster omelette ...",
-      price_symbol: "$$",
-    },
-    {
-      imageSource: Stall3,
-      title: "Malay Food",
-      location: "CAN 11",
-      description: "nasi lemak, mee goreng ...",
-      price_symbol: "$",
-    },
-    {
-      imageSource: Stall4,
-      title: "Local Specialties",
-      location: "CAN 9",
-      description: "cai fan, fried rice ...",
-      price_symbol: "$",
-    },
-  ];
-
   return (
     <View className="h-full w-full flex-col">
       <HomeNav
@@ -87,25 +68,29 @@ export default function EatWhat({
         />
       ) : (
         <View className={`bg-${backgroundColor} pt-8 rounded-tl-3xl`}>
-          <OptimizedScrollView
-            className={`bg-${backgroundColor} min-h-[80vh] px-8`}
-          >
-            <Text className="text-4xl font-koulen pt-8 text-blue">
-              What are we eating today?
-            </Text>
-            <SearchBar />
-            {stallData.map((stall, index) => (
-              <StallCard
-                key={index}
-                imageSource={stall.stall_pic}
-                title={stall.name}
-                location={stall.location}
-                description={stall.description}
-                priceSymbol={stall.price_symbol}
-              />
-            ))}
-            <Text className="py-24" />
-          </OptimizedScrollView>
+          {loading && <Loader />}
+          <View className={`${loading ? "opacity-0" : ""}`}>
+            <OptimizedScrollView
+              className={`bg-${backgroundColor} min-h-[80vh] px-8`}
+            >
+              <Text className="text-4xl font-koulen pt-8 text-blue">
+                What are we eating today?
+              </Text>
+              <SearchBar />
+              {stallData.map((stall, index) => (
+                <StallCard
+                  key={index}
+                  imageSource={stall.stall_pic}
+                  title={stall.name}
+                  location={stall.location}
+                  description={stall.description}
+                  priceSymbol={stall.price_symbol}
+                  onImageLoad={handleImageLoad}
+                />
+              ))}
+              <Text className="py-24" />
+            </OptimizedScrollView>
+          </View>
         </View>
       )}
     </View>
