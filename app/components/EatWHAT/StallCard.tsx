@@ -9,6 +9,7 @@ interface StallCardProps {
   location: string;
   description: string;
   priceSymbol: string;
+  stallId: string;
   onImageLoad?: () => void;
 }
 
@@ -18,12 +19,18 @@ const StallCard: React.FC<StallCardProps> = ({
   location,
   description,
   priceSymbol,
+  stallId,
   onImageLoad,
 }) => {
-  const { setCurrentPage } = useAppContext();
+  const { setCurrentPage, setSelectedId } = useAppContext();
   return (
     <View className="mt-8">
-      <TouchableScale onPress={() => setCurrentPage("stall-page")}>
+      <TouchableScale
+        onPress={() => {
+          setCurrentPage("stall-page");
+          setSelectedId(stallId);
+        }}
+      >
         <Image
           source={{ uri: imageSource }}
           resizeMode="cover"

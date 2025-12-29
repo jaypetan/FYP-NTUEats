@@ -12,6 +12,8 @@ interface AppContextType {
   currentPage: string;
   setCurrentPage: Dispatch<React.SetStateAction<string>>;
   returnToPreviousPage: () => void;
+  selectedId: string | null;
+  setSelectedId: Dispatch<React.SetStateAction<string | null>>;
 }
 
 // Create Context Object
@@ -23,6 +25,9 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentPage, setCurrentPage] = useState("home-page");
   const [prevPage, setPrevPage] = useState({ prev: "", next: "home-page" });
 
+  // State for selected ID (stall or review)
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
   useEffect(() => {
     setPrevPage((prev) => ({ prev: prev.next, next: currentPage }));
   }, [currentPage]);
@@ -33,7 +38,13 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ currentPage, setCurrentPage, returnToPreviousPage }}
+      value={{
+        currentPage,
+        setCurrentPage,
+        returnToPreviousPage,
+        selectedId,
+        setSelectedId,
+      }}
     >
       {children}
     </AppContext.Provider>

@@ -17,7 +17,7 @@ const StallHeader: React.FC<StallHeaderProps> = ({
       <ClosePage right={"right-6"} />
       <View className="w-full h-64 bg-cream flex justify-center items-center px-8 pt-8 rounded-t-full">
         <Image
-          source={stallImage}
+          source={{ uri: stallImage }}
           resizeMode="cover"
           className="h-full w-full rounded-t-full"
         />

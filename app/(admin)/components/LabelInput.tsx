@@ -4,10 +4,7 @@ type LabeledInputProps = {
   label: string;
 } & TextInputProps;
 
-export const LabeledInput: React.FC<LabeledInputProps> = ({
-  label,
-  ...props
-}) => (
+const LabeledInput: React.FC<LabeledInputProps> = ({ label, ...props }) => (
   <>
     <Text className="text-xl pt-2">{label}</Text>
     <TextInput
@@ -17,3 +14,5 @@ export const LabeledInput: React.FC<LabeledInputProps> = ({
     />
   </>
 );
+
+export default LabeledInput;

@@ -42,7 +42,6 @@ export default function EatWhat({
 
   // Handle image load for all stall cards
   const imagesLoaded = useRef(0);
-
   const handleImageLoad = () => {
     imagesLoaded.current += 1;
     if (imagesLoaded.current >= stallData.length) {
@@ -85,6 +84,7 @@ export default function EatWhat({
                   location={stall.location}
                   description={stall.description}
                   priceSymbol={stall.price_symbol}
+                  stallId={stall.id}
                   onImageLoad={handleImageLoad}
                 />
               ))}

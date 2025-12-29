@@ -6,7 +6,7 @@ type PriceRangeInputProps = {
   onChangeText: (text: string) => void;
 };
 
-export const PriceRangeInput: React.FC<PriceRangeInputProps> = ({
+const PriceRangeInput: React.FC<PriceRangeInputProps> = ({
   value,
   onChangeText,
 }) => (
@@ -32,3 +32,5 @@ export const PriceRangeInput: React.FC<PriceRangeInputProps> = ({
     </View>
   </>
 );
+
+export default PriceRangeInput;
