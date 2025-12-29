@@ -4,21 +4,10 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-
-// Function to fetch stall data
-const fetchStallData = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "stalls"));
-    const stallsData = querySnapshot.docs.map((doc) => doc.data());
-    return stallsData;
-  } catch (error) {
-    console.error("Error fetching stall data: ", error);
-    return [];
-  }
-};
 
 // Function to add a new stall
 const addNewStall = async (stallData) => {
@@ -40,8 +29,49 @@ const addNewStall = async (stallData) => {
   }
 };
 
+// Function to fetch stall data
+const fetchStallData = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "stalls"));
+    const stallsData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log("Fetched stall data: ", stallsData);
+    return stallsData;
+  } catch (error) {
+    console.error("Error fetching stall data: ", error);
+    return [];
+  }
+};
+
+// Function to get stall data by ID
+const getStallDataById = async (stallId) => {
+  try {
+    const stallRef = doc(db, "stalls", stallId);
+    const stallSnap = await getDoc(stallRef);
+    if (stallSnap.exists()) {
+      const data = stallSnap.data();
+      return {
+        id: stallSnap.id,
+        name: data.name,
+        description: data.description,
+        location: data.location,
+        price_symbol: data.price_symbol,
+        stall_pic: data.stall_pic,
+      };
+    } else {
+      console.log("No such stall!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting stall data by ID: ", error);
+    return null;
+  }
+};
+
 // Function to update stall data
-const updateStallData = async (stallId, updatedData) => {
+const updateStallById = async (stallId, updatedData) => {
   try {
     const stallRef = doc(db, "stalls", stallId);
     await updateDoc(stallRef, updatedData);
@@ -52,4 +82,4 @@ const updateStallData = async (stallId, updatedData) => {
   }
 };
 
-export { addNewStall, fetchStallData, updateStallData };
+export { addNewStall, fetchStallData, getStallDataById, updateStallById };

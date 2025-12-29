@@ -15,7 +15,7 @@ const StallAdd = () => {
     name: "",
     description: "",
     location: "",
-    priceSymbol: "",
+    price_symbol: "",
     stall_pic: "",
   });
 
@@ -38,15 +38,15 @@ const StallAdd = () => {
       !details.name.trim() ||
       !details.location.trim() ||
       !details.description.trim() ||
-      !details.priceSymbol ||
+      !details.price_symbol ||
       !details.stall_pic
     ) {
       Alert.alert("Missing Detail Information");
       return;
     }
 
-    // convert priceSymbol number to string of $
-    const priceSymbolSign = "$".repeat(Number(details.priceSymbol));
+    // convert price_symbol number to string of $
+    const price_symbol_sign = "$".repeat(Number(details.price_symbol));
 
     // Get timestamp
     const timestamp = new Date().toISOString();
@@ -54,7 +54,7 @@ const StallAdd = () => {
     // Prepare updated details
     const updatedDetails = {
       ...details,
-      priceSymbol: priceSymbolSign,
+      price_symbol: price_symbol_sign,
       created_at: timestamp,
     };
 
@@ -66,7 +66,7 @@ const StallAdd = () => {
       name: "",
       description: "",
       location: "",
-      priceSymbol: "",
+      price_symbol: "",
       stall_pic: "",
     });
   };
@@ -103,9 +103,9 @@ const StallAdd = () => {
             multiline
           />
           <PriceRangeInput
-            value={details.priceSymbol}
+            value={details.price_symbol}
             onChangeText={(text) =>
-              setDetails({ ...details, priceSymbol: text })
+              setDetails({ ...details, price_symbol: text })
             }
           />
 

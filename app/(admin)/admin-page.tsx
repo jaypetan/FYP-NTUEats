@@ -7,9 +7,12 @@ import TouchableScale from "../components/TouchableScale";
 // Internal Components
 import AdminDefault from "./admin-default";
 import StallAdd from "./stall/stall-add";
+import StallEdit from "./stall/stall-edit";
+import StallList from "./stall/stall-list";
 
 export default function AdminPage() {
   const [adminCurrentPage, setAdminCurrentPage] = useState("default");
+  const [propId, setPropId] = useState(""); // to pass ids to edit page
   const [content, setContent] = useState(
     <AdminDefault setAdminCurrentPage={setAdminCurrentPage} />
   );
@@ -21,6 +24,26 @@ export default function AdminPage() {
       case "stall-add":
         setContent(<StallAdd />);
         setPage(1);
+        break;
+      case "stall-list":
+        // Pass setPropId to allow setting propId when navigating to edit page
+        setContent(
+          <StallList
+            setAdminCurrentPage={setAdminCurrentPage}
+            setPropId={setPropId}
+          />
+        );
+        setPage(1);
+        break;
+      case "stall-edit":
+        // Use propId to identify which stall to edit
+        setContent(
+          <StallEdit
+            setAdminCurrentPage={setAdminCurrentPage}
+            propId={propId}
+          />
+        );
+        setPage(2);
         break;
       default:
         setContent(<AdminDefault setAdminCurrentPage={setAdminCurrentPage} />);

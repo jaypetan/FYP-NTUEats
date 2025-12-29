@@ -34,6 +34,11 @@ const AdminDefault: React.FC<AdminDefaultProps> = ({ setAdminCurrentPage }) => {
         itemText="Add New Stalls"
         setAdminCurrentPage={setAdminCurrentPage}
       />
+      <ListItem
+        itemPage="stall-list"
+        itemText="View Stall List"
+        setAdminCurrentPage={setAdminCurrentPage}
+      />
     </View>
   );
 };

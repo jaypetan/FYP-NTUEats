@@ -46,28 +46,28 @@ export default function EatWhat({
       title: "Si Chuan Mei Shi",
       location: "CAN 11",
       description: "sour fish soup, double cooked pork ...",
-      priceSymbol: "$$",
+      price_symbol: "$$",
     },
     {
       imageSource: Stall2,
       title: "Jiu Li Xiang",
       location: "CAN 9",
       description: "braised pork rice, oyster omelette ...",
-      priceSymbol: "$$",
+      price_symbol: "$$",
     },
     {
       imageSource: Stall3,
       title: "Malay Food",
       location: "CAN 11",
       description: "nasi lemak, mee goreng ...",
-      priceSymbol: "$",
+      price_symbol: "$",
     },
     {
       imageSource: Stall4,
       title: "Local Specialties",
       location: "CAN 9",
       description: "cai fan, fried rice ...",
-      priceSymbol: "$",
+      price_symbol: "$",
     },
   ];
 
@@ -101,17 +101,7 @@ export default function EatWhat({
                 title={stall.name}
                 location={stall.location}
                 description={stall.description}
-                priceSymbol={stall.priceSymbol}
-              />
-            ))}
-            {stalls.map((stall, index) => (
-              <StallCard
-                key={index}
-                imageSource={stall.imageSource}
-                title={stall.title}
-                location={stall.location}
-                description={stall.description}
-                priceSymbol={stall.priceSymbol}
+                priceSymbol={stall.price_symbol}
               />
             ))}
             <Text className="py-24" />
