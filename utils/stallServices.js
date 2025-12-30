@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 
 // Function to add a new stall
-const addNewStall = async (stallData) => {
+export const addNewStall = async (stallData) => {
   try {
     // Upload stall image and get URL
     const location = stallData.location.toLowerCase().replace(/\s+/g, ""); // remove spaces
@@ -30,7 +30,7 @@ const addNewStall = async (stallData) => {
 };
 
 // Function to fetch stall data
-const fetchStallData = async () => {
+export const fetchStallData = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "stalls"));
     const stallsData = querySnapshot.docs.map((doc) => ({
@@ -45,7 +45,7 @@ const fetchStallData = async () => {
 };
 
 // Function to get stall data by ID
-const getStallDataById = async (stallId) => {
+export const getStallDataById = async (stallId) => {
   try {
     const stallRef = doc(db, "stalls", stallId);
     const stallSnap = await getDoc(stallRef);
@@ -70,7 +70,7 @@ const getStallDataById = async (stallId) => {
 };
 
 // Function to update stall data
-const updateStallById = async (stallId, updatedData) => {
+export const updateStallById = async (stallId, updatedData) => {
   try {
     const stallRef = doc(db, "stalls", stallId);
     await updateDoc(stallRef, updatedData);
@@ -80,5 +80,3 @@ const updateStallById = async (stallId, updatedData) => {
     return false;
   }
 };
-
-export { addNewStall, fetchStallData, getStallDataById, updateStallById };

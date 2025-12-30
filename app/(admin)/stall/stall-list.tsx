@@ -29,40 +29,44 @@ const StallList: React.FC<StallListProps> = ({
       <Text className="text-2xl font-koulen py-2 px-4 text-blue">
         Stall List
       </Text>
-      <ScrollView>
-        {stalls.map((stall) => (
-          <View
-            key={stall.id}
-            className="w-72 bg-white rounded-lg p-4 my-2 flex-col border-2 border-blue"
-          >
-            <Image
-              source={{ uri: stall.stall_pic }}
-              resizeMode="cover"
-              className="w-64 h-64 rounded-md mb-2"
-            />
-            <Text className="text-lg font-semibold text-blue">
-              {stall.name}
-            </Text>
-            <Text className="text-blue">Description: {stall.description}</Text>
-            <Text className="text-blue">Price: {stall.price_symbol}</Text>
-            <Text className="text-blue">Location: {stall.location}</Text>
-            <View className="flex-row justify-between gap-2">
-              <TouchableScale onPress={() => editStall(stall.id)}>
-                <View className="flex-row items-center gap-2 mt-2 rounded-2xl border-2 border-blue bg-green/80 px-4 py-2">
-                  <Text>Edit</Text>
-                  <FontAwesome name="edit" size={20} color="black" />
-                </View>
-              </TouchableScale>
-              <TouchableScale onPress={() => {}}>
-                <View className="flex-row items-center gap-2 mt-2 rounded-2xl border-2 border-blue bg-red px-4 py-2">
-                  <Text>Delete</Text>
-                  <FontAwesome name="trash" size={20} color="black" />
-                </View>
-              </TouchableScale>
+      <View className="h-5/6">
+        <ScrollView>
+          {stalls.map((stall) => (
+            <View
+              key={stall.id}
+              className="w-72 bg-white rounded-lg p-4 my-2 flex-col border-2 border-blue"
+            >
+              <Image
+                source={{ uri: stall.stall_pic }}
+                resizeMode="cover"
+                className="w-64 h-64 rounded-md mb-2"
+              />
+              <Text className="text-lg font-semibold text-blue">
+                {stall.name}
+              </Text>
+              <Text className="text-blue">
+                Description: {stall.description}
+              </Text>
+              <Text className="text-blue">Price: {stall.price_symbol}</Text>
+              <Text className="text-blue">Location: {stall.location}</Text>
+              <View className="flex-row justify-between gap-2">
+                <TouchableScale onPress={() => editStall(stall.id)}>
+                  <View className="flex-row items-center gap-2 mt-2 rounded-2xl border-2 border-blue bg-green/80 px-4 py-2">
+                    <Text>Edit</Text>
+                    <FontAwesome name="edit" size={20} color="black" />
+                  </View>
+                </TouchableScale>
+                <TouchableScale onPress={() => {}}>
+                  <View className="flex-row items-center gap-2 mt-2 rounded-2xl border-2 border-blue bg-red px-4 py-2">
+                    <Text>Delete</Text>
+                    <FontAwesome name="trash" size={20} color="black" />
+                  </View>
+                </TouchableScale>
+              </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };

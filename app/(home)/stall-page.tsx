@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import StallButtons from "../components/Stall/StallButtons";
 import StallHeader from "../components/Stall/StallHeader";
 import StallReviews from "../components/Stall/StallReviews";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../components/AppContext";
 
 import MenuModal from "../components/Stall/MenuModal";
+import PictureModal from "../components/Stall/PictureModal";
 
 export default function StallPage() {
   const { selectedId } = useAppContext();
@@ -44,16 +45,22 @@ export default function StallPage() {
         setMenuModalVisible={setMenuModalVisible}
         menuModalVisible={menuModalVisible}
       />
+      <PictureModal
+        setPictureModalVisible={setPictureModalVisible}
+        pictureModalVisible={pictureModalVisible}
+      />
       <StallHeader
         stallImage={stallData.stall_pic}
         stallName={stallData.name}
         stallLocation={stallData.location.toUpperCase()}
       />
-      <View className="h-[55vh] w-full bg-cream pt-4 px-8">
+      <View className="h-[55vh] w-full bg-cream pt-4 pb-8 px-8">
         <ScrollView showsVerticalScrollIndicator={false}>
-          <StallButtons setMenuModalVisible={setMenuModalVisible} />
-          <StallReviews />
-          <Text className="py-8" />
+          <StallButtons
+            setMenuModalVisible={setMenuModalVisible}
+            setPictureModalVisible={setPictureModalVisible}
+          />
+          <StallReviews selectedId={selectedId} />
         </ScrollView>
       </View>
     </View>

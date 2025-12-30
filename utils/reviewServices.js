@@ -73,3 +73,14 @@ export const getReviewDataById = async (reviewId) => {
     return null;
   }
 };
+
+// Function to fetch all images from reviews for a specific stall
+export const fetchReviewImagesByStallId = async (stallId) => {
+  try {
+    const reviews = await fetchReviewsByStallId(stallId);
+    return reviews.map((review) => review.review_pic).filter((url) => url); // Filter out undefined or null URLs
+  } catch (error) {
+    console.error("Error fetching review images: ", error);
+    return [];
+  }
+};

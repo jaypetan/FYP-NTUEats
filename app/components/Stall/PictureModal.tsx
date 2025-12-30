@@ -1,42 +1,39 @@
-import { fetchMenuItemsByStallId } from "@/utils/menuServices";
+import { fetchReviewImagesByStallId } from "@/utils/reviewServices";
 import { useEffect, useState } from "react";
 import { FlatList, Image, Modal, Pressable, Text, View } from "react-native";
 import ImageViewing from "react-native-image-viewing";
 import { useAppContext } from "../AppContext";
 import Loader from "../Loader";
 
-interface MenuModalProps {
-  setMenuModalVisible: (visible: boolean) => void;
-  menuModalVisible: boolean;
+interface PictureModalProps {
+  setPictureModalVisible: (visible: boolean) => void;
+  pictureModalVisible: boolean;
 }
 
-const MenuModal: React.FC<MenuModalProps> = ({
-  setMenuModalVisible,
-  menuModalVisible,
+const PictureModal: React.FC<PictureModalProps> = ({
+  setPictureModalVisible,
+  pictureModalVisible,
 }) => {
   const { selectedId } = useAppContext();
-  const [menuData, setMenuData] = useState<any[]>([]);
+  const [pictureData, setPictureData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [loadedImages, setLoadedImages] = useState(0);
 
   useEffect(() => {
-    if (menuModalVisible) {
-      fetchMenuItemsByStallId(selectedId).then(setMenuData);
+    if (pictureModalVisible) {
+      fetchReviewImagesByStallId(selectedId).then(setPictureData);
       console.log("Menu data fetched for stall ID:", selectedId);
-      console.log(menuData);
+      console.log(pictureData);
     }
-  }, [menuModalVisible, selectedId]);
+  }, [pictureModalVisible, selectedId]);
 
   // Extract image URLs from menu data
-  const images = menuData
-    .map((item) => item.image)
-    .filter((url) => url !== undefined && url !== null)
-    .map((uri) => ({ uri }));
+  const images = pictureData.map((uri) => ({ uri }));
 
   useEffect(() => {
     setLoadedImages(0);
-  }, [menuModalVisible]);
+  }, [pictureModalVisible]);
 
   const handleImageLoad = () => {
     setLoadedImages((prev) => prev + 1);
@@ -46,23 +43,23 @@ const MenuModal: React.FC<MenuModalProps> = ({
     <Modal
       animationType="slide"
       transparent={true}
-      visible={menuModalVisible}
+      visible={pictureModalVisible}
       className="w-full h-full bg-cream/20"
       onRequestClose={() => {
-        setMenuModalVisible(!menuModalVisible);
+        setPictureModalVisible(!pictureModalVisible);
       }}
     >
       <View className="my-auto mx-4 bg-darkcream border-2 border-blue">
-        <Pressable onPress={() => setMenuModalVisible(!menuModalVisible)}>
+        <Pressable onPress={() => setPictureModalVisible(!pictureModalVisible)}>
           <Text className="border-b-2 border-blue text-2xl font-koulen pt-3 text-black text-center bg-red">
-            Close Menu
+            Close Gallery
           </Text>
         </Pressable>
 
         {images.length > 0 ? (
           <FlatList
             data={images}
-            className={`mx-4 `}
+            className={`mx-4 py-4`}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -79,7 +76,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
                 <Image
                   source={item}
                   resizeMode="contain"
-                  className="w-64 h-64"
+                  className="w-48 h-48"
                   onLoadEnd={handleImageLoad}
                 />
               </Pressable>
@@ -101,4 +98,4 @@ const MenuModal: React.FC<MenuModalProps> = ({
   );
 };
 
-export default MenuModal;
+export default PictureModal;

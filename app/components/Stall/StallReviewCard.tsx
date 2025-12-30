@@ -26,7 +26,7 @@ const StallReviewCard = ({
     >
       {reviewImage && (
         <Image
-          source={reviewImage}
+          source={{ uri: reviewImage }}
           resizeMode="cover"
           className="w-28 rounded-2xl h-48"
         />

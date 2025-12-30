@@ -1,6 +1,13 @@
 // Firebase imports
 import { db } from "@/utils/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
 // Function to fetch user data
 const fetchUserData = async () => {
@@ -17,6 +24,7 @@ const fetchUserData = async () => {
 interface UserData {
   id: string;
   clerk_id: string;
+  username: string;
   role: string;
 }
 
@@ -42,4 +50,24 @@ const fetchUserByClerkId = async (clerk_id: string) => {
   }
 };
 
-export { fetchUserByClerkId, fetchUserData };
+// Function to fetch user data by document ID
+const fetchUserByDocId = async (docId: string) => {
+  try {
+    const userDocRef = doc(db, "users", docId);
+    const userDocSnap = await getDoc(userDocRef);
+    if (userDocSnap.exists()) {
+      return {
+        id: userDocSnap.id,
+        ...userDocSnap.data(),
+      } as UserData;
+    } else {
+      console.error("No user with that document ID!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user by document ID: ", error);
+    return null;
+  }
+};
+
+export { fetchUserByClerkId, fetchUserByDocId, fetchUserData };
