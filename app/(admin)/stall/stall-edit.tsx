@@ -4,8 +4,8 @@ import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { LabeledInput } from "../components/LabelInput";
-import { PriceRangeInput } from "../components/PriceRangeInput";
+import LabeledInput from "../components/LabelInput";
+import PriceRangeInput from "../components/PriceRangeInput";
 
 interface StallEditProps {
   setAdminCurrentPage?: (page: string) => void;
@@ -71,14 +71,10 @@ const StallEdit: React.FC<StallEditProps> = ({
     // convert price_symbol number to string of $
     const price_symbol_sign = "$".repeat(Number(details.price_symbol));
 
-    // Get timestamp
-    const timestamp = new Date().toISOString();
-
     // Prepare updated details
     const updatedDetails = {
       ...details,
       price_symbol: price_symbol_sign,
-      updated_at: timestamp,
     };
 
     // update stall
@@ -134,7 +130,7 @@ const StallEdit: React.FC<StallEditProps> = ({
       </TouchableOpacity>
       <TouchableScale onPress={handleSubmit}>
         <Text className="py-2 mt-4 bg-green/80 rounded-full border-2 border-blue  text-center text-blue text-lg font-bold">
-          Add Stall
+          Confirm Edit
         </Text>
       </TouchableScale>
     </ScrollView>

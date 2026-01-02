@@ -23,8 +23,6 @@ const PictureModal: React.FC<PictureModalProps> = ({
   useEffect(() => {
     if (pictureModalVisible) {
       fetchReviewImagesByStallId(selectedId).then(setPictureData);
-      console.log("Menu data fetched for stall ID:", selectedId);
-      console.log(pictureData);
     }
   }, [pictureModalVisible, selectedId]);
 
@@ -84,7 +82,7 @@ const PictureModal: React.FC<PictureModalProps> = ({
           />
         ) : (
           <View className="h-32 justify-center items-center">
-            <Text className="text-xl">No Menu Available</Text>
+            <Text className="text-xl">No Pictures Available</Text>
           </View>
         )}
       </View>

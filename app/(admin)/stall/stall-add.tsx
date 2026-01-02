@@ -7,8 +7,8 @@ import { ScrollView } from "react-native-gesture-handler";
 // Project component
 import TouchableScale from "@/app/components/TouchableScale";
 import { addNewStall } from "@/utils/stallServices";
-import { LabeledInput } from "../components/LabelInput";
-import { PriceRangeInput } from "../components/PriceRangeInput";
+import LabeledInput from "../components/LabelInput";
+import PriceRangeInput from "../components/PriceRangeInput";
 
 const StallAdd = () => {
   const [details, setDetails] = useState({
@@ -26,7 +26,6 @@ const StallAdd = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.canceled && result.assets && result.assets.length > 0) {
       setDetails({ ...details, stall_pic: result.assets[0].uri });
     }
@@ -48,14 +47,10 @@ const StallAdd = () => {
     // convert price_symbol number to string of $
     const price_symbol_sign = "$".repeat(Number(details.price_symbol));
 
-    // Get timestamp
-    const timestamp = new Date().toISOString();
-
     // Prepare updated details
     const updatedDetails = {
       ...details,
       price_symbol: price_symbol_sign,
-      created_at: timestamp,
     };
 
     addNewStall(updatedDetails);

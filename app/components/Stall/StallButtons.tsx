@@ -4,11 +4,15 @@ import { Text, TouchableOpacity, View } from "react-native";
 interface StallButtonsProps {
   setMenuModalVisible: (visible: boolean) => void;
   setPictureModalVisible: (visible: boolean) => void;
+  setAddReview: (visible: boolean) => void;
+  addReview: boolean;
 }
 
 const StallButtons: React.FC<StallButtonsProps> = ({
   setMenuModalVisible,
   setPictureModalVisible,
+  setAddReview,
+  addReview,
 }) => {
   return (
     <View className="flex-col justify-between w-full gap-4">
@@ -28,11 +32,11 @@ const StallButtons: React.FC<StallButtonsProps> = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() => setAddReview(!addReview)}
           className="flex-row items-center bg-green/50 px-8 py-2 rounded-lg"
         >
           <Text className="text-2xl font-koulen pt-3 text-black">
-            Add Review
+            {addReview ? "Cancel" : "Add Review"}
           </Text>
         </TouchableOpacity>
       </View>

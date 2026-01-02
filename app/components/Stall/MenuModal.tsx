@@ -23,8 +23,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
   useEffect(() => {
     if (menuModalVisible) {
       fetchMenuItemsByStallId(selectedId).then(setMenuData);
-      console.log("Menu data fetched for stall ID:", selectedId);
-      console.log(menuData);
     }
   }, [menuModalVisible, selectedId]);
 

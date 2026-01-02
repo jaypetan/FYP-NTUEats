@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 
@@ -18,6 +19,9 @@ export const addNewStall = async (stallData) => {
     const path = `eatWHAT/stall-${location}-${name}.jpeg`;
     const imageUrl = await uploadImageAsync(stallData.stall_pic, path);
     stallData.stall_pic = imageUrl;
+
+    // Add timestamp
+    stallData.created_at = serverTimestamp();
 
     console.log("Adding new stall with data: ", stallData);
     const stallsCollection = collection(db, "stalls");
@@ -73,6 +77,9 @@ export const getStallDataById = async (stallId) => {
 export const updateStallById = async (stallId, updatedData) => {
   try {
     const stallRef = doc(db, "stalls", stallId);
+    // add timestamp
+    updatedData.updated_at = serverTimestamp();
+
     await updateDoc(stallRef, updatedData);
     return true;
   } catch (error) {

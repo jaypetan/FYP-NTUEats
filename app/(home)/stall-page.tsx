@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { Keyboard, ScrollView, View } from "react-native";
 import StallButtons from "../components/Stall/StallButtons";
 import StallHeader from "../components/Stall/StallHeader";
 import StallReviews from "../components/Stall/StallReviews";
@@ -7,6 +7,7 @@ import { getStallDataById } from "@/utils/stallServices";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../components/AppContext";
 
+import AddReviewPage from "../components/Stall/AddReviewPage";
 import MenuModal from "../components/Stall/MenuModal";
 import PictureModal from "../components/Stall/PictureModal";
 
@@ -22,6 +23,7 @@ export default function StallPage() {
 
   const [menuModalVisible, setMenuModalVisible] = useState(false);
   const [pictureModalVisible, setPictureModalVisible] = useState(false);
+  const [addReview, setAddReview] = useState(false);
 
   // Fetch stall data from selectedId
   useEffect(() => {
@@ -55,12 +57,22 @@ export default function StallPage() {
         stallLocation={stallData.location.toUpperCase()}
       />
       <View className="h-[55vh] w-full bg-cream pt-4 pb-8 px-8">
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          onScrollBeginDrag={Keyboard.dismiss}
+        >
           <StallButtons
             setMenuModalVisible={setMenuModalVisible}
             setPictureModalVisible={setPictureModalVisible}
+            addReview={addReview}
+            setAddReview={setAddReview}
           />
-          <StallReviews selectedId={selectedId} />
+          {addReview ? (
+            <AddReviewPage />
+          ) : (
+            <StallReviews selectedId={selectedId} />
+          )}
         </ScrollView>
       </View>
     </View>

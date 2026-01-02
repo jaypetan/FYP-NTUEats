@@ -22,7 +22,6 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
             return review;
           })
         );
-        console.log(reviewsWithNames);
         setReviewsData(reviewsWithNames);
       }
     });
@@ -36,7 +35,6 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
 
   // Convert date format from ISO to MM/DD/YYYY
   const formatDate = (input: { seconds: number }) => {
-    console.log(input.seconds * 1000);
     const date = new Date(input.seconds * 1000);
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -44,54 +42,18 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
     return `${month}/${day}/${year}`;
   };
 
-  // const reviews = [
-  //   {
-  //     reviewImage: review1,
-  //     reviewDate: "1/1/2025",
-  //     reviewTitle: "The best food in the world",
-  //     reviewDescription:
-  //       "The food was delicious and full of flavor, with fresh ingredients and perfect seasoning. The service was friendly and the cozy atmosphere made the experience even better.",
-  //     reviewName: "Jaype",
-  //     reviewLikes: 1000,
-  //   },
-  //   {
-  //     reviewImage: review2,
-  //     reviewDate: "1/1/2025",
-  //     reviewTitle: "Good Food",
-  //     reviewDescription: "Yum Yum in the Tum",
-  //     reviewName: "Ting",
-  //     reviewLikes: 888,
-  //   },
-  //   {
-  //     reviewTitle: "Highly Recommended",
-  //     reviewDate: "1/1/2025",
-  //     reviewDescription:
-  //       "The food was delicious and full of flavor, with fresh ingredients and perfect seasoning. The service was friendly and the cozy atmosphere made the experience even better.”",
-  //     reviewName: "Joe",
-  //     reviewLikes: 30,
-  //   },
-  //   {
-  //     reviewTitle: "Test Comment",
-  //     reviewDate: "1/1/2025",
-  //     reviewDescription: "Yum Yum in the Tum",
-  //     reviewName: "Joe",
-  //     reviewLikes: 30,
-  //   },
-  //   {
-  //     reviewImage: review2,
-  //     reviewTitle: "Test Comment",
-  //     reviewDate: "1/1/2025",
-  //     reviewDescription: "Yum Yum in the Tum",
-  //     reviewName: "Joe",
-  //     reviewLikes: 30,
-  //   },
-  // ];
   return (
-    <View className="flex-col gap-4 mt-8">
+    <View className="flex-col gap-4 mt-8" pointerEvents="box-none">
       <Text className="text-blue font-inter font-bold text-3xl w-full text-center">
         Top Reviews
       </Text>
       <View className="flex-col gap-4">
+        {!reviewsData ||
+          (reviewsData.length === 0 && (
+            <Text className="text-black font-inter text-xl text-center">
+              No reviews currently available.
+            </Text>
+          ))}
         {reviewsData.slice(0, numOfReviews).map((review, index) => (
           <StallReviewCard
             key={index}
@@ -104,20 +66,22 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
           />
         ))}
       </View>
-      <TouchableOpacity
-        className="border-2 border-blue rounded-2xl p-4 flex-row justify-center"
-        onPress={() =>
-          setNumOfReviews(
-            numOfReviews + 1 < reviewsData.length
-              ? numOfReviews + 2
-              : reviewsData.length
-          )
-        }
-      >
-        <Text className="text-blue font-inter font-bold text-lg">
-          View More Reviews
-        </Text>
-      </TouchableOpacity>
+      {reviewsData.length > numOfReviews && (
+        <TouchableOpacity
+          className="border-2 border-blue rounded-2xl p-4 flex-row justify-center"
+          onPress={() =>
+            setNumOfReviews(
+              numOfReviews + 1 < reviewsData.length
+                ? numOfReviews + 2
+                : reviewsData.length
+            )
+          }
+        >
+          <Text className="text-blue font-inter font-bold text-lg">
+            View More Reviews
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
