@@ -8,11 +8,13 @@ import Loader from "../Loader";
 interface MenuModalProps {
   setMenuModalVisible: (visible: boolean) => void;
   menuModalVisible: boolean;
+  setMenuUploadModalVisible: (visible: boolean) => void;
 }
 
 const MenuModal: React.FC<MenuModalProps> = ({
   setMenuModalVisible,
   menuModalVisible,
+  setMenuUploadModalVisible,
 }) => {
   const { selectedId } = useAppContext();
   const [menuData, setMenuData] = useState<any[]>([]);
@@ -40,6 +42,11 @@ const MenuModal: React.FC<MenuModalProps> = ({
     setLoadedImages((prev) => prev + 1);
   };
 
+  const openMenuUploadModal = () => {
+    setMenuModalVisible(false);
+    setMenuUploadModalVisible(true);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -56,7 +63,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
             Close Menu
           </Text>
         </Pressable>
-
         {images.length > 0 ? (
           <FlatList
             data={images}
@@ -88,6 +94,14 @@ const MenuModal: React.FC<MenuModalProps> = ({
             <Text className="text-xl">No Menu Available</Text>
           </View>
         )}
+        <View className="flex-row w-full justify-end">
+          <Pressable
+            onPress={openMenuUploadModal}
+            className="rounded-2xl flex justify-center bg-green px-4 pt-4 pb-2 mx-4 mb-4"
+          >
+            <Text className="font-koulen text-xl text-blue">Upload Menu</Text>
+          </Pressable>
+        </View>
       </View>
       <ImageViewing
         images={images}

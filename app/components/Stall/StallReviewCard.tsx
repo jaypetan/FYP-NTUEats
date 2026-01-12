@@ -46,14 +46,17 @@ const StallReviewCard = ({
             </View>
             <Text className="font-inter text-lg text-blue">{reviewDate}</Text>
           </View>
-          <Text className="text-blue font-inter font-bold text-lg mt-2">
+          <Text
+            className="text-blue font-inter font-bold text-lg mt-2"
+            numberOfLines={1}
+          >
             {reviewTitle}
           </Text>
           <Text
             className="text-blue font-inter text-sm"
             numberOfLines={reviewImage ? 4 : 3}
           >
-            "{reviewDescription}""
+            {reviewDescription}
           </Text>
         </View>
         <View className="flex-row gap-2 items-center justify-end">

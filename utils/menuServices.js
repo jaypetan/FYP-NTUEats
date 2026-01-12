@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   query,
+  serverTimestamp,
   where,
 } from "firebase/firestore";
 
@@ -25,8 +26,14 @@ export const addNewMenuItem = async (menuData) => {
 
     // Upload menu item image and get URL
     const path = `eatWHAT/menu-${location}-${name}-${nextItemNumber}.jpeg`;
-    const imageUrl = await uploadImageAsync(menuData.item_pic, path);
-    menuData.item_pic = imageUrl;
+    const imageUrl = await uploadImageAsync(menuData.image, path);
+    menuData.image = imageUrl;
+
+    // Add likes = 0 by default
+    menuData.likes = 0;
+
+    // Add timestamp
+    menuData.created_at = serverTimestamp();
 
     console.log("Adding new menu item with data: ", menuData);
     const menuCollection = collection(db, "menus");

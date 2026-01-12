@@ -6,7 +6,10 @@ import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useAppContext } from "../AppContext";
 import TouchableScale from "../TouchableScale";
 
-const AddReviewPage = () => {
+interface AddReviewPageProps {
+  setAddReview: (visible: boolean) => void;
+}
+const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
   const { selectedId } = useAppContext();
   const { user } = useUser();
 
@@ -54,6 +57,7 @@ const AddReviewPage = () => {
       stall_id: "",
       user_id: "",
     });
+    setAddReview(false);
   };
 
   return (
@@ -68,6 +72,7 @@ const AddReviewPage = () => {
         value={details.title}
         placeholder="Write your title here..."
         placeholderTextColor={"#888"}
+        maxLength={20}
       />
       <Text className="text-xl text-blue font-bold">Content:</Text>
       <TextInput
@@ -77,6 +82,8 @@ const AddReviewPage = () => {
         placeholder="Write your review here..."
         placeholderTextColor={"#888"}
         multiline
+        numberOfLines={4}
+        maxLength={80}
       />
 
       {/* Image Upload */}

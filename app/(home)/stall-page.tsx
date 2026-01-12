@@ -9,6 +9,7 @@ import { useAppContext } from "../components/AppContext";
 
 import AddReviewPage from "../components/Stall/AddReviewPage";
 import MenuModal from "../components/Stall/MenuModal";
+import MenuUploadModal from "../components/Stall/MenuUploadModal";
 import PictureModal from "../components/Stall/PictureModal";
 
 export default function StallPage() {
@@ -23,6 +24,7 @@ export default function StallPage() {
 
   const [menuModalVisible, setMenuModalVisible] = useState(false);
   const [pictureModalVisible, setPictureModalVisible] = useState(false);
+  const [menuUploadModalVisible, setMenuUploadModalVisible] = useState(false);
   const [addReview, setAddReview] = useState(false);
 
   // Fetch stall data from selectedId
@@ -46,10 +48,16 @@ export default function StallPage() {
       <MenuModal
         setMenuModalVisible={setMenuModalVisible}
         menuModalVisible={menuModalVisible}
+        setMenuUploadModalVisible={setMenuUploadModalVisible}
       />
       <PictureModal
         setPictureModalVisible={setPictureModalVisible}
         pictureModalVisible={pictureModalVisible}
+      />
+      <MenuUploadModal
+        setMenuModalVisible={setMenuModalVisible}
+        setMenuUploadModalVisible={setMenuUploadModalVisible}
+        menuUploadModalVisible={menuUploadModalVisible}
       />
       <StallHeader
         stallImage={stallData.stall_pic}
@@ -69,7 +77,7 @@ export default function StallPage() {
             setAddReview={setAddReview}
           />
           {addReview ? (
-            <AddReviewPage />
+            <AddReviewPage setAddReview={setAddReview} />
           ) : (
             <StallReviews selectedId={selectedId} />
           )}

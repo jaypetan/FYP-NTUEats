@@ -41,6 +41,9 @@ export const addNewReview = async (reviewData) => {
     // Add timestamp
     reviewData.timestamp = serverTimestamp();
 
+    // Add likes field initialized to 0
+    reviewData.likes = 0;
+
     console.log("Adding new review with data: ", reviewData);
     const reviewsCollection = collection(db, "reviews");
     await addDoc(reviewsCollection, reviewData);
