@@ -40,7 +40,6 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    console.log("isProcessing:", isProcessing);
     if (isProcessing) return; // Prevent multiple submissions
     if (!image) {
       alert("Please select an image to upload.");

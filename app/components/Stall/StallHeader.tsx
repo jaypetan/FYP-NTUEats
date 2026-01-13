@@ -1,8 +1,8 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import ClosePage from "../ClosePage";
-import Loader from "../Loader";
+import { ImageLoader } from "../ImageLoader";
 
 interface StallHeaderProps {
   stallImage: any;
@@ -26,19 +26,11 @@ const StallHeader: React.FC<StallHeaderProps> = ({
     <View>
       <ClosePage right={"right-6"} />
       <View className="w-full h-64 bg-cream flex justify-center items-center px-8 pt-8 rounded-t-full">
-        {loading && (
-          <View className="w-full h-full absolute">
-            <Loader />
-          </View>
-        )}
-        {stallImage && (
-          <Image
-            source={{ uri: stallImage }}
-            resizeMode="cover"
-            className="h-full w-full rounded-t-full"
-            onLoadEnd={handleImageLoad}
-          />
-        )}
+        <ImageLoader
+          image={stallImage}
+          className="h-full w-full rounded-t-full"
+          loaderClassName="w-full h-full absolute"
+        />
       </View>
       <View className="flex-row justify-between items-center bg-black py-4 px-8">
         <Text className="font-inter font-semibold uppercase text-white text-2xl">

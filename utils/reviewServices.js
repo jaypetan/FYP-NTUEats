@@ -100,3 +100,24 @@ export const fetchReviewImagesByStallId = async (stallId) => {
     return [];
   }
 };
+
+// Function to fetch review image with most likes for a specific stall
+export const fetchTopReviewImageByStallId = async (stallId) => {
+  try {
+    const reviews = await fetchReviewsByStallId(stallId);
+    // Filter reviews with a valid review_pic
+    const reviewsWithPic = reviews.filter(
+      (r) => r.review_pic && r.review_pic !== ""
+    );
+    if (reviewsWithPic.length === 0) return null;
+    // Find the review with the maximum likes
+    const topReview = reviewsWithPic.reduce((max, review) =>
+      review.likes > max.likes ? review : max
+    );
+    console.log("Top review: ", topReview);
+    return topReview.review_pic || null;
+  } catch (error) {
+    console.error("Error fetching top review image: ", error);
+    return null;
+  }
+};

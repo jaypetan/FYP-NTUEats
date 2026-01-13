@@ -3,7 +3,9 @@ import Review4 from "@/assets/sample-data/eat/review-can11-japanese-2.jpeg";
 import Review1 from "@/assets/sample-data/eat/review-can11-malayfood-3.jpeg";
 import Review3 from "@/assets/sample-data/eat/review-can11-sichuanmeishi.jpeg";
 import Review2 from "@/assets/sample-data/eat/review-can9-jiulixiang.jpeg";
-import { useState } from "react";
+import { fetchTopReviewImageByStallId } from "@/utils/reviewServices";
+import { fetchStallData } from "@/utils/stallServices";
+import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import Animated, { FadeOut } from "react-native-reanimated";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -14,6 +16,27 @@ import VerticalWordButton from "./SharedComponents/VerticalWordButton";
 const HomeEatWHAT = () => {
   const { setCurrentPage } = useAppContext();
   const [swiped, setSwiped] = useState(false); // To remove instructions after swipe
+  const [stallData, setStallData] = useState<any[]>([]);
+  useEffect(() => {
+    // Fetch stall data
+    fetchStallData().then((data) => {
+      setStallData(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    // Fetch review images for each stall
+    stallData.forEach(async (stall, index) => {
+      const reviewImage = await fetchTopReviewImageByStallId(stall.id);
+      if (reviewImage && reviewImage.length > 0) {
+        setStallData((prevStallData) => {
+          const newStallData = [...prevStallData];
+          newStallData[index].reviewImage = reviewImage; // Use the first review image
+          return newStallData;
+        });
+      }
+    });
+  }, [stallData.length]);
 
   // TODO: Sample data to adjsut with proper algorithm next time
   const foodCards = [
@@ -59,12 +82,13 @@ const HomeEatWHAT = () => {
         horizontal={true}
         onScroll={() => setSwiped(true)}
       >
-        {foodCards.map((card) => (
+        {stallData.map((stall) => (
           <FoodCard
-            key={card.id}
-            imageSource={card.imageSource}
-            foodName={card.foodName}
-            canteenName={card.canteenName}
+            key={stall.id}
+            imageSource={stall.reviewImage}
+            stallName={stall.name}
+            canteenName={stall.location}
+            storeId={stall.id}
           />
         ))}
         <VerticalWordButton
