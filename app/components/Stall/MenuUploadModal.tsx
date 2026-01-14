@@ -1,4 +1,6 @@
 import { addNewMenuItem } from "@/utils/menuServices";
+import { AntDesign } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
@@ -79,38 +81,40 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
         setMenuUploadModalVisible(!menuUploadModalVisible);
       }}
     >
-      <View className="my-auto mx-4 bg-darkcream border-2 border-blue">
-        <Pressable onPress={() => closeMenuUploadModal()}>
-          <Text className="border-b-2 border-blue text-2xl font-koulen pt-3 text-black text-center bg-red">
-            Close Menu Upload
-          </Text>
-        </Pressable>
-        <View className="flex-col gap-2 p-4">
-          <TouchableOpacity
-            onPress={pickImage}
-            className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mt-4 self-center"
-          >
-            {image ? (
-              <Image
-                className="w-64 h-64 border-2 border-blue"
-                source={{ uri: image }}
-              />
-            ) : (
-              <Text> Click to Upload Menu</Text>
-            )}
-          </TouchableOpacity>
-          <View className="flex-row w-full justify-end">
-            <TouchableScale
-              onPress={handleSubmit}
-              className="bg-green rounded-md py-2 px-4 items-center mt-4"
+      <BlurView intensity={20} className="w-full h-full ">
+        <View className="my-auto mx-4 bg-darkcream border-2 border-blue">
+          <Pressable onPress={() => closeMenuUploadModal()}>
+            <View className="border-b-2 border-blue text-center bg-red items-end p-2">
+              <AntDesign name="close" size={32} color="#264653" />
+            </View>
+          </Pressable>
+          <View className="flex-col gap-2 p-4">
+            <TouchableOpacity
+              onPress={pickImage}
+              className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mt-4 self-center"
             >
-              <Text className="text-blue font-semibold text-base">
-                Submit Menu
-              </Text>
-            </TouchableScale>
+              {image ? (
+                <Image
+                  className="w-64 h-64 border-2 border-blue"
+                  source={{ uri: image }}
+                />
+              ) : (
+                <Text> Click to Upload Menu</Text>
+              )}
+            </TouchableOpacity>
+            <View className="flex-row w-full justify-end">
+              <TouchableScale
+                onPress={handleSubmit}
+                className="bg-green rounded-md py-2 px-4 items-center mt-4"
+              >
+                <Text className="text-blue font-semibold text-base">
+                  Submit Menu
+                </Text>
+              </TouchableScale>
+            </View>
           </View>
         </View>
-      </View>
+      </BlurView>
     </Modal>
   );
 };

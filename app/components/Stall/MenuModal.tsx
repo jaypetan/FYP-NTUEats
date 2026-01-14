@@ -1,4 +1,6 @@
 import { fetchMenuItemsByStallId } from "@/utils/menuServices";
+import { AntDesign } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import { FlatList, Image, Modal, Pressable, Text, View } from "react-native";
 import ImageViewing from "react-native-image-viewing";
@@ -52,63 +54,67 @@ const MenuModal: React.FC<MenuModalProps> = ({
       animationType="slide"
       transparent={true}
       visible={menuModalVisible}
-      className="w-full h-full bg-cream/20"
       onRequestClose={() => {
         setMenuModalVisible(!menuModalVisible);
       }}
     >
-      <View className="my-auto mx-4 bg-darkcream border-2 border-blue">
-        <Pressable onPress={() => setMenuModalVisible(!menuModalVisible)}>
-          <Text className="border-b-2 border-blue text-2xl font-koulen pt-3 text-black text-center bg-red">
-            Close Menu
-          </Text>
-        </Pressable>
-        {images.length > 0 ? (
-          <FlatList
-            data={images}
-            className={`mx-4 `}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(_, idx) => idx.toString()}
-            renderItem={({ item, index }) => (
-              <Pressable
-                onPress={() => {
-                  setSelectedImageIndex(index);
-                  setEnlargedImageVisible(true);
-                }}
-                className="mr-4"
-              >
-                {!loadedImages && <Loader />}
-                <Image
-                  source={item}
-                  resizeMode="contain"
-                  className="w-64 h-64"
-                  onLoadEnd={handleImageLoad}
-                />
-              </Pressable>
-            )}
-          />
-        ) : (
-          <View className="h-32 justify-center items-center">
-            <Text className="text-xl">No Menu Available</Text>
-          </View>
-        )}
-        <View className="flex-row w-full justify-end">
-          <Pressable
-            onPress={openMenuUploadModal}
-            className="rounded-2xl flex justify-center bg-green px-4 pt-4 pb-2 mx-4 mb-4"
-          >
-            <Text className="font-koulen text-xl text-blue">Upload Menu</Text>
+      <BlurView intensity={20} className="w-full h-full ">
+        <View className="my-auto mx-4 bg-darkcream border-2 border-blue">
+          <Pressable onPress={() => setMenuModalVisible(!menuModalVisible)}>
+            <View className="border-b-2 border-blue text-center bg-red items-end p-2">
+              <AntDesign name="close" size={32} color="#264653" />
+            </View>
           </Pressable>
+          <Text className="text-3xl font-koulen pt-8 text-black text-center">
+            Menus
+          </Text>
+          {images.length > 0 ? (
+            <FlatList
+              data={images}
+              className={`mx-4 `}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(_, idx) => idx.toString()}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  onPress={() => {
+                    setSelectedImageIndex(index);
+                    setEnlargedImageVisible(true);
+                  }}
+                  className="mr-4"
+                >
+                  {!loadedImages && <Loader />}
+                  <Image
+                    source={item}
+                    resizeMode="contain"
+                    className="w-64 h-64"
+                    onLoadEnd={handleImageLoad}
+                  />
+                </Pressable>
+              )}
+            />
+          ) : (
+            <View className="h-32 justify-center items-center">
+              <Text className="text-xl">No Menu Available</Text>
+            </View>
+          )}
+          <View className="flex-row w-full justify-end">
+            <Pressable
+              onPress={openMenuUploadModal}
+              className="rounded-2xl flex justify-center bg-green px-4 pt-4 pb-2 mx-4 mb-4"
+            >
+              <Text className="font-koulen text-xl text-blue">Upload Menu</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-      <ImageViewing
-        images={images}
-        imageIndex={selectedImageIndex}
-        visible={enlargedImageVisible}
-        onRequestClose={() => setEnlargedImageVisible(false)}
-      />
+        <ImageViewing
+          images={images}
+          imageIndex={selectedImageIndex}
+          visible={enlargedImageVisible}
+          onRequestClose={() => setEnlargedImageVisible(false)}
+        />
+      </BlurView>
     </Modal>
   );
 };
