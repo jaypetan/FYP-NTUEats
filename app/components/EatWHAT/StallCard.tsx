@@ -1,7 +1,8 @@
 import TouchableScale from "@/app/components/TouchableScale";
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
+import { ImageLoader } from "../ImageLoader";
 
 interface StallCardProps {
   imageSource: any;
@@ -30,11 +31,14 @@ const StallCard: React.FC<StallCardProps> = ({
           setSelectedId(stallId);
         }}
       >
-        <Image
-          source={{ uri: imageSource }}
-          resizeMode="cover"
-          className="w-full h-48 rounded-2xl"
-        />
+        <View className="w-full h-48">
+          <ImageLoader
+            image={imageSource}
+            className="w-full h-full rounded-2xl absolute"
+            loaderClassName="w-full h-full rounded-2xl"
+          />
+        </View>
+
         <View className="absolute bottom-0 w-full px-4 pt-2 bg-green/70 rounded-b-2xl flex-col justify-end">
           <View className="flex-row justify-between">
             <Text className="text-3xl font-koulen text-blue leading-10 -mb-[1rem]">

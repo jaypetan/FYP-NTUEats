@@ -1,6 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { ImageLoader } from "../ImageLoader";
 
 interface StallReviewCardProps {
   reviewName: string;
@@ -25,11 +26,13 @@ const StallReviewCard = ({
       }`}
     >
       {reviewImage && (
-        <Image
-          source={{ uri: reviewImage }}
-          resizeMode="cover"
-          className="w-28 rounded-2xl h-48"
-        />
+        <View className="w-28 h-48">
+          <ImageLoader
+            image={reviewImage}
+            className="w-28 rounded-2xl h-48"
+            loaderClassName="w-full h-full absolute"
+          />
+        </View>
       )}
       <View
         className={`flex-col ${

@@ -114,7 +114,6 @@ export const fetchTopReviewImageByStallId = async (stallId) => {
     const topReview = reviewsWithPic.reduce((max, review) =>
       review.likes > max.likes ? review : max
     );
-    console.log("Top review: ", topReview);
     return topReview.review_pic || null;
   } catch (error) {
     console.error("Error fetching top review image: ", error);

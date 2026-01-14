@@ -1,5 +1,4 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import ClosePage from "../ClosePage";
 import { ImageLoader } from "../ImageLoader";
@@ -14,14 +13,6 @@ const StallHeader: React.FC<StallHeaderProps> = ({
   stallName,
   stallLocation,
 }) => {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(true);
-  }, [stallImage]);
-  const handleImageLoad = () => {
-    setLoading(false);
-  };
-
   return (
     <View>
       <ClosePage right={"right-6"} />
