@@ -12,6 +12,8 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
   // Get reviews from backend based on selectedId
   const [reviewsData, setReviewsData] = useState<any[]>([]);
 
+  // Fetch reviews when selectedId changes
+  // Get names from user IDs in reviewsData, and format dates
   useEffect(() => {
     fetchReviewsByStallId(selectedId.selectedId).then(async (data: any[]) => {
       if (data) {
@@ -57,12 +59,12 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
         {reviewsData.slice(0, numOfReviews).map((review, index) => (
           <StallReviewCard
             key={index}
+            reviewID={review.id}
             reviewImage={review.review_pic}
             reviewDate={review.reviewDate}
             reviewTitle={review.title}
             reviewDescription={review.content}
             reviewName={review.name}
-            reviewLikes={review.likes}
           />
         ))}
       </View>

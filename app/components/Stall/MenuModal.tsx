@@ -2,10 +2,10 @@ import { fetchMenuItemsByStallId } from "@/utils/menuServices";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
-import { FlatList, Image, Modal, Pressable, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import ImageViewing from "react-native-image-viewing";
 import { useAppContext } from "../AppContext";
-import Loader from "../Loader";
+import { ImageLoader } from "../ImageLoader";
 
 interface MenuModalProps {
   setMenuModalVisible: (visible: boolean) => void;
@@ -22,7 +22,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [menuData, setMenuData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [loadedImages, setLoadedImages] = useState(0);
 
   useEffect(() => {
     if (menuModalVisible) {
@@ -35,14 +34,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
     .map((item) => item.image)
     .filter((url) => url !== undefined && url !== null)
     .map((uri) => ({ uri }));
-
-  useEffect(() => {
-    setLoadedImages(0);
-  }, [menuModalVisible]);
-
-  const handleImageLoad = () => {
-    setLoadedImages((prev) => prev + 1);
-  };
 
   const openMenuUploadModal = () => {
     setMenuModalVisible(false);
@@ -84,13 +75,13 @@ const MenuModal: React.FC<MenuModalProps> = ({
                   }}
                   className="mr-4"
                 >
-                  {!loadedImages && <Loader />}
-                  <Image
-                    source={item}
-                    resizeMode="contain"
-                    className="w-64 h-64"
-                    onLoadEnd={handleImageLoad}
-                  />
+                  <View className="w-64 h-64">
+                    <ImageLoader
+                      image={item.uri}
+                      className="w-64 h-64"
+                      loaderClassName="w-full h-full absolute"
+                    />
+                  </View>
                 </Pressable>
               )}
             />
@@ -99,7 +90,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
               <Text className="text-xl">No Menu Available</Text>
             </View>
           )}
-          <View className="flex-row w-full justify-end">
+          <View className="flex-row w-full justify-end pt-4">
             <Pressable
               onPress={openMenuUploadModal}
               className="rounded-2xl flex justify-center bg-green px-4 pt-4 pb-2 mx-4 mb-4"

@@ -67,23 +67,23 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
       </Text>
       <Text className="text-xl text-blue font-bold">Title:</Text>
       <TextInput
-        className="w-full border-2 border-blue rounded-md p-2 mb-4 text-base"
+        className="w-full border-2 border-blue rounded-md p-2 mb-4 pb-4"
         onChangeText={(text) => setDetails({ ...details, title: text })}
         value={details.title}
-        placeholder="Write your title here..."
+        placeholder="Write your title here... (max 30 characters)"
         placeholderTextColor={"#888"}
-        maxLength={20}
+        maxLength={30}
       />
       <Text className="text-xl text-blue font-bold">Content:</Text>
       <TextInput
-        className="w-full h-24 border-2 border-blue rounded-md p-2 mb-4 text-base"
+        className="w-full h-24 border-2 border-blue rounded-md p-2 mb-4 pb-4"
         onChangeText={(text) => setDetails({ ...details, content: text })}
         value={details.content}
-        placeholder="Write your review here..."
+        placeholder="Write your review here... (max 120 characters)"
         placeholderTextColor={"#888"}
         multiline
         numberOfLines={4}
-        maxLength={80}
+        maxLength={120}
       />
 
       {/* Image Upload */}
@@ -106,7 +106,7 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
       </TouchableOpacity>
       <TouchableScale
         onPress={handleSubmit}
-        className="bg-green rounded-md py-2 px-4 items-center mt-4"
+        className="bg-green rounded-md py-2 px-4 items-center mt-4  border-2 border-blue mb-8"
       >
         <Text className="text-blue font-semibold text-base">Submit Review</Text>
       </TouchableScale>

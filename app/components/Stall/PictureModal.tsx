@@ -2,10 +2,10 @@ import { fetchReviewImagesByStallId } from "@/utils/reviewServices";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
-import { FlatList, Image, Modal, Pressable, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import ImageViewing from "react-native-image-viewing";
 import { useAppContext } from "../AppContext";
-import Loader from "../Loader";
+import { ImageLoader } from "../ImageLoader";
 
 interface PictureModalProps {
   setPictureModalVisible: (visible: boolean) => void;
@@ -20,7 +20,6 @@ const PictureModal: React.FC<PictureModalProps> = ({
   const [pictureData, setPictureData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [loadedImages, setLoadedImages] = useState(0);
 
   useEffect(() => {
     if (pictureModalVisible) {
@@ -30,14 +29,6 @@ const PictureModal: React.FC<PictureModalProps> = ({
 
   // Extract image URLs from menu data
   const images = pictureData.map((uri) => ({ uri }));
-
-  useEffect(() => {
-    setLoadedImages(0);
-  }, [pictureModalVisible]);
-
-  const handleImageLoad = () => {
-    setLoadedImages((prev) => prev + 1);
-  };
 
   return (
     <Modal
@@ -78,13 +69,13 @@ const PictureModal: React.FC<PictureModalProps> = ({
                   }}
                   className="mr-4"
                 >
-                  {!loadedImages && <Loader />}
-                  <Image
-                    source={item}
-                    resizeMode="contain"
-                    className="w-48 h-48"
-                    onLoadEnd={handleImageLoad}
-                  />
+                  <View className="w-64 h-64">
+                    <ImageLoader
+                      image={item.uri}
+                      className="w-64 h-64"
+                      loaderClassName="w-full h-full absolute"
+                    />
+                  </View>
                 </Pressable>
               )}
             />
