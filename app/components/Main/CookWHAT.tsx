@@ -1,13 +1,14 @@
-import { ScrollView, Text, View } from "react-native";
-import { useAppContext } from "../AppContext";
-import HomeNav from "../Home/HomeNav";
-import OptimizedScrollView from "../OptimizedScrollView";
-import SearchBar from "../CookWHAT/SearchBar";
-import RecipeCard from "../CookWHAT/RecipeCard";
+import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
 import Recipe1 from "@/assets/sample-data/cook/carbonara.jpeg";
 import Recipe2 from "@/assets/sample-data/cook/friednoodles.jpeg";
 import Recipe3 from "@/assets/sample-data/cook/japanesecurryrice.png";
 import Recipe4 from "@/assets/sample-data/cook/mushroomrisotto.jpeg";
+import { Image, Text, View } from "react-native";
+import { useAppContext } from "../AppContext";
+import RecipeCard from "../CookWHAT/RecipeCard";
+import SearchBar from "../CookWHAT/SearchBar";
+import HomeNav from "../Home/HomeNav";
+import OptimizedScrollView from "../OptimizedScrollView";
 
 interface CookWhatProps {
   backgroundColor: string;
@@ -75,7 +76,14 @@ export default function CookWhat({
           <OptimizedScrollView
             className={`bg-${backgroundColor} min-h-[80vh] px-8`}
           >
-            <Text className="text-4xl font-koulen pt-8 text-blue">
+            <View className="flex-row gap-2 mt-4 mb-2 justify-center">
+              <Image
+                source={CookWHATLogo}
+                className="w-40 h-40"
+                resizeMode="contain"
+              />
+            </View>
+            <Text className="text-4xl font-koulen pt-4 text-blue">
               What are we cooking today?
             </Text>
             <SearchBar />

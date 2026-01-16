@@ -1,8 +1,4 @@
 import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
-import Review4 from "@/assets/sample-data/eat/review-can11-japanese-2.jpeg";
-import Review1 from "@/assets/sample-data/eat/review-can11-malayfood-3.jpeg";
-import Review3 from "@/assets/sample-data/eat/review-can11-sichuanmeishi.jpeg";
-import Review2 from "@/assets/sample-data/eat/review-can9-jiulixiang.jpeg";
 import { fetchTopReviewImageByStallId } from "@/utils/reviewServices";
 import { fetchStallData } from "@/utils/stallServices";
 import { useEffect, useState } from "react";
@@ -37,34 +33,6 @@ const HomeEatWHAT = () => {
       }
     });
   }, [stallData.length]);
-
-  // TODO: Sample data to adjsut with proper algorithm next time
-  const foodCards = [
-    {
-      id: 1,
-      imageSource: Review1,
-      foodName: "Malay Food",
-      canteenName: "Can 11",
-    },
-    {
-      id: 2,
-      imageSource: Review2,
-      foodName: "Jiu Li Xiang",
-      canteenName: "Can 9",
-    },
-    {
-      id: 3,
-      imageSource: Review3,
-      foodName: "Sichuan Meishi",
-      canteenName: "Can 11",
-    },
-    {
-      id: 4,
-      imageSource: Review4,
-      foodName: "Japanese Food",
-      canteenName: "Can 11",
-    },
-  ];
 
   return (
     <View className="mt-8">

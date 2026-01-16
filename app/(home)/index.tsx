@@ -13,6 +13,7 @@ import MainPage from "./main-page";
 import ProfilePage from "./profile-page";
 import RecipePage from "./recipe-page";
 import StallPage from "./stall-page";
+import UploadRecipePage from "./upload-recipe-page";
 
 // Navigation Component
 import { useRef } from "react";
@@ -60,6 +61,10 @@ export default function Page() {
       case "admin-page":
         setContent(<AdminPage />);
         setPage(3);
+        break;
+      case "upload-recipe-page":
+        setContent(<UploadRecipePage />);
+        setPage(4);
         break;
       default:
         // home-page, eat-what, and cook-what will set to default
