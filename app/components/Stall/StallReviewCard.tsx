@@ -1,9 +1,9 @@
 import {
-  fetchTotalLikesByReviewId,
-  hasUserLikedReview,
-  likeReview,
-  unlikeReview,
-} from "@/utils/reviewLikeServices";
+  fetchTotalLikesByItemId,
+  hasUserLikedItem,
+  likeItem,
+  unlikeItem,
+} from "@/utils/LikeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
@@ -36,14 +36,22 @@ const StallReviewCard = ({
 
   // Check if the user has liked the review
   const checkUserLikeStatus = async () => {
-    const userHasLiked = await hasUserLikedReview(reviewID, currentUserId);
+    const userHasLiked = await hasUserLikedItem(
+      "reviews_likes",
+      "review_id",
+      reviewID,
+      currentUserId
+    );
     setLike(userHasLiked);
   };
 
   // Fetch total likes for the review
   const fetchLikes = async () => {
-    console.log("Fetching likes for review ID:", reviewID);
-    const likes = await fetchTotalLikesByReviewId(reviewID);
+    const likes = await fetchTotalLikesByItemId(
+      "reviews_likes",
+      "review_id",
+      reviewID
+    );
     setReviewLikesCount(likes);
   };
 
@@ -69,9 +77,9 @@ const StallReviewCard = ({
   // Handle like button press
   const likeReviewHandler = async () => {
     if (like === false) {
-      await likeReview(reviewID, currentUserId);
+      await likeItem("reviews_likes", "review_id", reviewID, currentUserId);
     } else {
-      await unlikeReview(reviewID, currentUserId);
+      await unlikeItem("reviews_likes", "review_id", reviewID, currentUserId);
     }
     setLike(!like);
     await fetchLikes(); // Fetch updated likes after action

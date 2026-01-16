@@ -1,3 +1,4 @@
+import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
 import { fetchMenuItemsByStallId } from "@/utils/menuServices";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -5,7 +6,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import ImageViewing from "react-native-image-viewing";
 import { useAppContext } from "../AppContext";
-import { ImageLoader } from "../ImageLoader";
+import MenuCard from "./MenuCard";
 
 interface MenuModalProps {
   setMenuModalVisible: (visible: boolean) => void;
@@ -22,6 +23,10 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [menuData, setMenuData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [menuItems, setmenuItems] = useState<
+    { id: string; uri: string; likes: number }[]
+  >([]);
+  const [sortedMenuItems, setSortedMenuItems] = useState<any[]>([]);
 
   useEffect(() => {
     if (menuModalVisible) {
@@ -29,11 +34,33 @@ const MenuModal: React.FC<MenuModalProps> = ({
     }
   }, [menuModalVisible, selectedId]);
 
-  // Extract image URLs from menu data
-  const images = menuData
-    .map((item) => item.image)
-    .filter((url) => url !== undefined && url !== null)
-    .map((uri) => ({ uri }));
+  // Function to build menu items
+  const buildMenuItems = async () => {
+    const menuItems = await Promise.all(
+      menuData.map(async (item) => ({
+        id: item.id,
+        uri: item.image,
+        likes: await fetchTotalLikesByItemId("menus_likes", "menu_id", item.id),
+      }))
+    );
+    return menuItems;
+  };
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const menuItems = await buildMenuItems();
+      setmenuItems(menuItems);
+    };
+    fetchImages();
+  }, [menuData]);
+
+  // Arrange menus in descending order based on likes
+  useEffect(() => {
+    const sorted = [...menuItems].sort((a, b) => {
+      return b.likes - a.likes; // More likes first
+    });
+    setSortedMenuItems(sorted);
+  }, [menuItems]);
 
   const openMenuUploadModal = () => {
     setMenuModalVisible(false);
@@ -59,30 +86,26 @@ const MenuModal: React.FC<MenuModalProps> = ({
           <Text className="text-3xl font-koulen pt-8 text-black text-center">
             Menus
           </Text>
-          {images.length > 0 ? (
+          {sortedMenuItems.length > 0 ? (
             <FlatList
-              data={images}
+              data={sortedMenuItems}
               className={`mx-4 `}
               horizontal
               pagingEnabled
               showsHorizontalScrollIndicator={false}
               keyExtractor={(_, idx) => idx.toString()}
               renderItem={({ item, index }) => (
-                <Pressable
-                  onPress={() => {
-                    setSelectedImageIndex(index);
-                    setEnlargedImageVisible(true);
-                  }}
-                  className="mr-4"
-                >
-                  <View className="w-64 h-64">
-                    <ImageLoader
-                      image={item.uri}
-                      className="w-64 h-64"
-                      loaderClassName="w-full h-full absolute"
-                    />
-                  </View>
-                </Pressable>
+                <View>
+                  <Pressable
+                    onPress={() => {
+                      setSelectedImageIndex(index);
+                      setEnlargedImageVisible(true);
+                    }}
+                    className="mr-4"
+                  >
+                    <MenuCard item={item} />
+                  </Pressable>
+                </View>
               )}
             />
           ) : (
@@ -100,7 +123,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
           </View>
         </View>
         <ImageViewing
-          images={images}
+          images={sortedMenuItems}
           imageIndex={selectedImageIndex}
           visible={enlargedImageVisible}
           onRequestClose={() => setEnlargedImageVisible(false)}
