@@ -89,7 +89,6 @@ const StallEdit: React.FC<StallEditProps> = ({
 
   return (
     <ScrollView className="h-5/6 w-full">
-      <Text>Reference ID: {propId}</Text>
       <LabeledInput
         label="Stall Name"
         maxLength={30}
@@ -128,6 +127,8 @@ const StallEdit: React.FC<StallEditProps> = ({
           source={{ uri: details.stall_pic }}
         />
       </TouchableOpacity>
+
+      {/* Submit Button */}
       <TouchableScale onPress={handleSubmit}>
         <Text className="py-2 mt-4 bg-green/80 rounded-full border-2 border-blue  text-center text-blue text-lg font-bold">
           Confirm Edit

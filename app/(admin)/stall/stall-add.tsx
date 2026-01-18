@@ -1,10 +1,10 @@
 // React and React Native core imports
-import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 // Project component
+import ImagePickerField from "@/app/components/ImagePickerField";
 import TouchableScale from "@/app/components/TouchableScale";
 import { addNewStall } from "@/utils/stallServices";
 import LabeledInput from "../components/LabelInput";
@@ -18,18 +18,6 @@ const StallAdd = () => {
     price_symbol: "",
     stall_pic: "",
   });
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      setDetails({ ...details, stall_pic: result.assets[0].uri });
-    }
-  };
 
   const handleSubmit = async () => {
     // Validate inputs
@@ -105,20 +93,17 @@ const StallAdd = () => {
           />
 
           {/* Image Upload */}
-          <Text className="text-xl pt-2">Stall Image</Text>
-          <TouchableOpacity
-            onPress={pickImage}
-            className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
-          >
-            {details.stall_pic ? (
-              <Image
-                className="w-64 h-64 border-2 border-blue"
-                source={{ uri: details.stall_pic }}
-              />
-            ) : (
-              <Text> Pick A Stall Image</Text>
-            )}
-          </TouchableOpacity>
+          <ImagePickerField
+            imageUri={details.stall_pic}
+            onImagePicked={(uri: string) =>
+              setDetails({ ...details, stall_pic: uri })
+            }
+            label="Stall Image"
+            optional={false}
+            textbold={false}
+          />
+
+          {/* Submit Button */}
           <TouchableScale onPress={handleSubmit}>
             <Text className="py-2 mt-4 bg-green/80 rounded-full border-2 border-blue  text-center text-blue text-lg font-bold">
               Add Stall

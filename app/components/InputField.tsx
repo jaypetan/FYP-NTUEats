@@ -1,11 +1,13 @@
 // InputField.tsx
 import React from "react";
-import { View, Text, TextInput, TextInputProps } from "react-native";
+import { Text, TextInput, TextInputProps, View } from "react-native";
 
 interface InputFieldProps extends TextInputProps {
-  label: string; // Label for the input field
-  value: string; // Current value of the input
-  onChangeText: (text: string) => void; // Callback for text changes
+  label: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder?: string;
+  h24?: boolean; // prop to set height to 24 for multiline inputs
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -13,15 +15,17 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   onChangeText,
   placeholder,
+  h24,
   ...rest
 }) => {
   return (
     <View>
-      <Text className="mb-1 text-blue text-xl text-left font-bold">
+      <Text className="mb-2 text-blue text-xl text-left font-bold">
         {label}
       </Text>
       <TextInput
-        className="text-blue text-lg font-semibold border-2 border-blue leading-5 p-3 rounded-full"
+        className={`text-blue text-lg font-semibold border-2 border-blue leading-5 p-3 rounded-xl 
+        ${h24 ? "h-24" : ""}`}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

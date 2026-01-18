@@ -1,5 +1,6 @@
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
-import { Text, View } from "react-native";
+import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
+import { Image, Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
 import SearchBar from "../EatWHAT/SearchBar";
 import StallCard from "../EatWHAT/StallCard";
@@ -54,7 +55,14 @@ export default function EatWhat({
           <OptimizedScrollView
             className={`bg-${backgroundColor} min-h-[80vh] px-8`}
           >
-            <Text className="text-4xl font-koulen pt-8 text-blue">
+            <View className="flex-row gap-2 mt-4 mb-2 justify-center">
+              <Image
+                source={EatWHATLogo}
+                className="w-40 h-40"
+                resizeMode="contain"
+              />
+            </View>
+            <Text className="text-4xl font-koulen pt-4 text-blue">
               What are we eating today?
             </Text>
             <SearchBar />

@@ -1,14 +1,16 @@
 import { addNewReview } from "@/utils/reviewServices";
 import { useUser } from "@clerk/clerk-expo";
-import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
+import ImagePickerField from "../ImagePickerField";
+import InputField from "../InputField";
 import TouchableScale from "../TouchableScale";
 
 interface AddReviewPageProps {
   setAddReview: (visible: boolean) => void;
 }
+
 const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
   const { selectedId } = useAppContext();
   const { user } = useUser();
@@ -20,18 +22,6 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
     stall_id: "",
     user_id: "",
   });
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      setDetails({ ...details, review_pic: result.assets[0].uri });
-    }
-  };
 
   const handleSubmit = async () => {
     // Validate inputs
@@ -65,48 +55,40 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
       <Text className="text-blue font-inter font-bold text-3xl w-full text-center">
         Add Review
       </Text>
-      <Text className="text-xl text-blue font-bold">Title:</Text>
-      <TextInput
-        className="w-full border-2 border-blue rounded-md p-2 mb-4 pb-4"
-        onChangeText={(text) => setDetails({ ...details, title: text })}
-        value={details.title}
-        placeholder="Write your title here... (max 30 characters)"
-        placeholderTextColor={"#888"}
-        maxLength={30}
-      />
-      <Text className="text-xl text-blue font-bold">Content:</Text>
-      <TextInput
-        className="w-full h-24 border-2 border-blue rounded-md p-2 mb-4 pb-4"
-        onChangeText={(text) => setDetails({ ...details, content: text })}
-        value={details.content}
-        placeholder="Write your review here... (max 120 characters)"
-        placeholderTextColor={"#888"}
-        multiline
-        numberOfLines={4}
-        maxLength={120}
-      />
+
+      {/* Input Fields */}
+      <View className="flex-col gap-4">
+        <InputField
+          label="Title:"
+          value={details.title}
+          onChangeText={(text) => setDetails({ ...details, title: text })}
+          placeholder="Write your title here... (max 30 characters)"
+          maxLength={30}
+        />
+        <InputField
+          label="Content:"
+          value={details.content}
+          onChangeText={(text) => setDetails({ ...details, content: text })}
+          placeholder="Write your review here... (max 120 characters)"
+          maxLength={120}
+          multiline
+          numberOfLines={4}
+          h24
+        />
+      </View>
 
       {/* Image Upload */}
-      <View className="flex-row items-center mb-2 gap-2">
-        <Text className="text-xl text-blue font-bold">Upload Image:</Text>
-        <Text className="text-xl text-gray-500">(optional)</Text>
-      </View>
-      <TouchableOpacity
-        onPress={pickImage}
-        className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
-      >
-        {details.review_pic ? (
-          <Image
-            className="w-64 h-64 border-2 border-blue"
-            source={{ uri: details.review_pic }}
-          />
-        ) : (
-          <Text> Pick A Review Image</Text>
-        )}
-      </TouchableOpacity>
+      <ImagePickerField
+        imageUri={details.review_pic}
+        onImagePicked={(uri) => setDetails({ ...details, review_pic: uri })}
+        label="Review Image"
+        optional={true}
+      />
+
+      {/* Submit Button */}
       <TouchableScale
         onPress={handleSubmit}
-        className="bg-green rounded-md py-2 px-4 items-center mt-4  border-2 border-blue mb-8"
+        className="bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue mb-8"
       >
         <Text className="text-blue font-semibold text-base">Submit Review</Text>
       </TouchableScale>
