@@ -8,6 +8,7 @@ import DynamicInputList from "../components/DynamicInputList";
 import ImagePickerField from "../components/ImagePickerField";
 import InputField from "../components/InputField";
 import TouchableScale from "../components/TouchableScale";
+
 export default function UploadRecipePage() {
   const { setCurrentPage } = useAppContext();
   const { user } = useUser();

@@ -1,6 +1,8 @@
 import carbonaraImage from "@/assets/sample-data/cook/carbonara.jpeg";
+import { getRecipeById } from "@/utils/recipeServices";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
+import { useAppContext } from "../components/AppContext";
 import RecipeAbout from "../components/Recipe/RecipeAbout";
 import RecipeComments from "../components/Recipe/RecipeComments";
 import RecipeHeader from "../components/Recipe/RecipeHeader";
@@ -9,6 +11,30 @@ import RecipeSteps from "../components/Recipe/RecipeSteps";
 export default function RecipePage() {
   const [page, setPage] = useState("about");
   const scrollViewRef = useRef<ScrollView>(null);
+  const [recipeData, setRecipeData] = useState<any>({
+    title: "",
+    recipe_pic: "",
+    description: "",
+    ingredients: [],
+    instructions: [],
+  });
+  const { selectedId } = useAppContext();
+
+  // Fetch Data based on selectedId
+  useEffect(() => {
+    const fetchRecipeData = async () => {
+      if (selectedId) {
+        const data = await getRecipeById(selectedId);
+        setRecipeData(data);
+        console.log("Fetched Recipe Data:", data);
+      }
+    };
+    fetchRecipeData();
+  }, [selectedId]);
+
+  useEffect(() => {
+    console.log("Recipe Data:", recipeData);
+  }, [recipeData]);
 
   useEffect(() => {
     // Reset scroll position to the top when the page changes
@@ -73,8 +99,8 @@ export default function RecipePage() {
   return (
     <View className="mt-4 flex-col">
       <RecipeHeader
-        recipeImage={carbonaraImage}
-        recipeName={sampleData.name}
+        recipeImage={recipeData.recipe_pic}
+        recipeName={recipeData.title}
         page={page}
         setPage={setPage}
       />
@@ -90,11 +116,11 @@ export default function RecipePage() {
       >
         {page === "about" ? (
           <RecipeAbout
-            desc={sampleData.desc}
-            ingredients={sampleData.ingredients}
+            desc={recipeData.description}
+            ingredients={recipeData.ingredients}
           />
         ) : page === "steps" ? (
-          <RecipeSteps steps={sampleData.steps} />
+          <RecipeSteps steps={recipeData.instructions} />
         ) : page === "comments" ? (
           <RecipeComments comments={sampleData.comments} />
         ) : null}

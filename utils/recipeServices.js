@@ -1,7 +1,16 @@
 // Firebase imports
 import { db, uploadImageAsync } from "@/utils/firebase";
 import { fetchUserByClerkId } from "@/utils/userServices";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 // Function to add a new recipe
 export const addNewRecipe = async (recipeData) => {
@@ -34,6 +43,63 @@ export const addNewRecipe = async (recipeData) => {
     return true;
   } catch (error) {
     console.error("Error adding new recipe: ", error);
+    return false;
+  }
+};
+
+// Get all recipes
+export const getAllRecipes = async () => {
+  try {
+    const recipesCollection = collection(db, "recipes");
+    const snapshot = await getDocs(recipesCollection);
+    const recipes = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return recipes;
+  } catch (error) {
+    console.error("Error fetching recipes: ", error);
+    return [];
+  }
+};
+
+// Get a recipe by ID
+export const getRecipeById = async (recipeId) => {
+  try {
+    const recipeDoc = doc(db, "recipes", recipeId);
+    const snapshot = await getDoc(recipeDoc);
+    if (snapshot.exists()) {
+      return { id: snapshot.id, ...snapshot.data() };
+    } else {
+      console.log("No such recipe!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching recipe: ", error);
+    return null;
+  }
+};
+
+// Update a recipe by ID
+export const updateRecipeById = async (recipeId, updatedData) => {
+  try {
+    const recipeDoc = doc(db, "recipes", recipeId);
+    await updateDoc(recipeDoc, updatedData);
+    return true;
+  } catch (error) {
+    console.error("Error updating recipe: ", error);
+    return false;
+  }
+};
+
+// Delete a recipe by ID
+export const deleteRecipeById = async (recipeId) => {
+  try {
+    const recipeDoc = doc(db, "recipes", recipeId);
+    await deleteDoc(recipeDoc);
+    return true;
+  } catch (error) {
+    console.error("Error deleting recipe: ", error);
     return false;
   }
 };

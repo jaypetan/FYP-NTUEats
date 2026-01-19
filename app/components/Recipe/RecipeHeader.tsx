@@ -1,6 +1,7 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import ClosePage from "../ClosePage";
+import { ImageLoader } from "../ImageLoader";
 
 import RecipeNav from "./RecipeNav";
 
@@ -21,10 +22,10 @@ const RecipeHeader: React.FC<RecipeHeaderProps> = ({
     <View>
       <ClosePage right={"right-6"} />
       <View className="mx-8 aspect-square bg-green rounded-t-[4rem] pt-12 px-8 relative">
-        <Image
-          source={recipeImage}
-          resizeMode="cover"
-          className="h-full w-full rounded-t-[2rem]"
+        <ImageLoader
+          image={recipeImage}
+          className="w-full h-full rounded-t-[2rem]"
+          loaderClassName="absolute w-full h-full"
         />
         <Text className="absolute font-koulen bg-red/90 px-4 text-3xl pt-6 top-12 left-8 w-full rounded-t-[2rem] text-center text-cream">
           {recipeName}

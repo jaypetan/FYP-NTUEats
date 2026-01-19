@@ -3,6 +3,9 @@ import Recipe1 from "@/assets/sample-data/cook/carbonara.jpeg";
 import Recipe2 from "@/assets/sample-data/cook/friednoodles.jpeg";
 import Recipe3 from "@/assets/sample-data/cook/japanesecurryrice.png";
 import Recipe4 from "@/assets/sample-data/cook/mushroomrisotto.jpeg";
+import { getAllRecipes } from "@/utils/recipeServices";
+import { fetchUserByDocId } from "@/utils/userServices";
+import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
 import RecipeCard from "../CookWHAT/RecipeCard";
@@ -21,7 +24,35 @@ export default function CookWhat({
   backgroundColorHex,
   widthClass,
 }: CookWhatProps) {
-  const { currentPage, setCurrentPage } = useAppContext();
+  const { currentPage, setCurrentPage, setSelectedId } = useAppContext();
+  const [recipesData, setRecipesData] = useState<any[]>([]);
+
+  // Fetch recipes
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const recipes = await getAllRecipes();
+      setRecipesData(recipes);
+    };
+    fetchRecipes();
+  }, []);
+
+  // Update recipesData with chef names
+  useEffect(() => {
+    async function updateChefNames() {
+      const updatedRecipes = await Promise.all(
+        recipesData.map(async (recipe) => {
+          const chefData = await fetchUserByDocId(recipe.user_id);
+          return {
+            ...recipe,
+            chefName: chefData ? chefData.username : "Unknown Chef",
+          };
+        })
+      );
+      setRecipesData(updatedRecipes);
+    }
+    updateChefNames();
+  }, [recipesData.length]);
+
   const recipes = [
     {
       foodImage: Recipe1,
@@ -87,13 +118,14 @@ export default function CookWhat({
               What are we cooking today?
             </Text>
             <SearchBar />
-            {recipes.map((recipe, index) => (
+            {recipesData.map((recipe, index) => (
               <RecipeCard
                 key={index}
-                foodImage={recipe.foodImage}
-                foodName={recipe.foodName}
+                recipeId={recipe.id}
+                foodImage={recipe.recipe_pic}
+                foodName={recipe.title}
                 chefName={recipe.chefName}
-                duration={recipe.duration}
+                duration={recipe.cooking_time}
                 likes={recipe.likes}
                 halal={recipe.halal}
                 vegetarian={recipe.vegetarian}

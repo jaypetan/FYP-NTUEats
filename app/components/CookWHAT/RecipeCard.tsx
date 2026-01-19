@@ -1,11 +1,12 @@
-import { View, Image, Text } from "react-native";
-import { useAppContext } from "../AppContext";
-import { FontAwesome } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { ImageLoader } from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Text, View } from "react-native";
+import { useAppContext } from "../AppContext";
 
 interface RecipeCardProps {
+  recipeId: string;
   foodImage: any;
   foodName: string;
   chefName: string;
@@ -17,6 +18,7 @@ interface RecipeCardProps {
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({
+  recipeId,
   foodImage,
   foodName,
   chefName,
@@ -26,21 +28,28 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   vegetarian,
   spicy,
 }) => {
-  const { setCurrentPage } = useAppContext();
+  const { setCurrentPage, setSelectedId } = useAppContext();
   const [isLiked, setIsLiked] = useState(false);
+
+  const handlePress = () => {
+    setCurrentPage("recipe-page");
+    setSelectedId(recipeId);
+  };
 
   return (
     <View className="mt-8">
       <TouchableScale
-        onPress={() => setCurrentPage("recipe-page")}
+        onPress={() => handlePress()}
         className="w-full rounded-2xl bg-green/50 flex-row items-center p-4"
       >
         <View className="relative">
-          <Image
-            source={foodImage}
-            resizeMode="cover"
-            className="w-32 h-32 rounded-2xl"
-          />
+          <View className="w-32 h-32 rounded-2xl justify-center items-center overflow-hidden">
+            <ImageLoader
+              image={foodImage}
+              className="w-32 h-32 rounded-2xl"
+              loaderClassName="absolute w-full h-full bottom-0 translate-y-3"
+            />
+          </View>
           <View className="absolute bottom-2 right-2 flex-row gap-2">
             {spicy && (
               <MaterialCommunityIcons
