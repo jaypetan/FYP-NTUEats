@@ -80,6 +80,10 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
   useEffect(() => {
     checkUserLikeStatus();
   }, [currentUserId]);
+  useEffect(() => {
+    fetchLikes();
+    checkUserLikeStatus();
+  }, [comment]);
 
   // Update likes count when like state changes
   const likeCommentHandler = async () => {

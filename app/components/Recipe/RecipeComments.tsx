@@ -15,6 +15,10 @@ const RecipeComments: React.FC<RecipeCommentsProps> = ({
 }) => {
   const [commentUploadModalVisible, setCommentUploadModalVisible] =
     useState(false);
+
+  // Sort comments by likes
+  comments.sort((a: any, b: any) => b.likes - a.likes);
+
   return (
     <>
       {commentUploadModalVisible && (

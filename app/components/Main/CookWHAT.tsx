@@ -1,8 +1,5 @@
 import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
-import Recipe1 from "@/assets/sample-data/cook/carbonara.jpeg";
-import Recipe2 from "@/assets/sample-data/cook/friednoodles.jpeg";
-import Recipe3 from "@/assets/sample-data/cook/japanesecurryrice.png";
-import Recipe4 from "@/assets/sample-data/cook/mushroomrisotto.jpeg";
+import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
 import { getAllRecipes } from "@/utils/recipeServices";
 import { fetchUserByDocId } from "@/utils/userServices";
 import { useEffect, useState } from "react";
@@ -24,69 +21,43 @@ export default function CookWhat({
   backgroundColorHex,
   widthClass,
 }: CookWhatProps) {
-  const { currentPage, setCurrentPage, setSelectedId } = useAppContext();
+  const { currentPage, setCurrentPage } = useAppContext();
   const [recipesData, setRecipesData] = useState<any[]>([]);
+  const [rawRecipes, setRawRecipes] = useState<any[]>([]);
 
-  // Fetch recipes
   useEffect(() => {
     const fetchRecipes = async () => {
       const recipes = await getAllRecipes();
-      setRecipesData(recipes);
+      setRawRecipes(recipes); // Set raw recipes first
     };
     fetchRecipes();
   }, []);
 
-  // Update recipesData with chef names
   useEffect(() => {
-    async function updateChefNames() {
+    if (rawRecipes.length === 0) return;
+
+    const fetchAdditionalData = async () => {
       const updatedRecipes = await Promise.all(
-        recipesData.map(async (recipe) => {
+        rawRecipes.map(async (recipe) => {
           const chefData = await fetchUserByDocId(recipe.user_id);
+          const likesCount = await fetchTotalLikesByItemId(
+            "recipes_likes",
+            "recipe_id",
+            recipe.id
+          );
           return {
             ...recipe,
             chefName: chefData ? chefData.username : "Unknown Chef",
+            likes: likesCount,
           };
         })
       );
+      updatedRecipes.sort((a, b) => b.likes - a.likes);
       setRecipesData(updatedRecipes);
-    }
-    updateChefNames();
-  }, [recipesData.length]);
+    };
 
-  const recipes = [
-    {
-      foodImage: Recipe1,
-      foodName: "Creamy Carbonara",
-      chefName: "Chef Luigi",
-      duration: "1 hour",
-      likes: 120,
-    },
-    {
-      foodImage: Recipe2,
-      foodName: "Stir-Fried Noodles",
-      chefName: "Chef Mei",
-      duration: "20 mins",
-      likes: 95,
-      halal: true,
-    },
-    {
-      foodImage: Recipe3,
-      foodName: "Japanese Curry Rice",
-      chefName: "Chef Sato",
-      duration: "40 mins",
-      likes: 150,
-      spicy: true,
-    },
-    {
-      foodImage: Recipe4,
-      foodName: "Mushroom Risotto",
-      chefName: "Chef Maria",
-      duration: "35 mins",
-      likes: 110,
-      halal: true,
-      vegetarian: true,
-    },
-  ];
+    fetchAdditionalData();
+  }, [rawRecipes]);
 
   return (
     <View className="h-full w-full flex-col">
@@ -126,7 +97,6 @@ export default function CookWhat({
                 foodName={recipe.title}
                 chefName={recipe.chefName}
                 duration={recipe.cooking_time}
-                likes={recipe.likes}
                 halal={recipe.halal}
                 vegetarian={recipe.vegetarian}
                 spicy={recipe.spicy}

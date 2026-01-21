@@ -1,3 +1,4 @@
+import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
 import {
   getRecipeById,
   getRecipeCommentsByRecipeId,
@@ -43,6 +44,24 @@ export default function RecipePage() {
     fetchRecipeData();
     fetchCommentsData();
   }, [selectedId]);
+
+  // Fetch comments likes
+  const fetchCommentsLikes = async () => {
+    const updatedComments = await Promise.all(
+      commentsData.map(async (comment) => {
+        const likesCount = await fetchTotalLikesByItemId(
+          "recipe_comments_likes",
+          "recipe_comment_id",
+          comment.id
+        );
+        return { ...comment, likes: likesCount };
+      })
+    );
+    setCommentsData(updatedComments);
+  };
+  useEffect(() => {
+    fetchCommentsLikes();
+  }, [commentsData.length]);
 
   useEffect(() => {
     // Reset scroll position to the top when the page changes

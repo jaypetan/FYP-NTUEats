@@ -38,7 +38,6 @@ export default function StallPage() {
           price_symbol: data.price_symbol || "",
           stall_pic: data.stall_pic || "",
         });
-        console.log("Stall data fetched for ID:", selectedId);
       }
     });
   }, [selectedId]);

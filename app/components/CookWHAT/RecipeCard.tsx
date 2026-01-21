@@ -1,8 +1,16 @@
 import { ImageLoader } from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
+import {
+  fetchTotalLikesByItemId,
+  hasUserLikedItem,
+  likeItem,
+  unlikeItem,
+} from "@/utils/LikeServices";
+import { fetchUserByClerkId } from "@/utils/userServices";
+import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
-import { Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useAppContext } from "../AppContext";
 
 interface RecipeCardProps {
@@ -11,7 +19,6 @@ interface RecipeCardProps {
   foodName: string;
   chefName: string;
   duration: string;
-  likes: number;
   halal?: boolean;
   vegetarian?: boolean;
   spicy?: boolean;
@@ -23,17 +30,72 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   foodName,
   chefName,
   duration,
-  likes,
   halal,
   vegetarian,
   spicy,
 }) => {
   const { setCurrentPage, setSelectedId } = useAppContext();
-  const [isLiked, setIsLiked] = useState(false);
-
   const handlePress = () => {
     setCurrentPage("recipe-page");
     setSelectedId(recipeId);
+  };
+
+  const [like, setLike] = useState(false);
+  const [recipeLikesCount, setRecipeLikesCount] = useState(0);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const { user } = useUser();
+
+  // Get current user ID
+  const getCurrentUserId = async () => {
+    if (user) {
+      const userData = await fetchUserByClerkId(user.id);
+      setCurrentUserId(userData ? userData.id : "");
+      return userData ? userData.id : "";
+    }
+    return null;
+  };
+
+  // Check if the user has liked the comment
+  const checkUserLikeStatus = async () => {
+    const userHasLiked = await hasUserLikedItem(
+      "recipes_likes",
+      "recipe_id",
+      recipeId,
+      currentUserId
+    );
+    setLike(userHasLiked);
+  };
+
+  // Fetch current likes
+  const fetchLikes = async () => {
+    fetchTotalLikesByItemId("recipes_likes", "recipe_id", recipeId).then(
+      (totalLikes) => {
+        setRecipeLikesCount(totalLikes);
+      }
+    );
+  };
+
+  // Fetch like status and total likes on component mount
+  useEffect(() => {
+    getCurrentUserId();
+    fetchLikes();
+  }, []);
+  useEffect(() => {
+    checkUserLikeStatus();
+  }, [currentUserId]);
+
+  const likeRecipeHandler = async () => {
+    if (like) {
+      // Unlike the recipe
+      await unlikeItem("recipes_likes", "recipe_id", recipeId, currentUserId);
+      setLike(false);
+      fetchLikes();
+    } else {
+      // Like the recipe
+      await likeItem("recipes_likes", "recipe_id", recipeId, currentUserId);
+      setLike(true);
+      fetchLikes();
+    }
   };
 
   return (
@@ -89,13 +151,17 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           </View>
           <View className="flex-row justify-between items-center">
             <Text className="text-xl text-blue">{duration}</Text>
-            <View className="flex-row items-center gap-1">
-              <Text className="text-xl">{likes}</Text>
-              <FontAwesome
-                name={isLiked ? "heart" : "heart-o"} // Toggle between filled and empty heart
-                size={20}
-                color={isLiked ? "red" : "gray"} // Change color based on state
-              />
+            <View className="flex-row gap-2 items-center justify-end">
+              <Text className="font-inter text-lg font-semibold text-blue">
+                {recipeLikesCount ? recipeLikesCount : ""}
+              </Text>
+              <TouchableOpacity onPress={() => likeRecipeHandler()}>
+                {like ? (
+                  <FontAwesome name="heart" size={20} color="red" />
+                ) : (
+                  <FontAwesome name="heart-o" size={20} color="black" />
+                )}
+              </TouchableOpacity>
             </View>
           </View>
         </View>
