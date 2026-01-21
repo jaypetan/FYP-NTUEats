@@ -8,8 +8,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
 // Function to add a new recipe
@@ -100,6 +102,106 @@ export const deleteRecipeById = async (recipeId) => {
     return true;
   } catch (error) {
     console.error("Error deleting recipe: ", error);
+    return false;
+  }
+};
+
+// FOR COMMENTS ON RECIPES
+// Fetch comments for a specific recipe
+export const getRecipeCommentsByRecipeId = async (recipeId) => {
+  try {
+    const commentsRef = collection(db, "recipe_comments");
+    const q = query(commentsRef, where("recipe_id", "==", recipeId));
+
+    const snapshot = await getDocs(q);
+    const comments = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return comments;
+  } catch (error) {
+    console.error("Error fetching recipe comments: ", error);
+    return [];
+  }
+};
+
+// Fetch comments made by a specific user
+export const getRecipeCommentsByUserId = async (userId) => {
+  try {
+    const commentsRef = collection(db, "recipe_comments");
+    const q = query(commentsRef, where("user_id", "==", userId));
+
+    const snapshot = await getDocs(q);
+    const comments = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return comments;
+  } catch (error) {
+    console.error("Error fetching user recipe comments: ", error);
+    return [];
+  }
+};
+
+// Add a comment to a recipe
+export const addRecipeComment = async (commentData) => {
+  try {
+    // Upload comment image and get URL if comment_pic exists
+    if (commentData.comment_pic) {
+      // Upload comment image and get URL
+      const recipeName = await getRecipeById(commentData.recipe_id).then(
+        (recipe) => (recipe ? recipe.title : "unknown-recipe")
+      );
+      const commentNumber = await getRecipeCommentsByRecipeId(
+        commentData.recipe_id
+      ).then((comments) => comments.length + 1);
+
+      const path = `cookWHAT/comment-${recipeName}-${commentNumber}.jpeg`;
+      const imageUrl = await uploadImageAsync(commentData.comment_pic, path);
+      commentData.comment_pic = imageUrl;
+    } else {
+      console.log("No comment picture provided.");
+    }
+    // Convert clerk_id to user_id
+    const userData = await fetchUserByClerkId(commentData.user_id);
+    if (!userData) throw new Error("User not found for the given clerk_id");
+    commentData.user_id = userData.id;
+
+    // Add timestamp
+    commentData.timestamp = serverTimestamp();
+
+    console.log("Adding new recipe comment with data: ", commentData);
+    const commentsCollection = collection(db, "recipe_comments");
+    await addDoc(commentsCollection, commentData);
+    return true;
+  } catch (error) {
+    console.error("Error adding recipe comment: ", error);
+    return false;
+  }
+};
+
+// Edit a recipe comment by ID
+export const editRecipeCommentById = async (commentId, updatedData) => {
+  try {
+    const commentDoc = doc(db, "recipe_comments", commentId);
+    await updateDoc(commentDoc, updatedData);
+    return true;
+  } catch (error) {
+    console.error("Error updating recipe comment: ", error);
+    return false;
+  }
+};
+
+// Delete a recipe comment by ID
+export const deleteRecipeCommentById = async (commentId) => {
+  try {
+    const commentDoc = doc(db, "recipe_comments", commentId);
+    await deleteDoc(commentDoc);
+    return true;
+  } catch (error) {
+    console.error("Error deleting recipe comment: ", error);
     return false;
   }
 };

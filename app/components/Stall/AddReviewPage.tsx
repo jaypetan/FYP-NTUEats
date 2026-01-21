@@ -14,6 +14,7 @@ interface AddReviewPageProps {
 const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
   const { selectedId } = useAppContext();
   const { user } = useUser();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const [details, setDetails] = useState({
     title: "",

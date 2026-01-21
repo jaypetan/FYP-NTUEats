@@ -37,7 +37,9 @@ export default function ImagePickerField({
         <Text className={`${textbold ? "font-bold" : ""} text-xl text-blue`}>
           {label}
         </Text>
-        {optional && <Text className="text-xl text-gray-500">(optional)</Text>}
+        {optional && (
+          <Text className="text-xl text-gray-500 ml-2">(optional)</Text>
+        )}
       </View>
       <TouchableScale
         onPress={pickImage}

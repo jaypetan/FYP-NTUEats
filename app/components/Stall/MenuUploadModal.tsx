@@ -1,17 +1,10 @@
 import { addNewMenuItem } from "@/utils/menuServices";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import {
-  Image,
-  Modal,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Modal, Pressable, Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
+import ImagePickerField from "../ImagePickerField";
 import TouchableScale from "../TouchableScale";
 
 interface MenuUploadModalProps {
@@ -26,20 +19,8 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
   menuUploadModalVisible,
 }) => {
   const { selectedId } = useAppContext();
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   const handleSubmit = async () => {
     if (isProcessing) return; // Prevent multiple submissions
@@ -63,7 +44,7 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
 
     // Reset form
     setIsProcessing(false);
-    setImage(null);
+    setImage("");
     closeMenuUploadModal();
   };
 
@@ -89,19 +70,11 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
             </View>
           </Pressable>
           <View className="flex-col gap-2 p-4">
-            <TouchableOpacity
-              onPress={pickImage}
-              className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mt-4 self-center"
-            >
-              {image ? (
-                <Image
-                  className="w-64 h-64 border-2 border-blue"
-                  source={{ uri: image }}
-                />
-              ) : (
-                <Text> Click to Upload Menu</Text>
-              )}
-            </TouchableOpacity>
+            <ImagePickerField
+              imageUri={image}
+              onImagePicked={(uri: string) => setImage(uri)}
+              label="Select Menu Image:"
+            />
             <View className="flex-row w-full justify-end">
               <TouchableScale
                 onPress={handleSubmit}
