@@ -1,5 +1,4 @@
-import { fetchTotalLikesByItemId } from "@/utils/likeServices";
-import { fetchReviewsByStallId } from "@/utils/reviewServices";
+import { getReviewArranged } from "@/utils/reviewServices";
 import { fetchUserByDocId } from "@/utils/userServices";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -12,37 +11,25 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
   const [numOfReviews, setNumOfReviews] = useState(3);
   // Get reviews from backend based on selectedId
   const [reviewsData, setReviewsData] = useState<any[]>([]);
-  const [sortedReviews, setSortedReviews] = useState<any[]>([]);
 
   // Fetch reviews when selectedId changes
   // Get names from user IDs in reviewsData, and format dates
   useEffect(() => {
-    fetchReviewsByStallId(selectedId.selectedId).then(async (data: any[]) => {
-      if (data) {
-        const reviewsWithNames = await Promise.all(
-          data.map(async (review) => {
-            review.reviewDate = formatDate(review.timestamp);
-            review.name = await getUserName(review.user_id);
-            review.likes = await fetchTotalLikesByItemId(
-              "review_likes",
-              "review_id",
-              review.id
-            );
-            return review;
-          })
-        );
-        setReviewsData(reviewsWithNames);
+    getReviewArranged(selectedId.selectedId, "most_liked").then(
+      async (data: any[]) => {
+        if (data) {
+          const reviewsWithNames = await Promise.all(
+            data.map(async (review) => {
+              review.reviewDate = formatDate(review.timestamp);
+              review.name = await getUserName(review.user_id);
+              return review;
+            })
+          );
+          setReviewsData(reviewsWithNames);
+        }
       }
-    });
+    );
   }, [selectedId.selectedId]);
-
-  // Arrange reviews in descending order based on likes, then on date
-  useEffect(() => {
-    const sorted = [...reviewsData].sort((a, b) => {
-      return b.likes - a.likes; // More likes first
-    });
-    setSortedReviews(sorted);
-  }, [reviewsData]);
 
   // Get names from user IDs in reviewsData
   const getUserName = async (userId: string) => {
@@ -71,7 +58,7 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
               No reviews currently available.
             </Text>
           ))}
-        {sortedReviews.slice(0, numOfReviews).map((review, index) => (
+        {reviewsData.slice(0, numOfReviews).map((review, index) => (
           <StallReviewCard
             key={index}
             reviewID={review.id}

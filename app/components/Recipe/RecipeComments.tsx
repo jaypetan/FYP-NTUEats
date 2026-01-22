@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Text, View } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import TouchableScale from "../TouchableScale";
 import CommentUploadModal from "./CommentUploadModal";
 import RecipeCommentCard from "./RecipeCommentCard";
@@ -16,9 +17,6 @@ const RecipeComments: React.FC<RecipeCommentsProps> = ({
   const [commentUploadModalVisible, setCommentUploadModalVisible] =
     useState(false);
 
-  // Sort comments by likes
-  comments.sort((a: any, b: any) => b.likes - a.likes);
-
   return (
     <>
       {commentUploadModalVisible && (
@@ -34,9 +32,9 @@ const RecipeComments: React.FC<RecipeCommentsProps> = ({
         </Text>
         <TouchableScale
           onPress={() => setCommentUploadModalVisible(true)}
-          className="bg-green/50 rounded-xl px-4 py-2"
+          className="bg-green/50 rounded-full py-2 px-4 border-2 border-blue"
         >
-          <Text className="text-blue font-semibold text-xl">Add Comment</Text>
+          <MaterialCommunityIcons name="plus-thick" size={20} color="#264653" />
         </TouchableScale>
       </View>
       <View className="px-2 pt-4">

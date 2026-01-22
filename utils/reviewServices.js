@@ -1,5 +1,6 @@
 // Firebase imports
 import { db, uploadImageAsync } from "@/utils/firebase";
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
 import {
   addDoc,
@@ -57,13 +58,41 @@ export const fetchReviewsByStallId = async (stallId) => {
     const reviewsRef = collection(db, "reviews");
     const q = query(reviewsRef, where("stall_id", "==", stallId));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({
+
+    const reviews = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    const reviewsWithLikes = await Promise.all(
+      reviews.map(async (review) => {
+        const likes = await fetchTotalLikesByItemId(
+          "reviews_likes",
+          "review_id",
+          review.id
+        );
+        return { ...review, likes };
+      })
+    );
+
+    return reviewsWithLikes;
   } catch (error) {
     console.error("Error fetching reviews: ", error);
     return [];
+  }
+};
+
+// Arrange by most recent review or most liked review
+export const getReviewArranged = async (stallId, arrangeBy) => {
+  const reviews = await fetchReviewsByStallId(stallId);
+  if (arrangeBy === "most_recent") {
+    return reviews.sort(
+      (a, b) => b.timestamp?.toMillis() - a.timestamp?.toMillis()
+    );
+  } else if (arrangeBy === "most_liked") {
+    return reviews.sort((a, b) => b.likes - a.likes);
+  } else {
+    return reviews; // No specific arrangement
   }
 };
 

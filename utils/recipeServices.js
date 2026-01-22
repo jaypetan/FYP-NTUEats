@@ -153,9 +153,30 @@ export const getRecipeCommentsByRecipeId = async (recipeId) => {
       ...doc.data(),
     }));
 
+    // Get likes for each comment
+    for (let comment of comments) {
+      comment.likes = await fetchTotalLikesByItemId(
+        "recipe_comments_likes",
+        "recipe_comment_id",
+        comment.id
+      );
+    }
+
     return comments;
   } catch (error) {
     console.error("Error fetching recipe comments: ", error);
+    return [];
+  }
+};
+
+// Arrange recipe comments by most likes
+export const getRecipeCommentsArranged = async (recipeId) => {
+  try {
+    const comments = await getRecipeCommentsByRecipeId(recipeId);
+    comments.sort((a, b) => b.likes - a.likes);
+    return comments;
+  } catch (error) {
+    console.error("Error arranging recipe comments by likes: ", error);
     return [];
   }
 };
@@ -171,6 +192,15 @@ export const getRecipeCommentsByUserId = async (userId) => {
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Get likes for each comment
+    for (let comment of comments) {
+      comment.likes = await fetchTotalLikesByItemId(
+        "recipe_comments_likes",
+        "recipe_comment_id",
+        comment.id
+      );
+    }
 
     return comments;
   } catch (error) {

@@ -1,7 +1,6 @@
-import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import {
   getRecipeById,
-  getRecipeCommentsByRecipeId,
+  getRecipeCommentsArranged,
 } from "@/utils/recipeServices";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
@@ -35,7 +34,7 @@ export default function RecipePage() {
   // Fetch Comments Data based on selectedId
   const fetchCommentsData = async () => {
     if (selectedId) {
-      const data = await getRecipeCommentsByRecipeId(selectedId);
+      const data = await getRecipeCommentsArranged(selectedId);
       setCommentsData(data);
     }
   };
@@ -44,24 +43,6 @@ export default function RecipePage() {
     fetchRecipeData();
     fetchCommentsData();
   }, [selectedId]);
-
-  // Fetch comments likes
-  const fetchCommentsLikes = async () => {
-    const updatedComments = await Promise.all(
-      commentsData.map(async (comment) => {
-        const likesCount = await fetchTotalLikesByItemId(
-          "recipe_comments_likes",
-          "recipe_comment_id",
-          comment.id
-        );
-        return { ...comment, likes: likesCount };
-      })
-    );
-    setCommentsData(updatedComments);
-  };
-  useEffect(() => {
-    fetchCommentsLikes();
-  }, [commentsData.length]);
 
   useEffect(() => {
     // Reset scroll position to the top when the page changes
