@@ -1,3 +1,12 @@
+// React and React Native core
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
+import { FontAwesome } from "@expo/vector-icons";
+
+// Utilities
 import {
   fetchTotalLikesByItemId,
   hasUserLikedItem,
@@ -5,11 +14,9 @@ import {
   unlikeItem,
 } from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
-import { useUser } from "@clerk/clerk-expo";
-import { FontAwesome } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { ImageLoader } from "../ImageLoader";
+
+// Components
+import { ImageLoader } from "@/app/components/ImageLoader";
 
 interface MenuCardProps {
   item: {

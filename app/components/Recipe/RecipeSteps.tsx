@@ -1,4 +1,4 @@
-import React from "react";
+// React and React Native core
 import { Text, View } from "react-native";
 
 interface RecipeStepsProps {

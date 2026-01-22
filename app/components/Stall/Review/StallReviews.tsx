@@ -1,8 +1,13 @@
-import { getReviewArranged } from "@/utils/reviewServices";
-import { fetchUserByDocId } from "@/utils/userServices";
+// React and React Native core
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import StallReviewCard from "./StallReviewCard";
+
+// Utilities
+import { getReviewArranged } from "@/utils/reviewServices";
+import { fetchUserByDocId } from "@/utils/userServices";
+
+// Components
+import StallReviewCard from "@/app/components/Stall/Review/StallReviewCard";
 
 interface StallReviewProps {
   selectedId: string | null;

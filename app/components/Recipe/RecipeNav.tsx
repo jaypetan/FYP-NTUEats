@@ -1,7 +1,11 @@
-import Subtract from "@/assets/design/Subtract.svg";
-import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+// React and React Native core
 import { Text, TouchableWithoutFeedback, View } from "react-native";
+
+// External libraries
+import { FontAwesome } from "@expo/vector-icons";
+
+// Assets
+import Subtract from "@/assets/design/Subtract.svg";
 
 interface RecipeNavProps {
   page: string;

@@ -1,5 +1,8 @@
+// React Native core
 import { Text, View } from "react-native";
-import TouchableScale from "../components/TouchableScale";
+
+// Components
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface ListItemProps {
   setAdminCurrentPage: React.Dispatch<React.SetStateAction<string>>;

@@ -1,12 +1,19 @@
-import { useAppContext } from "@/app/components/AppContext";
-import SignOutButton from "@/app/components/SignOutButton";
-import { Text, TouchableOpacity, View } from "react-native";
-import NavImage from "../components/Nav/NavImage";
-
-// Admin Component
-import { fetchUserByClerkId } from "@/utils/userServices";
-import { useUser } from "@clerk/clerk-expo";
+// React and React Native core
 import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import NavImage from "@/app/components/Nav/NavImage";
+import SignOutButton from "@/app/components/SignOutButton";
+
+// Utilities
+import { fetchUserByClerkId } from "@/utils/userServices";
 
 interface NavPageProps {
   closeDrawer: () => void;
@@ -15,6 +22,7 @@ interface NavPageProps {
 export default function NavPage({ closeDrawer }: NavPageProps) {
   const appContext = useAppContext();
 
+  // Navigation Button Component
   const NavDirectButton = (page: string, text: string) => {
     return (
       <TouchableOpacity

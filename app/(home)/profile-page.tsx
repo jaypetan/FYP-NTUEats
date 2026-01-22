@@ -1,15 +1,21 @@
+// React and React Native core
+import { useState } from "react";
+import { Text, View } from "react-native";
+
+// External libraries
+import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+
+// Assets
 import CommentsLogo from "@/assets/images/logos/Comments-logo.png";
 import ProfileLogo from "@/assets/images/logos/Profile-logo.png";
 import RecipesLogo from "@/assets/images/logos/Recipes-logo.png";
-import { useState } from "react";
-import { Text, View } from "react-native";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
-import ClosePage from "../components/ClosePage";
-import ProfileNav from "../components/Profile/ProfileNav";
 
-import CommentsContent from "../components/Profile/CommentsContent";
-import ProfileContent from "../components/Profile/ProfileContent";
-import RecipesContent from "../components/Profile/RecipesContent";
+// Components
+import ClosePage from "@/app/components/ClosePage";
+import CommentsContent from "@/app/components/Profile/CommentsContent";
+import ProfileContent from "@/app/components/Profile/ProfileContent";
+import ProfileNav from "@/app/components/Profile/ProfileNav";
+import RecipesContent from "@/app/components/Profile/RecipesContent";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");

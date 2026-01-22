@@ -1,9 +1,14 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
-import HomeNav from "../Home/HomeNav";
-import HomeProfile from "../Home/HomeProfile";
-import HomeEatWHAT from "../Home/HomeEatWHAT";
-import HomeCookWHAT from "../Home/HomeCookWHAT";
-import { useAppContext } from "../AppContext";
+// React Native core
+import { Text, View } from "react-native";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import HomeCookWHAT from "@/app/components/Home/HomeCookWHAT";
+import HomeEatWHAT from "@/app/components/Home/HomeEatWHAT";
+import HomeNav from "@/app/components/Home/HomeNav";
+import HomeProfile from "@/app/components/Home/HomeProfile";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 
 interface HomePageProps {

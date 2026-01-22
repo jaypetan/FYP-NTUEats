@@ -1,13 +1,15 @@
-// External Libraries
-import React, { useEffect, useState } from "react";
+// React and React Native core
+import { useEffect, useState } from "react";
 import { View } from "react-native";
+
+// External libraries
 import Animated, {
   ReduceMotion,
   SequencedTransition,
 } from "react-native-reanimated";
 
 // App Context
-import { useAppContext } from "../components/AppContext";
+import { useAppContext } from "@/app/components/AppContext";
 
 // Components
 import CookWhat from "@/app/components/Main/CookWHAT";
@@ -17,6 +19,7 @@ import HomePage from "@/app/components/Main/HomePage";
 export default function MainPage() {
   const { currentPage } = useAppContext();
 
+  // State to manage the order of components
   const [componentOrder, setComponentOrder] = useState([
     { id: "cook-what", component: CookWhat },
     { id: "eat-what", component: EatWhat },

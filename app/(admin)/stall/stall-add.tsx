@@ -3,12 +3,14 @@ import { useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-// Project component
+// Project components
+import PriceRangeInput from "@/app/(admin)//components/PriceRangeInput";
+import LabeledInput from "@/app/(admin)/components/LabeledInput";
 import ImagePickerField from "@/app/components/ImagePickerField";
 import TouchableScale from "@/app/components/TouchableScale";
+
+// Project utilities
 import { addNewStall } from "@/utils/stallServices";
-import LabeledInput from "../components/LabelInput";
-import PriceRangeInput from "../components/PriceRangeInput";
 
 interface StallAddProps {
   setAdminCurrentPage: (page: string) => void;

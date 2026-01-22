@@ -1,8 +1,13 @@
+// React and React Native core imports
 import * as React from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+
+// External libraries
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
-import InputField from "../components/InputField";
+
+// Project components
+import InputField from "@/app/components/InputField";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();

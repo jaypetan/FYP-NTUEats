@@ -1,22 +1,9 @@
-// External libraries
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
-import { useEffect, useState } from "react";
+// React and React Native core imports
+import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 
-// App Context
-import { useAppContext } from "../components/AppContext";
-
-// Internal Components
-import AdminPage from "../(admin)/admin-page";
-import SignInScreen from "../(auth)/sign-in";
-import MainPage from "./main-page";
-import ProfilePage from "./profile-page";
-import RecipePage from "./recipe-page";
-import StallPage from "./stall-page";
-import UploadRecipePage from "./upload-recipe-page";
-
-// Navigation Component
-import { useRef } from "react";
+// External libraries
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import ReanimatedDrawerLayout, {
   DrawerLayoutMethods,
@@ -24,8 +11,20 @@ import ReanimatedDrawerLayout, {
   DrawerType,
 } from "react-native-gesture-handler/ReanimatedDrawerLayout";
 import Animated, { FadeOutRight, SlideInDown } from "react-native-reanimated";
-import NavButton from "../components/Nav/NavButton";
-import NavPage from "./nav-page";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Internal Components
+import AdminPage from "@/app/(admin)/admin-page";
+import SignInScreen from "@/app/(auth)/sign-in";
+import MainPage from "@/app/(home)/main-page";
+import NavPage from "@/app/(home)/nav-page";
+import ProfilePage from "@/app/(home)/profile-page";
+import RecipePage from "@/app/(home)/recipe-page";
+import StallPage from "@/app/(home)/stall-page";
+import UploadRecipePage from "@/app/(home)/upload-recipe-page";
+import NavButton from "@/app/components/Nav/NavButton";
 
 export default function Page() {
   const { currentPage } = useAppContext();

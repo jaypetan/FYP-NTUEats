@@ -1,6 +1,11 @@
-import { Stack } from "expo-router/stack";
-import { AppProvider } from "../components/AppContext";
+// React Native core
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+// External libraries
+import { Stack } from "expo-router/stack";
+
+// App Context
+import { AppProvider } from "@/app/components/AppContext";
 
 export default function Layout() {
   return (

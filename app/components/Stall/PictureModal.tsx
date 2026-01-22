@@ -1,11 +1,20 @@
-import { fetchReviewImagesByStallId } from "@/utils/reviewServices";
-import { AntDesign } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
+// React and React Native core
 import { useEffect, useState } from "react";
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
+
+// External libraries
+import { AntDesign } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import ImageViewing from "react-native-image-viewing";
-import { useAppContext } from "../AppContext";
-import { ImageLoader } from "../ImageLoader";
+
+// Utilities
+import { fetchReviewImagesByStallId } from "@/utils/reviewServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import { ImageLoader } from "@/app/components/ImageLoader";
 
 interface PictureModalProps {
   setPictureModalVisible: (visible: boolean) => void;

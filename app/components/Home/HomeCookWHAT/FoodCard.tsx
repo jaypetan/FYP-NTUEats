@@ -1,10 +1,16 @@
-import TouchableScale from "@/app/components/TouchableScale";
-import React from "react";
+// React and React Native core
 import { Text, View } from "react-native";
+
+// External libraries
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useAppContext } from "../../AppContext";
-import { ImageLoader } from "../../ImageLoader";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import { ImageLoader } from "@/app/components/ImageLoader";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface FoodCardProps {
   imageSource: any;

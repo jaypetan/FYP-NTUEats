@@ -1,9 +1,10 @@
-import React from "react";
+// React and React Native core
 import { Text, View } from "react-native";
-import ClosePage from "../ClosePage";
-import { ImageLoader } from "../ImageLoader";
 
-import RecipeNav from "./RecipeNav";
+// Components
+import ClosePage from "@/app/components/ClosePage";
+import { ImageLoader } from "@/app/components/ImageLoader";
+import RecipeNav from "@/app/components/Recipe/RecipeNav";
 
 interface RecipeHeaderProps {
   recipeImage: any;

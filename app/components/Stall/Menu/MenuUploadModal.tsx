@@ -1,11 +1,20 @@
-import { addNewMenuItem } from "@/utils/menuServices";
-import { AntDesign } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
+// React and React Native core
 import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { useAppContext } from "../AppContext";
-import ImagePickerField from "../ImagePickerField";
-import TouchableScale from "../TouchableScale";
+
+// External libraries
+import { AntDesign } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+
+// Utilities
+import { addNewMenuItem } from "@/utils/menuServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import ImagePickerField from "@/app/components/ImagePickerField";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface MenuUploadModalProps {
   setMenuModalVisible: (visible: boolean) => void;

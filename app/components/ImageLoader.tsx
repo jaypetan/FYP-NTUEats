@@ -1,6 +1,9 @@
+// React and React Native core
 import { useState } from "react";
 import { Image, View } from "react-native";
-import Loader from "./Loader";
+
+// Components
+import Loader from "@/app/components/Loader";
 
 interface ImageLoaderProps {
   image: string;

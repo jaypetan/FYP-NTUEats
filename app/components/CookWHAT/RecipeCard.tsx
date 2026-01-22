@@ -1,5 +1,12 @@
-import { ImageLoader } from "@/app/components/ImageLoader";
-import TouchableScale from "@/app/components/TouchableScale";
+// React and React Native core
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+
+// Utilities
 import {
   fetchTotalLikesByItemId,
   hasUserLikedItem,
@@ -7,11 +14,13 @@ import {
   unlikeItem,
 } from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
-import { useUser } from "@clerk/clerk-expo";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { useAppContext } from "../AppContext";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import { ImageLoader } from "@/app/components/ImageLoader";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface RecipeCardProps {
   recipeId: string;

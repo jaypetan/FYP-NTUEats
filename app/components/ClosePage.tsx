@@ -1,7 +1,11 @@
-import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+// React and React Native core
 import { TouchableOpacity, View } from "react-native";
-import { useAppContext } from "./AppContext";
+
+// External libraries
+import { FontAwesome } from "@expo/vector-icons";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
 
 interface ClosePageProps {
   right?: string;

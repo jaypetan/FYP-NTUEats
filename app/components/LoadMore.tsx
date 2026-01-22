@@ -1,6 +1,11 @@
+// React and React Native core
 import { Text } from "react-native";
+
+// External libraries
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import TouchableScale from "./TouchableScale";
+
+// Components
+import TouchableScale from "@/app/components/TouchableScale";
 
 const LoadMore = ({ onClick }: { onClick: () => void }) => {
   return (

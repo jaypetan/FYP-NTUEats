@@ -1,5 +1,8 @@
+// React and React Native core
 import React from "react";
 import { Text, View } from "react-native";
+
+// External libraries
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 
 interface RecipeAboutProps {

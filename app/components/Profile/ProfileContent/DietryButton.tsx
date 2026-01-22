@@ -1,3 +1,4 @@
+// React and React Native core
 import { useState } from "react";
 import { Text, TouchableOpacity } from "react-native";
 

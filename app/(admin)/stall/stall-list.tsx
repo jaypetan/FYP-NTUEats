@@ -1,10 +1,17 @@
-import { ImageLoader } from "@/app/components/ImageLoader";
-import TouchableScale from "@/app/components/TouchableScale";
-import { fetchStallData } from "@/utils/stallServices";
-import { FontAwesome } from "@expo/vector-icons";
+// React and React Native core imports
 import { useEffect, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+
+// External libraries
+import { FontAwesome } from "@expo/vector-icons";
+
+// Project components
+import { ImageLoader } from "@/app/components/ImageLoader";
+import TouchableScale from "@/app/components/TouchableScale";
+
+// Project utilities
+import { fetchStallData } from "@/utils/stallServices";
 
 interface StallListProps {
   setAdminCurrentPage: (page: string) => void;

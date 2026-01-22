@@ -1,16 +1,22 @@
-import { ClerkProvider } from "@clerk/clerk-expo";
-import SafeScreen from "./components/SafeScreen";
-import { tokenCache } from "@clerk/clerk-expo/token-cache";
-import { Slot } from "expo-router";
-import "./global.css"
-
-import { useFonts } from "expo-font";
+// React and React Native core
 import { ActivityIndicator, View } from "react-native";
+
+// External libraries
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { useFonts } from "expo-font";
+import { Slot } from "expo-router";
+
+// Styles
+import "./global.css";
+
+// Components
+import SafeScreen from "@/app/components/SafeScreen";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "Inter-Italic": require("../assets/fonts/Inter/Inter-Italic-VariableFont_opsz,wght.ttf"),
-    "Inter": require("../assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf"),
+    Inter: require("../assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf"),
     "Koulen-Regular": require("../assets/fonts/Koulen/Koulen-Regular.ttf"),
     "Ranchers-Regular": require("../assets/fonts/Ranchers/Ranchers-Regular.ttf"),
   });

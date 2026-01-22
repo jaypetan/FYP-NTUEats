@@ -1,9 +1,14 @@
+// React and React Native core imports
+import React from "react";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+
+// External libraries
 import { useSignIn } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View, Image, Alert } from "react-native";
-import React from "react";
+
+// Project assets and components
+import InputField from "@/app/components/InputField";
 import NTUEatsLogo from "@/assets/images/logos/NTUeats-logo.png";
-import InputField from "../components/InputField";
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();

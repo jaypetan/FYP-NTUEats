@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+// React and React Native core
+import { useRef } from "react";
 import { Animated, TouchableWithoutFeedback } from "react-native";
 
 interface TouchableScaleProps {

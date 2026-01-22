@@ -1,13 +1,22 @@
-import { addRecipeComment } from "@/utils/recipeServices";
+// React and React Native core
+import { useState } from "react";
+import { Modal, Pressable, Text, View } from "react-native";
+
+// External libraries
 import { useUser } from "@clerk/clerk-expo";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { useState } from "react";
-import { Modal, Pressable, Text, View } from "react-native";
-import { useAppContext } from "../AppContext";
-import ImagePickerField from "../ImagePickerField";
-import InputField from "../InputField";
-import TouchableScale from "../TouchableScale";
+
+// Utilities
+import { addRecipeComment } from "@/utils/recipeServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import ImagePickerField from "@/app/components/ImagePickerField";
+import InputField from "@/app/components/InputField";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface CommentUploadModalProps {
   setCommentUploadModalVisible: (visible: boolean) => void;

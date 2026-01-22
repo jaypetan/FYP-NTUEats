@@ -1,3 +1,4 @@
+// React Native core
 import { ScrollView, Text } from "react-native";
 
 const RecipesContent = () => {

@@ -1,8 +1,8 @@
 import { Text, TextInput, TextInputProps } from "react-native";
 
-type LabeledInputProps = {
+interface LabeledInputProps extends TextInputProps {
   label: string;
-} & TextInputProps;
+}
 
 const LabeledInput: React.FC<LabeledInputProps> = ({ label, ...props }) => (
   <>

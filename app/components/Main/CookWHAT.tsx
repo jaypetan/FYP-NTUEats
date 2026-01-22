@@ -1,13 +1,22 @@
-import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
-import { getRecipesArranged } from "@/utils/recipeServices";
+// React and React Native core
 import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
-import { useAppContext } from "../AppContext";
-import RecipeCard from "../CookWHAT/RecipeCard";
-import SearchBar from "../CookWHAT/SearchBar";
-import HomeNav from "../Home/HomeNav";
-import LoadMore from "../LoadMore";
-import OptimizedScrollView from "../OptimizedScrollView";
+
+// Assets
+import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
+
+// Utilities
+import { getRecipesArranged } from "@/utils/recipeServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import RecipeCard from "@/app/components/CookWHAT/RecipeCard";
+import SearchBar from "@/app/components/CookWHAT/SearchBar";
+import HomeNav from "@/app/components/Home/HomeNav";
+import LoadMore from "@/app/components/LoadMore";
+import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 
 interface CookWhatProps {
   backgroundColor: string;

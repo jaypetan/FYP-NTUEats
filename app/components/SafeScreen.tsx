@@ -1,4 +1,7 @@
+// React and React Native core
 import { KeyboardAvoidingView, Platform } from "react-native";
+
+// External libraries
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const SafeScreen = ({ children }: { children: React.ReactNode }) => {

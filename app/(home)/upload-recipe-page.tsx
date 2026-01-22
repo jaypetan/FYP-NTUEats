@@ -1,13 +1,22 @@
-import { addNewRecipe } from "@/utils/recipeServices";
-import { useUser } from "@clerk/clerk-expo";
+// React and React Native core
 import { useState } from "react";
 import { Keyboard, Text, View } from "react-native";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
 import { ScrollView } from "react-native-gesture-handler";
-import { useAppContext } from "../components/AppContext";
-import DynamicInputList from "../components/DynamicInputList";
-import ImagePickerField from "../components/ImagePickerField";
-import InputField from "../components/InputField";
-import TouchableScale from "../components/TouchableScale";
+
+// Utilities
+import { addNewRecipe } from "@/utils/recipeServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import DynamicInputList from "@/app/components/DynamicInputList";
+import ImagePickerField from "@/app/components/ImagePickerField";
+import InputField from "@/app/components/InputField";
+import TouchableScale from "@/app/components/TouchableScale";
 
 export default function UploadRecipePage() {
   const { setCurrentPage } = useAppContext();
@@ -45,20 +54,24 @@ export default function UploadRecipePage() {
     };
     console.log("Submitting recipe:", newRecipe);
 
-    // Submit recipe to backend (Firebase Firestore)
-    await addNewRecipe(newRecipe);
-    alert("Recipe submitted successfully!");
+    // Submit the new recipe
+    try {
+      await addNewRecipe(newRecipe);
+      alert("Recipe submitted successfully!");
 
-    // Reset form
-    setRecipe({
-      title: "",
-      description: "",
-      cooking_time: "",
-      recipe_pic: "",
-    });
-    setIngredients([""]);
-    setInstructions([""]);
-    setCurrentPage("home-page");
+      // Reset form
+      setRecipe({
+        title: "",
+        description: "",
+        cooking_time: "",
+        recipe_pic: "",
+      });
+      setIngredients([""]);
+      setInstructions([""]);
+      setCurrentPage("home-page");
+    } catch (error) {
+      alert("Failed to submit recipe. Please try again.");
+    }
   };
 
   return (

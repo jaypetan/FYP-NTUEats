@@ -1,14 +1,19 @@
-import { FontAwesome } from "@expo/vector-icons";
+// React and React Native core imports
 import { useEffect, useState } from "react";
 import { Keyboard, Text, TouchableWithoutFeedback, View } from "react-native";
+
+// External libraries
+import { FontAwesome } from "@expo/vector-icons";
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
-import TouchableScale from "../components/TouchableScale";
+
+// Project components
+import TouchableScale from "@/app/components/TouchableScale";
 
 // Internal Components
-import AdminDefault from "./admin-default";
-import StallAdd from "./stall/stall-add";
-import StallEdit from "./stall/stall-edit";
-import StallList from "./stall/stall-list";
+import AdminDefault from "@/app/(admin)/admin-default";
+import StallAdd from "@/app/(admin)/stall/stall-add";
+import StallEdit from "@/app/(admin)/stall/stall-edit";
+import StallList from "@/app/(admin)/stall/stall-list";
 
 export default function AdminPage() {
   const [adminCurrentPage, setAdminCurrentPage] = useState("default");

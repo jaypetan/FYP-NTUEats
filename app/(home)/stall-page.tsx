@@ -1,16 +1,21 @@
-import { Keyboard, ScrollView, View } from "react-native";
-import StallButtons from "../components/Stall/StallButtons";
-import StallHeader from "../components/Stall/StallHeader";
-import StallReviews from "../components/Stall/StallReviews";
-
-import { getStallDataById } from "@/utils/stallServices";
+// React and React Native core
 import { useEffect, useState } from "react";
-import { useAppContext } from "../components/AppContext";
+import { Keyboard, ScrollView, View } from "react-native";
 
-import AddReviewPage from "../components/Stall/AddReviewPage";
-import MenuModal from "../components/Stall/MenuModal";
-import MenuUploadModal from "../components/Stall/MenuUploadModal";
-import PictureModal from "../components/Stall/PictureModal";
+// Utilities
+import { getStallDataById } from "@/utils/stallServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import MenuModal from "@/app/components/Stall/Menu/MenuModal";
+import MenuUploadModal from "@/app/components/Stall/Menu/MenuUploadModal";
+import PictureModal from "@/app/components/Stall/PictureModal";
+import AddReviewPage from "@/app/components/Stall/Review/AddReviewPage";
+import StallReviews from "@/app/components/Stall/Review/StallReviews";
+import StallButtons from "@/app/components/Stall/StallButtons";
+import StallHeader from "@/app/components/Stall/StallHeader";
 
 export default function StallPage() {
   const { selectedId } = useAppContext();

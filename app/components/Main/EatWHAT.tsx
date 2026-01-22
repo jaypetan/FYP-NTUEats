@@ -1,16 +1,22 @@
-import OptimizedScrollView from "@/app/components/OptimizedScrollView";
-import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
-import { Image, Text, View } from "react-native";
-import { useAppContext } from "../AppContext";
-import SearchBar from "../EatWHAT/SearchBar";
-import StallCard from "../EatWHAT/StallCard";
-import HomeNav from "../Home/HomeNav";
-import LoadMore from "../LoadMore";
-
+// React and React Native core
 import { useEffect, useState } from "react";
+import { Image, Text, View } from "react-native";
 
-// Firebase Services
+// Assets
+import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
+
+// Utilities
 import { fetchStallData } from "@/utils/stallServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import SearchBar from "@/app/components/EatWHAT/SearchBar";
+import StallCard from "@/app/components/EatWHAT/StallCard";
+import HomeNav from "@/app/components/Home/HomeNav";
+import LoadMore from "@/app/components/LoadMore";
+import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 
 interface EatWhatProps {
   backgroundColor: string;

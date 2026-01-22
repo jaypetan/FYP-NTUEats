@@ -1,5 +1,8 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+// React Native core
 import { Text, TextInput, View } from "react-native";
+
+// External libraries
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SearchBar = () => {
   return (

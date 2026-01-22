@@ -1,5 +1,8 @@
-import { FontAwesome } from "@expo/vector-icons";
+// React and React Native core
 import { Text, TouchableOpacity, View } from "react-native";
+
+// External libraries
+import { FontAwesome } from "@expo/vector-icons";
 
 interface StallButtonsProps {
   setMenuModalVisible: (visible: boolean) => void;

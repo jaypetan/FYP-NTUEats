@@ -1,13 +1,24 @@
-import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
-import { fetchTotalLikesByItemId } from "@/utils/likeServices";
-import { getRecipesArranged } from "@/utils/recipeServices";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+// React and React Native core
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
+
+// External libraries
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeOut } from "react-native-reanimated";
-import { useAppContext } from "../AppContext";
-import FoodCard from "./HomeCookWHAT/FoodCard";
-import VerticalWordButton from "./SharedComponents/VerticalWordButton";
+
+// Assets
+import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
+
+// Utilities
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
+import { getRecipesArranged } from "@/utils/recipeServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import FoodCard from "@/app/components/Home/HomeCookWHAT/FoodCard";
+import VerticalWordButton from "@/app/components/Home/SharedComponents/VerticalWordButton";
 
 const HomeEatWHAT = () => {
   const { setCurrentPage } = useAppContext();

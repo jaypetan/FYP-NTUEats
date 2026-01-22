@@ -1,14 +1,21 @@
+// React and React Native core
+import { useEffect, useRef, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+
+// Utilities
 import {
   getRecipeById,
   getRecipeCommentsArranged,
 } from "@/utils/recipeServices";
-import { useEffect, useRef, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
-import { useAppContext } from "../components/AppContext";
-import RecipeAbout from "../components/Recipe/RecipeAbout";
-import RecipeComments from "../components/Recipe/RecipeComments";
-import RecipeHeader from "../components/Recipe/RecipeHeader";
-import RecipeSteps from "../components/Recipe/RecipeSteps";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import RecipeComments from "@/app/components/Recipe/Comments/RecipeComments";
+import RecipeAbout from "@/app/components/Recipe/RecipeAbout";
+import RecipeHeader from "@/app/components/Recipe/RecipeHeader";
+import RecipeSteps from "@/app/components/Recipe/RecipeSteps";
 
 export default function RecipePage() {
   const [page, setPage] = useState("about");

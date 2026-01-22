@@ -1,6 +1,8 @@
-import { Feather } from "@expo/vector-icons";
-import React from "react";
+// React and React Native core
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+
+// External libraries
+import { Feather } from "@expo/vector-icons";
 
 type DynamicInputListProps = {
   items: string[];

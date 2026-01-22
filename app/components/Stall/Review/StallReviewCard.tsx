@@ -1,3 +1,13 @@
+// React and React Native core
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
+import { FontAwesome } from "@expo/vector-icons";
+import ImageViewing from "react-native-image-viewing";
+
+// Utilities
 import {
   fetchTotalLikesByItemId,
   hasUserLikedItem,
@@ -5,12 +15,9 @@ import {
   unlikeItem,
 } from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
-import { useUser } from "@clerk/clerk-expo";
-import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import ImageViewing from "react-native-image-viewing";
-import { ImageLoader } from "../ImageLoader";
+
+// Components
+import { ImageLoader } from "@/app/components/ImageLoader";
 
 interface StallReviewCardProps {
   reviewID: string;

@@ -1,6 +1,8 @@
-import Subtract from "@/assets/design/Subtract.svg";
-import React from "react";
+// React Native core
 import { Text, TouchableWithoutFeedback, View } from "react-native";
+
+// Assets
+import Subtract from "@/assets/design/Subtract.svg";
 
 interface HomeNavProps {
   backgroundColor: string;

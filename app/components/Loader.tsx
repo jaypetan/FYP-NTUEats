@@ -1,3 +1,4 @@
+// React and React Native core
 import { Image, Text, View } from "react-native";
 
 const Loader = () => {

@@ -1,6 +1,11 @@
-import { useUser } from "@clerk/clerk-expo";
+// React Native core
 import { Text, View } from "react-native";
-import TouchableScale from "../../TouchableScale";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
+
+// Components
+import TouchableScale from "@/app/components/TouchableScale";
 
 const UserInfo = () => {
   const { user } = useUser();

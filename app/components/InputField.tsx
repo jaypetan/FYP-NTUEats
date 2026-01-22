@@ -1,5 +1,4 @@
-// InputField.tsx
-import React from "react";
+// React and React Native core
 import { Text, TextInput, TextInputProps, View } from "react-native";
 
 interface InputFieldProps extends TextInputProps {

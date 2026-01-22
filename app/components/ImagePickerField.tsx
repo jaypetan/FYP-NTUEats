@@ -1,8 +1,12 @@
+// React and React Native core
+import { Image, Text, View } from "react-native";
+
+// External libraries
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import React from "react";
-import { Image, Text, View } from "react-native";
-import TouchableScale from "./TouchableScale";
+
+// Components
+import TouchableScale from "@/app/components/TouchableScale";
 
 type ImagePickerFieldProps = {
   imageUri: string;

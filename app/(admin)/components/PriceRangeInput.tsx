@@ -1,10 +1,9 @@
-import React from "react";
 import { Text, TextInput, View } from "react-native";
 
-type PriceRangeInputProps = {
+interface PriceRangeInputProps {
   value: string;
   onChangeText: (text: string) => void;
-};
+}
 
 const PriceRangeInput: React.FC<PriceRangeInputProps> = ({
   value,

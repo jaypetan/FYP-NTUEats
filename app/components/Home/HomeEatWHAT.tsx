@@ -1,13 +1,24 @@
-import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
-import { fetchTopReviewImageByStallId } from "@/utils/reviewServices";
-import { fetchStallData } from "@/utils/stallServices";
+// React and React Native core
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
+
+// External libraries
 import Animated, { FadeOut } from "react-native-reanimated";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useAppContext } from "../AppContext";
-import FoodCard from "./HomeEatWHAT/FoodCard";
-import VerticalWordButton from "./SharedComponents/VerticalWordButton";
+
+// Assets
+import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
+
+// Utilities
+import { fetchTopReviewImageByStallId } from "@/utils/reviewServices";
+import { fetchStallData } from "@/utils/stallServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import FoodCard from "@/app/components/Home/HomeEatWHAT/FoodCard";
+import VerticalWordButton from "@/app/components/Home/SharedComponents/VerticalWordButton";
 
 const HomeEatWHAT = () => {
   const { setCurrentPage } = useAppContext();

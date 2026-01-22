@@ -1,12 +1,19 @@
-import { ImageLoader } from "@/app/components/ImageLoader";
-import TouchableScale from "@/app/components/TouchableScale";
-import { getStallDataById, updateStallById } from "@/utils/stallServices";
-import * as ImagePicker from "expo-image-picker";
+// React and React Native core imports
 import { useEffect, useState } from "react";
 import { Alert, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import LabeledInput from "../components/LabelInput";
-import PriceRangeInput from "../components/PriceRangeInput";
+
+// External libraries
+import * as ImagePicker from "expo-image-picker";
+
+// Project components
+import PriceRangeInput from "@/app/(admin)//components/PriceRangeInput";
+import LabeledInput from "@/app/(admin)/components/LabeledInput";
+import { ImageLoader } from "@/app/components/ImageLoader";
+import TouchableScale from "@/app/components/TouchableScale";
+
+// Project utilities
+import { getStallDataById, updateStallById } from "@/utils/stallServices";
 
 interface StallEditProps {
   setAdminCurrentPage: (page: string) => void;

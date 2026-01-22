@@ -1,9 +1,14 @@
+// React and React Native core
 import { useState } from "react";
 import { Text, View } from "react-native";
+
+// External libraries
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import TouchableScale from "../TouchableScale";
-import CommentUploadModal from "./CommentUploadModal";
-import RecipeCommentCard from "./RecipeCommentCard";
+
+// Components
+import RecipeCommentCard from "@/app/components/Recipe/Comments//RecipeCommentCard";
+import CommentUploadModal from "@/app/components/Recipe/Comments/CommentUploadModal";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface RecipeCommentsProps {
   comments: object[];

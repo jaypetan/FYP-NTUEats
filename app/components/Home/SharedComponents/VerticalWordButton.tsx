@@ -1,5 +1,7 @@
-import React from "react";
+// React Native core
 import { Text } from "react-native";
+
+// Components
 import TouchableScale from "@/app/components/TouchableScale";
 
 interface VerticalWordButtonProps {

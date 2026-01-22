@@ -1,7 +1,12 @@
-import { FontAwesome } from "@expo/vector-icons";
+// React and React Native core
 import { Text, View } from "react-native";
-import ClosePage from "../ClosePage";
-import { ImageLoader } from "../ImageLoader";
+
+// External libraries
+import { FontAwesome } from "@expo/vector-icons";
+
+// Components
+import ClosePage from "@/app/components/ClosePage";
+import { ImageLoader } from "@/app/components/ImageLoader";
 
 interface StallHeaderProps {
   stallImage: any;

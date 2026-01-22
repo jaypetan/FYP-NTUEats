@@ -1,11 +1,20 @@
-import { addNewReview } from "@/utils/reviewServices";
-import { useUser } from "@clerk/clerk-expo";
-import React, { useState } from "react";
+// React and React Native core
+import { useState } from "react";
 import { Text, View } from "react-native";
-import { useAppContext } from "../AppContext";
-import ImagePickerField from "../ImagePickerField";
-import InputField from "../InputField";
-import TouchableScale from "../TouchableScale";
+
+// External libraries
+import { useUser } from "@clerk/clerk-expo";
+
+// Utilities
+import { addNewReview } from "@/utils/reviewServices";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Components
+import ImagePickerField from "@/app/components/ImagePickerField";
+import InputField from "@/app/components/InputField";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface AddReviewPageProps {
   setAddReview: (visible: boolean) => void;

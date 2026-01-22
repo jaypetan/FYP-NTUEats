@@ -1,16 +1,25 @@
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+// React Native core
 import { ScrollView, Text, View } from "react-native";
-import TouchableScale from "../TouchableScale";
-import DietryButton from "./ProfileContent/DietryButton";
-import UserInfo from "./ProfileContent/UserInfo";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+// External libraries
+import {
+  FontAwesome,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+
+// Components
+import DietryButton from "@/app/components/Profile/ProfileContent/DietryButton";
+import UserInfo from "@/app/components/Profile/ProfileContent/UserInfo";
+import TouchableScale from "@/app/components/TouchableScale";
 
 const ProfileContent = () => {
   const dietaryPreferences = [
     {
       label: "Halal",
-      icon: <MaterialCommunityIcons name="food-halal" size={24} color="green" />,
+      icon: (
+        <MaterialCommunityIcons name="food-halal" size={24} color="green" />
+      ),
     },
     {
       label: "Vegetarian",
@@ -36,7 +45,9 @@ const ProfileContent = () => {
 
   return (
     <ScrollView className="p-8 mt-4 bg-darkcream/80 w-full h-full rounded-3xl">
-      <Text className="text-center text-4xl font-koulen text-blue mb-4 pt-4">Profile</Text>
+      <Text className="text-center text-4xl font-koulen text-blue mb-4 pt-4">
+        Profile
+      </Text>
       {/* User information */}
       <UserInfo />
 

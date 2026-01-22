@@ -1,5 +1,8 @@
-import { MaterialIcons } from "@expo/vector-icons";
+// React Native core
 import { Text, View } from "react-native";
+
+// External libraries
+import { MaterialIcons } from "@expo/vector-icons";
 
 const NavButton = () => {
   return (
