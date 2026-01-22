@@ -1,5 +1,4 @@
-import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
-import { fetchMenuItemsByStallId } from "@/utils/menuServices";
+import { getMenusArranged } from "@/utils/menuServices";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
@@ -23,44 +22,19 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [menuData, setMenuData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [menuItems, setmenuItems] = useState<
-    { id: string; uri: string; likes: number }[]
-  >([]);
-  const [sortedMenuItems, setSortedMenuItems] = useState<any[]>([]);
 
   useEffect(() => {
     if (menuModalVisible) {
-      fetchMenuItemsByStallId(selectedId).then(setMenuData);
+      fetchMenuData();
     }
   }, [menuModalVisible, selectedId]);
 
-  // Function to build menu items
-  const buildMenuItems = async () => {
-    const menuItems = await Promise.all(
-      menuData.map(async (item) => ({
-        id: item.id,
-        uri: item.image,
-        likes: await fetchTotalLikesByItemId("menus_likes", "menu_id", item.id),
-      }))
-    );
-    return menuItems;
+  const fetchMenuData = async () => {
+    if (selectedId) {
+      const menus = await getMenusArranged(selectedId);
+      setMenuData(menus);
+    }
   };
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      const menuItems = await buildMenuItems();
-      setmenuItems(menuItems);
-    };
-    fetchImages();
-  }, [menuData]);
-
-  // Arrange menus in descending order based on likes
-  useEffect(() => {
-    const sorted = [...menuItems].sort((a, b) => {
-      return b.likes - a.likes; // More likes first
-    });
-    setSortedMenuItems(sorted);
-  }, [menuItems]);
 
   const openMenuUploadModal = () => {
     setMenuModalVisible(false);
@@ -86,9 +60,9 @@ const MenuModal: React.FC<MenuModalProps> = ({
           <Text className="text-3xl font-koulen pt-8 text-black text-center">
             Menus
           </Text>
-          {sortedMenuItems.length > 0 ? (
+          {menuData.length > 0 ? (
             <FlatList
-              data={sortedMenuItems}
+              data={menuData}
               className={`mx-4 `}
               horizontal
               pagingEnabled
@@ -123,7 +97,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
           </View>
         </View>
         <ImageViewing
-          images={sortedMenuItems}
+          images={menuData.map((menu) => ({ uri: menu.image }))}
           imageIndex={selectedImageIndex}
           visible={enlargedImageVisible}
           onRequestClose={() => setEnlargedImageVisible(false)}

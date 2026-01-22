@@ -1,4 +1,4 @@
-import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import { fetchReviewsByStallId } from "@/utils/reviewServices";
 import { fetchUserByDocId } from "@/utils/userServices";
 import { useEffect, useState } from "react";

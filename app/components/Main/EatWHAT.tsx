@@ -5,6 +5,7 @@ import { useAppContext } from "../AppContext";
 import SearchBar from "../EatWHAT/SearchBar";
 import StallCard from "../EatWHAT/StallCard";
 import HomeNav from "../Home/HomeNav";
+import LoadMore from "../LoadMore";
 
 import { useEffect, useState } from "react";
 
@@ -26,16 +27,28 @@ export default function EatWhat({
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
+  const [stallsShown, setStallsShown] = useState<number>(4);
 
   useEffect(() => {
     if (currentPage !== "eat-what") return;
-    console.log("Fetching stall data...");
-    fetchStallData().then((data) => {
-      setStallData(data);
-    });
+    setStallsShown(4); // Reset stalls shown when leaving the page
+
+    fetchStallFunction(stallsShown);
   }, [currentPage]);
 
+  const fetchStallFunction = (limitNumber: number) => {
+    fetchStallData(limitNumber).then((data) => {
+      setStallData(data);
+    });
+  };
+
+  const loadMoreStalls = () => {
+    const newLimit = stallsShown + 4;
+    setStallsShown(newLimit);
+    fetchStallFunction(newLimit);
+  };
   // TODO: Add search bar functionality
+
   return (
     <View className="h-full w-full flex-col">
       <HomeNav
@@ -77,6 +90,9 @@ export default function EatWhat({
                 stallId={stall.id}
               />
             ))}
+            {stallData.length >= stallsShown && (
+              <LoadMore onClick={loadMoreStalls} />
+            )}
             <Text className="py-24" />
           </OptimizedScrollView>
         </View>

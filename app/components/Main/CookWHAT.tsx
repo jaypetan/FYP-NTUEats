@@ -1,13 +1,12 @@
 import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
-import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
-import { getAllRecipes } from "@/utils/recipeServices";
-import { fetchUserByDocId } from "@/utils/userServices";
+import { getRecipesArranged } from "@/utils/recipeServices";
 import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { useAppContext } from "../AppContext";
 import RecipeCard from "../CookWHAT/RecipeCard";
 import SearchBar from "../CookWHAT/SearchBar";
 import HomeNav from "../Home/HomeNav";
+import LoadMore from "../LoadMore";
 import OptimizedScrollView from "../OptimizedScrollView";
 
 interface CookWhatProps {
@@ -23,41 +22,25 @@ export default function CookWhat({
 }: CookWhatProps) {
   const { currentPage, setCurrentPage } = useAppContext();
   const [recipesData, setRecipesData] = useState<any[]>([]);
-  const [rawRecipes, setRawRecipes] = useState<any[]>([]);
+  const [recipesShown, setRecipesShown] = useState(4);
 
+  // Fetch all recipes on component mount
+  const fetchRecipesFunction = async (recipesToShow: Number) => {
+    const recipes = await getRecipesArranged("most_likes", recipesToShow);
+    setRecipesData(recipes.content);
+  };
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const recipes = await getAllRecipes();
-      setRawRecipes(recipes); // Set raw recipes first
-    };
-    fetchRecipes();
+    const recipesToShow = 4;
+    setRecipesShown(recipesToShow); // Reset to initial number of recipes
+    fetchRecipesFunction(recipesToShow);
   }, []);
 
-  useEffect(() => {
-    if (rawRecipes.length === 0) return;
-
-    const fetchAdditionalData = async () => {
-      const updatedRecipes = await Promise.all(
-        rawRecipes.map(async (recipe) => {
-          const chefData = await fetchUserByDocId(recipe.user_id);
-          const likesCount = await fetchTotalLikesByItemId(
-            "recipes_likes",
-            "recipe_id",
-            recipe.id
-          );
-          return {
-            ...recipe,
-            chefName: chefData ? chefData.username : "Unknown Chef",
-            likes: likesCount,
-          };
-        })
-      );
-      updatedRecipes.sort((a, b) => b.likes - a.likes);
-      setRecipesData(updatedRecipes);
-    };
-
-    fetchAdditionalData();
-  }, [rawRecipes]);
+  // Fetch more recipes
+  const loadMoreRecipes = () => {
+    const recipesToShow = recipesShown + 4;
+    setRecipesShown(recipesToShow);
+    fetchRecipesFunction(recipesToShow);
+  };
 
   return (
     <View className="h-full w-full flex-col">
@@ -102,6 +85,9 @@ export default function CookWhat({
                 spicy={recipe.spicy}
               />
             ))}
+            {recipesData.length >= recipesShown && (
+              <LoadMore onClick={loadMoreRecipes} />
+            )}
             <Text className="py-24" />
           </OptimizedScrollView>
         </View>

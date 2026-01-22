@@ -3,7 +3,7 @@ import {
   hasUserLikedItem,
   likeItem,
   unlikeItem,
-} from "@/utils/LikeServices";
+} from "@/utils/likeServices";
 import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";

@@ -1,5 +1,6 @@
 // Firebase imports
 import { db, uploadImageAsync } from "@/utils/firebase";
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
 import {
   addDoc,
@@ -49,19 +50,52 @@ export const addNewRecipe = async (recipeData) => {
   }
 };
 
-// Get all recipes
-export const getAllRecipes = async () => {
+// Get recipes with total likes
+export const getRecipes = async () => {
   try {
     const recipesCollection = collection(db, "recipes");
     const snapshot = await getDocs(recipesCollection);
-    const recipes = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const recipes = await Promise.all(
+      snapshot.docs.map(async (doc) => ({
+        id: doc.id,
+        likes: await fetchTotalLikesByItemId(
+          "recipes_likes",
+          "recipe_id",
+          doc.id
+        ),
+        ...doc.data(),
+      }))
+    );
     return recipes;
   } catch (error) {
     console.error("Error fetching recipes: ", error);
     return [];
+  }
+};
+
+// Get recipes arranged by most likes or most recent
+export const getRecipesArranged = async (arrangementType, limitNum) => {
+  try {
+    const recipes = await getRecipes();
+
+    if (arrangementType === "most_likes") {
+      recipes.sort((a, b) => b.likes - a.likes);
+    } else if (arrangementType === "most_recent") {
+      recipes.sort((a, b) => b.timestamp - a.timestamp);
+    } else {
+      console.log("Invalid arrangement type. Returning unsorted recipes.");
+    }
+
+    const total = recipes.length; // Store total before slicing
+    const limitedRecipes =
+      typeof limitNum === "number" && limitNum > 0
+        ? recipes.slice(0, limitNum)
+        : recipes;
+
+    return { content: limitedRecipes, total };
+  } catch (error) {
+    console.error("Error arranging recipes: ", error);
+    return { content: [], total: 0 };
   }
 };
 

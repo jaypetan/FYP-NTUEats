@@ -13,26 +13,20 @@ const HomeEatWHAT = () => {
   const { setCurrentPage } = useAppContext();
   const [swiped, setSwiped] = useState(false); // To remove instructions after swipe
   const [stallData, setStallData] = useState<any[]>([]);
-  useEffect(() => {
-    // Fetch stall data
-    fetchStallData().then((data) => {
-      setStallData(data);
-    });
-  }, []);
 
   useEffect(() => {
-    // Fetch review images for each stall
-    stallData.forEach(async (stall, index) => {
-      const reviewImage = await fetchTopReviewImageByStallId(stall.id);
-      if (reviewImage && reviewImage.length > 0) {
-        setStallData((prevStallData) => {
-          const newStallData = [...prevStallData];
-          newStallData[index].reviewImage = reviewImage; // Use the first review image
-          return newStallData;
-        });
-      }
+    // Fetch only 4 stalls
+    fetchStallData(4).then(async (data) => {
+      // Fetch review images for each stall
+      const stallsWithImages = await Promise.all(
+        data.map(async (stall) => {
+          const reviewImage = await fetchTopReviewImageByStallId(stall.id);
+          return { ...stall, reviewImage };
+        })
+      );
+      setStallData(stallsWithImages);
     });
-  }, [stallData.length]);
+  }, []);
 
   return (
     <View className="mt-8">

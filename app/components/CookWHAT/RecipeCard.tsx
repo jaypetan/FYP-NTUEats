@@ -5,7 +5,7 @@ import {
   hasUserLikedItem,
   likeItem,
   unlikeItem,
-} from "@/utils/LikeServices";
+} from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -36,8 +36,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 }) => {
   const { setCurrentPage, setSelectedId } = useAppContext();
   const handlePress = () => {
-    setCurrentPage("recipe-page");
     setSelectedId(recipeId);
+    setCurrentPage("recipe-page");
   };
 
   const [like, setLike] = useState(false);

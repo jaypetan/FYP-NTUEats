@@ -1,8 +1,9 @@
+import { ImageLoader } from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 import { getStallDataById, updateStallById } from "@/utils/stallServices";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
-import { Alert, Image, Text, TouchableOpacity } from "react-native";
+import { Alert, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import LabeledInput from "../components/LabelInput";
 import PriceRangeInput from "../components/PriceRangeInput";
@@ -122,9 +123,10 @@ const StallEdit: React.FC<StallEditProps> = ({
         onPress={pickImage}
         className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
       >
-        <Image
-          className="w-64 h-64 border-2 border-blue"
-          source={{ uri: details.stall_pic }}
+        <ImageLoader
+          image={details.stall_pic}
+          className="absolute w-64 h-64"
+          loaderClassName="w-64 h-64"
         />
       </TouchableOpacity>
 

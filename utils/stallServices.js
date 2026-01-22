@@ -6,6 +6,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  query,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -34,9 +36,15 @@ export const addNewStall = async (stallData) => {
 };
 
 // Function to fetch stall data
-export const fetchStallData = async () => {
+export const fetchStallData = async (limitNum) => {
   try {
-    const querySnapshot = await getDocs(collection(db, "stalls"));
+    let q;
+    if (limitNum) {
+      q = query(collection(db, "stalls"), limit(limitNum));
+    } else {
+      q = collection(db, "stalls");
+    }
+    const querySnapshot = await getDocs(q);
     const stallsData = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),

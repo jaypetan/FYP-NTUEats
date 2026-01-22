@@ -1,9 +1,10 @@
+import TouchableScale from "@/app/components/TouchableScale";
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAppContext } from "../../AppContext";
-import TouchableScale from "@/app/components/TouchableScale";
+import { ImageLoader } from "../../ImageLoader";
 
 interface FoodCardProps {
   imageSource: any;
@@ -11,6 +12,7 @@ interface FoodCardProps {
   halal?: boolean;
   vegetarian?: boolean;
   spicy?: boolean;
+  recipeId: string;
 }
 
 const FoodCard: React.FC<FoodCardProps> = ({
@@ -19,16 +21,21 @@ const FoodCard: React.FC<FoodCardProps> = ({
   halal,
   vegetarian,
   spicy,
+  recipeId,
 }) => {
-  const { setCurrentPage } = useAppContext();
+  const { setCurrentPage, setSelectedId } = useAppContext();
+  const handlePress = () => {
+    setSelectedId(recipeId);
+    setCurrentPage("recipe-page");
+  };
 
   return (
     <View className="mr-4 relative w-44 h-64 rounded-2xl bg-green/50">
-      <TouchableScale onPress={() => setCurrentPage("recipe-page")}>
-        <Image
-          source={imageSource}
-          className="w-full h-full rounded-2xl p-2"
-          resizeMode="cover"
+      <TouchableScale onPress={() => handlePress()}>
+        <ImageLoader
+          image={imageSource}
+          className="w-full h-full rounded-2xl absolute p-2"
+          loaderClassName="w-full h-full rounded-2xl"
         />
         <View className="absolute p-4 h-full w-full flex-col justify-between">
           <View className="flex-row justify-end gap-1">

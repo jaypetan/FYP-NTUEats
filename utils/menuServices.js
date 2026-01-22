@@ -1,5 +1,6 @@
 // Firebase imports
 import { db, uploadImageAsync } from "@/utils/firebase";
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import {
   addDoc,
   collection,
@@ -51,12 +52,38 @@ export const fetchMenuItemsByStallId = async (stallId) => {
     const menuRef = collection(db, "menus");
     const q = query(menuRef, where("stall_id", "==", stallId));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({
+
+    const menuItems = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    const menuItemsWithLikes = await Promise.all(
+      menuItems.map(async (item) => {
+        const likes = await fetchTotalLikesByItemId(
+          "menus_likes",
+          "menu_id",
+          item.id
+        );
+        return { ...item, likes };
+      })
+    );
+
+    return menuItemsWithLikes;
   } catch (error) {
     console.error("Error fetching menu items: ", error);
+    return [];
+  }
+};
+
+// Function to arrange menu items by likes
+export const getMenusArranged = async (stallId) => {
+  try {
+    const menuItems = await fetchMenuItemsByStallId(stallId);
+    menuItems.sort((a, b) => b.likes - a.likes);
+    return menuItems;
+  } catch (error) {
+    console.error("Error arranging menu items by likes: ", error);
     return [];
   }
 };

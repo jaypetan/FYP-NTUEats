@@ -26,11 +26,13 @@ const FoodCard: React.FC<FoodCardProps> = ({
   return (
     <View className="mr-4 relative w-44 h-64 rounded-2xl overflow-hidden bg-green/50">
       <TouchableScale onPress={() => handlePress()} className="w-full h-full">
-        <ImageLoader
-          image={imageSource}
-          className="w-full h-full rounded-2xl absolute p-2"
-          loaderClassName="w-full h-full rounded-2xl"
-        />
+        {imageSource && (
+          <ImageLoader
+            image={imageSource}
+            className="w-full h-full rounded-2xl absolute p-2"
+            loaderClassName="w-full h-full rounded-2xl"
+          />
+        )}
         <View className="absolute h-full w-full  py-6 px-4 flex-col justify-end">
           <Text className="text-2xl font-ranchers tracking-wider text-white bg-red/80 px-2">
             {stallName}

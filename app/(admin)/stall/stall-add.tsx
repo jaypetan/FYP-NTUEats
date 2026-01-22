@@ -59,8 +59,8 @@ const StallAdd = () => {
       <Text className="text-2xl font-koulen py-2 px-4 text-blue">
         New Stall
       </Text>
-      <View className="w-64 flex-col gap-2">
-        <ScrollView className="h-5/6 w-full">
+      <View className="w-full h-5/6">
+        <ScrollView>
           <LabeledInput
             label="Stall Name"
             maxLength={30}

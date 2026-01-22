@@ -1,4 +1,4 @@
-import { fetchTotalLikesByItemId } from "@/utils/LikeServices";
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import {
   getRecipeById,
   getRecipeCommentsByRecipeId,

@@ -3,7 +3,7 @@ import {
   hasUserLikedItem,
   likeItem,
   unlikeItem,
-} from "@/utils/LikeServices";
+} from "@/utils/likeServices";
 import { fetchUserByClerkId } from "@/utils/userServices";
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
@@ -14,7 +14,7 @@ import { ImageLoader } from "../ImageLoader";
 interface MenuCardProps {
   item: {
     id: string;
-    uri: string;
+    image: string;
   };
 }
 
@@ -79,7 +79,7 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
     <View>
       <View className="w-64 h-64">
         <ImageLoader
-          image={item.uri}
+          image={item.image}
           className="w-64 h-64"
           loaderClassName="w-full h-full absolute"
         />

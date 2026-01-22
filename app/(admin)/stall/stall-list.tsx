@@ -1,8 +1,9 @@
+import { ImageLoader } from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 import { fetchStallData } from "@/utils/stallServices";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 interface StallListProps {
@@ -36,11 +37,13 @@ const StallList: React.FC<StallListProps> = ({
               key={stall.id}
               className="w-72 bg-white rounded-lg p-4 my-2 flex-col border-2 border-blue"
             >
-              <Image
-                source={{ uri: stall.stall_pic }}
-                resizeMode="cover"
-                className="w-64 h-64 rounded-md mb-2"
-              />
+              <View className="w-64 h-64 mb-2">
+                <ImageLoader
+                  image={stall.stall_pic}
+                  className="w-64 h-64 rounded-md"
+                  loaderClassName="absolute w-64 h-64 rounded-md"
+                />
+              </View>
               <Text className="text-lg font-semibold text-blue">
                 {stall.name}
               </Text>
