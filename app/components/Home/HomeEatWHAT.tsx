@@ -48,6 +48,7 @@ const HomeEatWHAT = () => {
           <FoodCard
             key={stall.id}
             imageSource={stall.reviewImage}
+            stallImage={stall.stall_pic}
             stallName={stall.name}
             canteenName={stall.location}
             storeId={stall.id}

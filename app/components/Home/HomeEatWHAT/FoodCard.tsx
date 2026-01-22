@@ -6,6 +6,7 @@ import { ImageLoader } from "../../ImageLoader";
 
 interface FoodCardProps {
   imageSource: any;
+  stallImage: string;
   stallName: string;
   canteenName: string;
   storeId: string;
@@ -13,6 +14,7 @@ interface FoodCardProps {
 
 const FoodCard: React.FC<FoodCardProps> = ({
   imageSource,
+  stallImage,
   stallName,
   canteenName,
   storeId,
@@ -26,9 +28,15 @@ const FoodCard: React.FC<FoodCardProps> = ({
   return (
     <View className="mr-4 relative w-44 h-64 rounded-2xl overflow-hidden bg-green/50">
       <TouchableScale onPress={() => handlePress()} className="w-full h-full">
-        {imageSource && (
+        {imageSource ? (
           <ImageLoader
             image={imageSource}
+            className="w-full h-full rounded-2xl absolute p-2"
+            loaderClassName="w-full h-full rounded-2xl"
+          />
+        ) : (
+          <ImageLoader
+            image={stallImage}
             className="w-full h-full rounded-2xl absolute p-2"
             loaderClassName="w-full h-full rounded-2xl"
           />

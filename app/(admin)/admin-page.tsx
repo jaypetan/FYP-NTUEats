@@ -22,7 +22,7 @@ export default function AdminPage() {
   useEffect(() => {
     switch (adminCurrentPage) {
       case "stall-add":
-        setContent(<StallAdd />);
+        setContent(<StallAdd setAdminCurrentPage={setAdminCurrentPage} />);
         setPage(1);
         break;
       case "stall-list":

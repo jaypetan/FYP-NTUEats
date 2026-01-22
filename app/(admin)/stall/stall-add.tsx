@@ -10,7 +10,11 @@ import { addNewStall } from "@/utils/stallServices";
 import LabeledInput from "../components/LabelInput";
 import PriceRangeInput from "../components/PriceRangeInput";
 
-const StallAdd = () => {
+interface StallAddProps {
+  setAdminCurrentPage: (page: string) => void;
+}
+
+const StallAdd: React.FC<StallAddProps> = ({ setAdminCurrentPage }) => {
   const [details, setDetails] = useState({
     name: "",
     description: "",
@@ -52,6 +56,7 @@ const StallAdd = () => {
       price_symbol: "",
       stall_pic: "",
     });
+    setAdminCurrentPage("default");
   };
 
   return (

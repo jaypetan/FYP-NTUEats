@@ -9,7 +9,7 @@ import LabeledInput from "../components/LabelInput";
 import PriceRangeInput from "../components/PriceRangeInput";
 
 interface StallEditProps {
-  setAdminCurrentPage?: (page: string) => void;
+  setAdminCurrentPage: (page: string) => void;
   propId?: string;
 }
 const StallEdit: React.FC<StallEditProps> = ({
@@ -83,9 +83,7 @@ const StallEdit: React.FC<StallEditProps> = ({
     Alert.alert("Stall Updated Successfully");
 
     // Navigate back to stall list
-    if (setAdminCurrentPage) {
-      setAdminCurrentPage("stall-list");
-    }
+    setAdminCurrentPage("stall-list");
   };
 
   return (

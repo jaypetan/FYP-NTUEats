@@ -3,7 +3,7 @@ import TouchableScale from "@/app/components/TouchableScale";
 import { fetchStallData } from "@/utils/stallServices";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 interface StallListProps {
@@ -23,6 +23,25 @@ const StallList: React.FC<StallListProps> = ({
   const editStall = (stallId: string) => {
     setAdminCurrentPage("stall-edit");
     setPropId(stallId);
+  };
+
+  const handleDelete = (stallId: string) => {
+    Alert.alert(
+      "Delete Stall",
+      "Are you sure you want to delete this stall?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            // Perform deletion logic here, for demonstration no action taken
+            alert("Stall deleted successfully");
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
@@ -59,7 +78,7 @@ const StallList: React.FC<StallListProps> = ({
                     <FontAwesome name="edit" size={20} color="black" />
                   </View>
                 </TouchableScale>
-                <TouchableScale onPress={() => {}}>
+                <TouchableScale onPress={() => handleDelete(stall.id)}>
                   <View className="flex-row items-center gap-2 mt-2 rounded-2xl border-2 border-blue bg-red px-4 py-2">
                     <Text>Delete</Text>
                     <FontAwesome name="trash" size={20} color="black" />
