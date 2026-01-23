@@ -93,10 +93,7 @@ const StallReviewCard = ({
   };
 
   return (
-    <View
-      className={`bg-green/50 rounded-xl p-4 flex-col gap-4
-      }`}
-    >
+    <View className="bg-green/50 rounded-xl p-4 flex-col gap-4 border-2 border-blue w-full">
       <View className="flex-col w-full justify-between gap-4">
         <View>
           <View className="flex-row justify-between">

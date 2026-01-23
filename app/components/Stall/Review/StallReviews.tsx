@@ -8,19 +8,21 @@ import { fetchUserByDocId } from "@/utils/userServices";
 
 // Components
 import StallReviewCard from "@/app/components/Stall/Review/StallReviewCard";
+import StallReviewHeader from "@/app/components/Stall/Review/StallReviewHeader";
 
 interface StallReviewProps {
   selectedId: string | null;
 }
 const StallReview: React.FC<StallReviewProps> = (selectedId) => {
   const [numOfReviews, setNumOfReviews] = useState(3);
+  const [arrangement, setArrangement] = useState("most_liked");
   // Get reviews from backend based on selectedId
   const [reviewsData, setReviewsData] = useState<any[]>([]);
 
   // Fetch reviews when selectedId changes
   // Get names from user IDs in reviewsData, and format dates
   useEffect(() => {
-    getReviewArranged(selectedId.selectedId, "most_liked").then(
+    getReviewArranged(selectedId.selectedId, arrangement).then(
       async (data: any[]) => {
         if (data) {
           const reviewsWithNames = await Promise.all(
@@ -53,13 +55,14 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
 
   return (
     <View className="flex-col gap-4 mt-8" pointerEvents="box-none">
-      <Text className="text-blue font-inter font-bold text-3xl w-full text-center">
-        Top Reviews
-      </Text>
+      <StallReviewHeader
+        arrangement={arrangement}
+        setArrangement={setArrangement}
+      />
       <View className="flex-col gap-4">
         {!reviewsData ||
           (reviewsData.length === 0 && (
-            <Text className="text-black font-inter text-xl text-center">
+            <Text className="text-black text-xl text-center">
               No reviews currently available.
             </Text>
           ))}
