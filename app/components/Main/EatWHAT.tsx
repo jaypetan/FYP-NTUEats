@@ -12,11 +12,11 @@ import { fetchStallData, searchStallsByName } from "@/utils/stallServices";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
-import SearchBar from "@/app/components/EatWHAT/SearchBar";
 import StallCard from "@/app/components/EatWHAT/StallCard";
 import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
+import SearchBar from "@/app/components/SearchBar";
 
 interface EatWhatProps {
   backgroundColor: string;
@@ -36,20 +36,20 @@ export default function EatWhat({
   const [stallsShown, setStallsShown] = useState<number>(4);
   const [stallDataLength, setStallDataLength] = useState<number>(0);
 
-  useEffect(() => {
-    if (currentPage !== "eat-what") return;
-    setStallsShown(4); // Reset stalls shown when leaving the page
-
-    fetchStallFunction(stallsShown);
-  }, [currentPage]);
-
+  // Fetch stall data function
   const fetchStallFunction = (limitNumber: number) => {
     fetchStallData().then(({ data, length }) => {
       setStallData(data);
       setStallDataLength(length);
     });
   };
+  useEffect(() => {
+    if (currentPage !== "eat-what") return;
+    setStallsShown(4); // Reset stalls shown when leaving the page
+    fetchStallFunction(stallsShown);
+  }, [currentPage]);
 
+  // Fetch more stalls
   const loadMoreStalls = () => {
     const newLimit = stallsShown + 4;
     setStallsShown(newLimit);

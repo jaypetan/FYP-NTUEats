@@ -31,10 +31,6 @@ const HomeEatWHAT = () => {
   };
 
   useEffect(() => {
-    console.log(recipeData);
-  }, [recipeData]);
-
-  useEffect(() => {
     fetchRecipeData();
   }, []);
 

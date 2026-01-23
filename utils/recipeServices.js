@@ -1,7 +1,7 @@
 // Firebase imports
 import { db, uploadImageAsync } from "@/utils/firebase";
 import { fetchTotalLikesByItemId } from "@/utils/likeServices";
-import { fetchUserByClerkId } from "@/utils/userServices";
+import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 import {
   addDoc,
   collection,
@@ -56,15 +56,21 @@ export const getRecipes = async () => {
     const recipesCollection = collection(db, "recipes");
     const snapshot = await getDocs(recipesCollection);
     const recipes = await Promise.all(
-      snapshot.docs.map(async (doc) => ({
-        id: doc.id,
-        likes: await fetchTotalLikesByItemId(
+      snapshot.docs.map(async (doc) => {
+        const data = doc.data();
+        const likes = await fetchTotalLikesByItemId(
           "recipes_likes",
           "recipe_id",
           doc.id
-        ),
-        ...doc.data(),
-      }))
+        );
+        const chefData = await fetchUserByDocId(data.user_id);
+        return {
+          id: doc.id,
+          likes,
+          chef_name: chefData.username,
+          ...data,
+        };
+      })
     );
     return recipes;
   } catch (error) {
@@ -137,6 +143,40 @@ export const deleteRecipeById = async (recipeId) => {
   } catch (error) {
     console.error("Error deleting recipe: ", error);
     return false;
+  }
+};
+
+export const searchRecipesByTitleArranged = async (
+  keyword,
+  arrangementType,
+  limitNum
+) => {
+  try {
+    const lowerKeyword = keyword.toLowerCase();
+    const recipes = await getRecipes();
+
+    // Filter by title
+    const filteredRecipes = recipes.filter((recipe) =>
+      recipe.title.toLowerCase().includes(lowerKeyword)
+    );
+
+    // Sort by arrangementType
+    if (arrangementType === "most_likes") {
+      filteredRecipes.sort((a, b) => b.likes - a.likes);
+    } else if (arrangementType === "most_recent") {
+      filteredRecipes.sort((a, b) => b.timestamp - a.timestamp);
+    }
+
+    const total = filteredRecipes.length;
+    const limitedRecipes =
+      typeof limitNum === "number" && limitNum > 0
+        ? filteredRecipes.slice(0, limitNum)
+        : filteredRecipes;
+
+    return { content: limitedRecipes, total };
+  } catch (error) {
+    console.error("Error searching and arranging recipes: ", error);
+    return { content: [], total: 0 };
   }
 };
 

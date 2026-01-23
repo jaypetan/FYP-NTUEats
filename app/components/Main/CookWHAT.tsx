@@ -1,23 +1,25 @@
 // React and React Native core
-import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Image, ScrollView, Text, View } from "react-native";
 
 // Assets
 import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
 
 // Utilities
-import { getRecipesArranged } from "@/utils/recipeServices";
-import { fetchUserByDocId } from "@/utils/userServices";
+import {
+  getRecipesArranged,
+  searchRecipesByTitleArranged,
+} from "@/utils/recipeServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
 import RecipeCard from "@/app/components/CookWHAT/RecipeCard";
-import SearchBar from "@/app/components/CookWHAT/SearchBar";
 import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
+import SearchBar from "@/app/components/SearchBar";
 
 interface CookWhatProps {
   backgroundColor: string;
@@ -37,28 +39,43 @@ export default function CookWhat({
   // Fetch all recipes on component mount
   const fetchRecipesFunction = async (recipesToShow: number) => {
     const recipes = await getRecipesArranged("most_likes", recipesToShow);
-    const recipesWithChef = await Promise.all(
-      recipes.content.map(async (recipe: any) => {
-        const chefData = await fetchUserByDocId(recipe.user_id);
-        return {
-          ...recipe,
-          chef_name: chefData ? chefData.username : "Unknown Chef",
-        };
-      })
-    );
-    setRecipesData(recipesWithChef);
+    setRecipesData(recipes.content);
   };
   useEffect(() => {
+    if (currentPage !== "cook-what") return;
     const recipesToShow = 4;
     setRecipesShown(recipesToShow); // Reset to initial number of recipes
     fetchRecipesFunction(recipesToShow);
-  }, []);
+  }, [currentPage]);
 
   // Fetch more recipes
   const loadMoreRecipes = () => {
     const recipesToShow = recipesShown + 4;
     setRecipesShown(recipesToShow);
     fetchRecipesFunction(recipesToShow);
+  };
+
+  // Search bar functionality
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
+    if (query.trim() === "") {
+      fetchRecipesFunction(recipesShown);
+    } else {
+      searchRecipesByTitleArranged(query, "most_likes", recipesShown).then(
+        (results) => {
+          setRecipesData(results.content);
+        }
+      );
+    }
+  };
+
+  // ScrollView reference for scrolling to top on search
+  const scrollViewRef = useRef<ScrollView>(null);
+  const handleScroll = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 200, animated: true });
+    }
   };
 
   return (
@@ -79,6 +96,7 @@ export default function CookWhat({
         <View className={`bg-${backgroundColor} pt-8 rounded-tl-3xl`}>
           <OptimizedScrollView
             className={`bg-${backgroundColor} min-h-[80vh] px-8`}
+            ref={scrollViewRef}
           >
             <View className="flex-row gap-2 mt-4 mb-2 justify-center">
               <Image
@@ -90,20 +108,26 @@ export default function CookWhat({
             <Text className="text-4xl font-koulen pt-4 text-blue">
               What are we cooking today?
             </Text>
-            <SearchBar />
-            {recipesData.map((recipe, index) => (
-              <RecipeCard
-                key={index}
-                recipeId={recipe.id}
-                foodImage={recipe.recipe_pic}
-                foodName={recipe.title}
-                chefName={recipe.chef_name}
-                duration={recipe.cooking_time}
-                halal={recipe.halal}
-                vegetarian={recipe.vegetarian}
-                spicy={recipe.spicy}
-              />
-            ))}
+            <SearchBar
+              handleSearch={handleSearch}
+              searchTerm={searchTerm}
+              handleScroll={handleScroll}
+            />
+            <View className="min-h-[50vh] flex-col gap-4 mt-6">
+              {recipesData.map((recipe, index) => (
+                <RecipeCard
+                  key={index}
+                  recipeId={recipe.id}
+                  foodImage={recipe.recipe_pic}
+                  foodName={recipe.title}
+                  chefName={recipe.chef_name}
+                  duration={recipe.cooking_time}
+                  halal={recipe.halal}
+                  vegetarian={recipe.vegetarian}
+                  spicy={recipe.spicy}
+                />
+              ))}
+            </View>
             {recipesData.length >= recipesShown && (
               <LoadMore onClick={loadMoreRecipes} />
             )}
