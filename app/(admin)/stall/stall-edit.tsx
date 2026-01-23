@@ -9,7 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 // Project components
 import PriceRangeInput from "@/app/(admin)//components/PriceRangeInput";
 import LabeledInput from "@/app/(admin)/components/LabeledInput";
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 // Project utilities

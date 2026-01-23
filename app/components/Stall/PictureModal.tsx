@@ -14,7 +14,7 @@ import { fetchReviewImagesByStallId } from "@/utils/reviewServices";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 
 interface PictureModalProps {
   setPictureModalVisible: (visible: boolean) => void;

@@ -1,12 +1,12 @@
 // React and React Native core
-import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Image, ScrollView, Text, View } from "react-native";
 
 // Assets
 import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
 
 // Utilities
-import { fetchStallData } from "@/utils/stallServices";
+import { fetchStallData, searchStallsByName } from "@/utils/stallServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
@@ -34,6 +34,7 @@ export default function EatWhat({
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
   const [stallsShown, setStallsShown] = useState<number>(4);
+  const [stallDataLength, setStallDataLength] = useState<number>(0);
 
   useEffect(() => {
     if (currentPage !== "eat-what") return;
@@ -43,8 +44,9 @@ export default function EatWhat({
   }, [currentPage]);
 
   const fetchStallFunction = (limitNumber: number) => {
-    fetchStallData(limitNumber).then((data) => {
+    fetchStallData().then(({ data, length }) => {
       setStallData(data);
+      setStallDataLength(length);
     });
   };
 
@@ -53,7 +55,24 @@ export default function EatWhat({
     setStallsShown(newLimit);
     fetchStallFunction(newLimit);
   };
-  // TODO: Add search bar functionality
+
+  // Search bar functionality
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
+    // Implement search filtering logic here
+    searchStallsByName(query).then((data) => {
+      setStallData(data);
+    });
+  };
+
+  // ScrollView reference for scrolling to top on search
+  const scrollViewRef = useRef<ScrollView>(null);
+  const handleScroll = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 200, animated: true });
+    }
+  };
 
   return (
     <View className="h-full w-full flex-col">
@@ -73,6 +92,7 @@ export default function EatWhat({
         <View className={`bg-${backgroundColor} pt-8 rounded-tl-3xl`}>
           <OptimizedScrollView
             className={`bg-${backgroundColor} min-h-[80vh] px-8`}
+            ref={scrollViewRef}
           >
             <View className="flex-row gap-2 mt-4 mb-2 justify-center">
               <Image
@@ -84,19 +104,25 @@ export default function EatWhat({
             <Text className="text-4xl font-koulen pt-4 text-blue">
               What are we eating today?
             </Text>
-            <SearchBar />
-            {stallData.map((stall, index) => (
-              <StallCard
-                key={index}
-                imageSource={stall.stall_pic}
-                title={stall.name}
-                location={stall.location}
-                description={stall.description}
-                priceSymbol={stall.price_symbol}
-                stallId={stall.id}
-              />
-            ))}
-            {stallData.length >= stallsShown && (
+            <SearchBar
+              handleSearch={handleSearch}
+              searchTerm={searchTerm}
+              handleScroll={handleScroll}
+            />
+            <View className="min-h-[50vh] flex-col gap-4 mt-6">
+              {stallData.map((stall, index) => (
+                <StallCard
+                  key={index}
+                  imageSource={stall.stall_pic}
+                  title={stall.name}
+                  location={stall.location}
+                  description={stall.description}
+                  priceSymbol={stall.price_symbol}
+                  stallId={stall.id}
+                />
+              ))}
+            </View>
+            {stallDataLength > stallsShown && (
               <LoadMore onClick={loadMoreStalls} />
             )}
             <Text className="py-24" />

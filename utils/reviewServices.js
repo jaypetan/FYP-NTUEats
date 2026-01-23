@@ -130,7 +130,7 @@ export const fetchReviewImagesByStallId = async (stallId) => {
 // Function to fetch review image with most likes for a specific stall
 export const fetchTopReviewImageByStallId = async (stallId) => {
   try {
-    const reviews = await fetchReviewsByStallId(stallId);
+    const reviews = await getReviewArranged(stallId, "most_liked");
     // Filter reviews with a valid review_pic
     const reviewsWithPic = reviews.filter(
       (r) => r.review_pic && r.review_pic !== ""

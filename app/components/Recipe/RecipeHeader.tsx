@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 
 // Components
 import ClosePage from "@/app/components/ClosePage";
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 import RecipeNav from "@/app/components/Recipe/RecipeNav";
 
 interface RecipeHeaderProps {

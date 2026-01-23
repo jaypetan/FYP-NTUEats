@@ -11,7 +11,7 @@ interface ImageLoaderProps {
   className?: string;
 }
 
-export const ImageLoader: React.FC<ImageLoaderProps> = ({
+const ImageLoader: React.FC<ImageLoaderProps> = ({
   image,
   loaderClassName = "",
   className = "",
@@ -39,3 +39,5 @@ export const ImageLoader: React.FC<ImageLoaderProps> = ({
     </View>
   );
 };
+
+export default ImageLoader;

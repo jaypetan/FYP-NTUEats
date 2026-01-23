@@ -9,7 +9,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 interface FoodCardProps {

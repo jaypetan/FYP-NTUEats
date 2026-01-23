@@ -16,7 +16,7 @@ import {
 import { fetchUserByClerkId } from "@/utils/userServices";
 
 // Components
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 
 interface MenuCardProps {
   item: {

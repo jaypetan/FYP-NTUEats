@@ -16,7 +16,7 @@ import {
 import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 
 // Components
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 
 interface RecipeCommentCardProps {
   comment: {

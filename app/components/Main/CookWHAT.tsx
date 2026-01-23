@@ -7,6 +7,7 @@ import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
 
 // Utilities
 import { getRecipesArranged } from "@/utils/recipeServices";
+import { fetchUserByDocId } from "@/utils/userServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
@@ -34,9 +35,18 @@ export default function CookWhat({
   const [recipesShown, setRecipesShown] = useState(4);
 
   // Fetch all recipes on component mount
-  const fetchRecipesFunction = async (recipesToShow: Number) => {
+  const fetchRecipesFunction = async (recipesToShow: number) => {
     const recipes = await getRecipesArranged("most_likes", recipesToShow);
-    setRecipesData(recipes.content);
+    const recipesWithChef = await Promise.all(
+      recipes.content.map(async (recipe: any) => {
+        const chefData = await fetchUserByDocId(recipe.user_id);
+        return {
+          ...recipe,
+          chef_name: chefData ? chefData.username : "Unknown Chef",
+        };
+      })
+    );
+    setRecipesData(recipesWithChef);
   };
   useEffect(() => {
     const recipesToShow = 4;
@@ -87,7 +97,7 @@ export default function CookWhat({
                 recipeId={recipe.id}
                 foodImage={recipe.recipe_pic}
                 foodName={recipe.title}
-                chefName={recipe.chefName}
+                chefName={recipe.chef_name}
                 duration={recipe.cooking_time}
                 halal={recipe.halal}
                 vegetarian={recipe.vegetarian}

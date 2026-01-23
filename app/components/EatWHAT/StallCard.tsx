@@ -5,7 +5,7 @@ import { Text, View } from "react-native";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 interface StallCardProps {

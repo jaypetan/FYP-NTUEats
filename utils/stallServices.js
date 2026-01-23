@@ -6,7 +6,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
   query,
   serverTimestamp,
   updateDoc,
@@ -35,24 +34,19 @@ export const addNewStall = async (stallData) => {
   }
 };
 
-// Function to fetch stall data
-export const fetchStallData = async (limitNum) => {
+// Function to fetch stall data and return both data and length
+export const fetchStallData = async () => {
   try {
-    let q;
-    if (limitNum) {
-      q = query(collection(db, "stalls"), limit(limitNum));
-    } else {
-      q = collection(db, "stalls");
-    }
+    const q = collection(db, "stalls");
     const querySnapshot = await getDocs(q);
     const stallsData = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    return stallsData;
+    return { data: stallsData, length: stallsData.length };
   } catch (error) {
     console.error("Error fetching stall data: ", error);
-    return [];
+    return { data: [], length: 0 };
   }
 };
 
@@ -93,5 +87,25 @@ export const updateStallById = async (stallId, updatedData) => {
   } catch (error) {
     console.error("Error updating stall data: ", error);
     return false;
+  }
+};
+
+// Function to search stalls by name
+export const searchStallsByName = async (searchTerm) => {
+  try {
+    const q = query(collection(db, "stalls"));
+    const querySnapshot = await getDocs(q);
+    const stallsData = querySnapshot.docs
+      .map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      .filter((stall) =>
+        stall.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    return stallsData;
+  } catch (error) {
+    console.error("Error searching stalls by name: ", error);
+    return [];
   }
 };

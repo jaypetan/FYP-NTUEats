@@ -10,7 +10,6 @@ import Animated, { FadeOut } from "react-native-reanimated";
 import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
 
 // Utilities
-import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import { getRecipesArranged } from "@/utils/recipeServices";
 
 // App Context
@@ -28,17 +27,12 @@ const HomeEatWHAT = () => {
   const [recipeData, setRecipeData] = useState<any[]>([]);
   const fetchRecipeData = async () => {
     const data = await getRecipesArranged("most_likes", 4);
-    const likesPromises = data.content.map(async (recipe) => {
-      const likes = await fetchTotalLikesByItemId(
-        "recipes_likes",
-        "recipe_id",
-        recipe.id
-      );
-      return { ...recipe, likes };
-    });
-    const recipesWithLikes = await Promise.all(likesPromises);
-    setRecipeData(recipesWithLikes);
+    setRecipeData(data.content);
   };
+
+  useEffect(() => {
+    console.log(recipeData);
+  }, [recipeData]);
 
   useEffect(() => {
     fetchRecipeData();

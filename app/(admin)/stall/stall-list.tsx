@@ -7,7 +7,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 
 // Project components
-import { ImageLoader } from "@/app/components/ImageLoader";
+import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 // Project utilities
@@ -24,7 +24,7 @@ const StallList: React.FC<StallListProps> = ({
 }) => {
   const [stalls, setStalls] = useState<any[]>([]);
   useEffect(() => {
-    fetchStallData().then((data) => setStalls(data));
+    fetchStallData().then((response) => setStalls(response.data));
   }, []);
 
   const editStall = (stallId: string) => {

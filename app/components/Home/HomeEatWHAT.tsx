@@ -27,10 +27,10 @@ const HomeEatWHAT = () => {
 
   useEffect(() => {
     // Fetch only 4 stalls
-    fetchStallData(4).then(async (data) => {
+    fetchStallData().then(async (data) => {
       // Fetch review images for each stall
       const stallsWithImages = await Promise.all(
-        data.map(async (stall) => {
+        data.data.map(async (stall) => {
           const reviewImage = await fetchTopReviewImageByStallId(stall.id);
           return { ...stall, reviewImage };
         })
