@@ -81,6 +81,14 @@ const StallReviewCard = ({
     checkUserLikeStatus();
   }, [currentUserId]);
 
+  // Fetch updated likes when data updates
+  useEffect(() => {
+    getCurrentUserId().then(() => {
+      checkUserLikeStatus();
+    });
+    fetchLikes();
+  }, [reviewID]);
+
   // Handle like button press
   const likeReviewHandler = async () => {
     if (like === false) {

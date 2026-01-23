@@ -79,6 +79,7 @@ export default function StallPage() {
             setPictureModalVisible={setPictureModalVisible}
             addReview={addReview}
             setAddReview={setAddReview}
+            stallId={selectedId || ""}
           />
           {addReview ? (
             <AddReviewPage setAddReview={setAddReview} />

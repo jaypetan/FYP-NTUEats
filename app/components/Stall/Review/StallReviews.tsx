@@ -20,8 +20,14 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
   const [reviewsData, setReviewsData] = useState<any[]>([]);
 
   // Fetch reviews when selectedId changes
-  // Get names from user IDs in reviewsData, and format dates
   useEffect(() => {
+    if (selectedId.selectedId) {
+      arrangeReviews();
+    }
+  }, [selectedId.selectedId, arrangement]);
+
+  // Get names from user IDs in reviewsData, and format dates
+  const arrangeReviews = () => {
     getReviewArranged(selectedId.selectedId, arrangement).then(
       async (data: any[]) => {
         if (data) {
@@ -36,7 +42,7 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
         }
       }
     );
-  }, [selectedId.selectedId]);
+  };
 
   // Get names from user IDs in reviewsData
   const getUserName = async (userId: string) => {
@@ -58,6 +64,7 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
       <StallReviewHeader
         arrangement={arrangement}
         setArrangement={setArrangement}
+        arrangeReviews={arrangeReviews}
       />
       <View className="flex-col gap-4">
         {!reviewsData ||

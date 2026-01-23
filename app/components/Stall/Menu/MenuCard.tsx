@@ -31,15 +31,14 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
   const [like, setLike] = useState(false);
   const [menuLikesCount, setMenuLikesCount] = useState(0);
 
-  // Check if the user has liked the menu
-  const checkUserLikeStatus = async () => {
-    const userHasLiked = await hasUserLikedItem(
-      "menus_likes",
-      "menu_id",
-      item.id,
-      currentUserId
-    );
-    setLike(userHasLiked);
+  // Get current user ID
+  const getCurrentUserId = async () => {
+    if (user) {
+      const userData = await fetchUserByClerkId(user.id);
+      setCurrentUserId(userData ? userData.id : null);
+      return userData ? userData.id : null;
+    }
+    return null;
   };
 
   // Fetch total likes for the menu
@@ -52,14 +51,15 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
     setMenuLikesCount(likes);
   };
 
-  // Get current user ID
-  const getCurrentUserId = async () => {
-    if (user) {
-      const userData = await fetchUserByClerkId(user.id);
-      setCurrentUserId(userData ? userData.id : null);
-      return userData ? userData.id : null;
-    }
-    return null;
+  // Check if the user has liked the menu
+  const checkUserLikeStatus = async () => {
+    const userHasLiked = await hasUserLikedItem(
+      "menus_likes",
+      "menu_id",
+      item.id,
+      currentUserId
+    );
+    setLike(userHasLiked);
   };
 
   // Fetch like status and total likes on component mount
