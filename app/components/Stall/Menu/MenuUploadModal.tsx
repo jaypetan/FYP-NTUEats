@@ -32,29 +32,25 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async () => {
-    if (isProcessing) return; // Prevent multiple submissions
     if (!image) {
       alert("Please select an image to upload.");
       return;
     }
     setIsProcessing(true);
-    await addNewMenuItem({
-      stall_id: selectedId,
-      image: image,
-    });
-
-    console.log(
-      "Menu Image Submitted for Stall ID:",
-      selectedId,
-      "Image URI:",
-      image
-    );
-    alert("Menu image submitted successfully!");
-
-    // Reset form
-    setIsProcessing(false);
-    setImage("");
-    closeMenuUploadModal();
+    try {
+      await addNewMenuItem({
+        image: image,
+        stall_id: selectedId || "",
+      });
+      alert("Menu item uploaded successfully!");
+    } catch (error) {
+      alert("Error uploading menu item. Please try again.");
+    } finally {
+      // Reset form
+      setImage("");
+      setIsProcessing(false);
+      closeMenuUploadModal();
+    }
   };
 
   const closeMenuUploadModal = () => {
@@ -87,10 +83,11 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
             <View className="flex-row w-full justify-end">
               <TouchableScale
                 onPress={handleSubmit}
+                disabled={isProcessing}
                 className="bg-green rounded-md py-2 px-4 items-center mt-4"
               >
                 <Text className="text-blue font-semibold text-base">
-                  Submit Menu
+                  {isProcessing ? "Uploading..." : "Submit"}
                 </Text>
               </TouchableScale>
             </View>

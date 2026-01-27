@@ -12,13 +12,11 @@ import TouchableScale from "@/app/components/TouchableScale";
 interface StallReviewHeaderProps {
   arrangement: string;
   setArrangement: (arrangement: string) => void;
-  arrangeReviews: () => void;
 }
 
 const StallReviewHeader: React.FC<StallReviewHeaderProps> = ({
   arrangement,
   setArrangement,
-  arrangeReviews,
 }) => {
   const handleChange = () => {
     const newArrangement =

@@ -39,25 +39,26 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
       alert("Please fill in all required fields.");
       return;
     }
+    setIsProcessing(true);
+    try {
+      // Prepare review details
+      details.stall_id = selectedId || "";
+      details.user_id = user ? user.id : "";
+      await addNewReview(details);
+      alert("Review submitted successfully!");
 
-    // Get stall_id
-    details.stall_id = selectedId || "";
-    // Get user_id
-    details.user_id = user ? user.id : "";
-
-    console.log("Review Submitted:", details);
-    await addNewReview(details);
-    alert("Review submitted successfully!");
-
-    // Reset form
-    setDetails({
-      title: "",
-      content: "",
-      review_pic: "",
-      stall_id: "",
-      user_id: "",
-    });
-    setAddReview(false);
+      // Reset form
+      setDetails({
+        title: "",
+        content: "",
+        review_pic: "",
+        stall_id: "",
+        user_id: "",
+      });
+      setAddReview(false);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -98,9 +99,14 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
       {/* Submit Button */}
       <TouchableScale
         onPress={handleSubmit}
-        className="bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue mb-8"
+        disabled={isProcessing}
+        className={`bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue mb-8 ${
+          isProcessing ? "opacity-50" : ""
+        }`}
       >
-        <Text className="text-blue font-semibold text-base">Submit Review</Text>
+        <Text className="text-blue font-semibold text-base">
+          {isProcessing ? "Submitting..." : "Submit Review"}
+        </Text>
       </TouchableScale>
     </View>
   );

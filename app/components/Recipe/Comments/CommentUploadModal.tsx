@@ -36,7 +36,6 @@ const CommentUploadModal: React.FC<CommentUploadModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async () => {
-    if (isProcessing) return; // Prevent multiple submissions
     // Validate input
     if (commentContent.trim() === "") {
       alert("Please enter comment content.");
@@ -44,21 +43,25 @@ const CommentUploadModal: React.FC<CommentUploadModalProps> = ({
     }
     setIsProcessing(true);
 
-    // Submit comment
-    await addRecipeComment({
-      user_id: user?.id || "",
-      recipe_id: selectedId,
-      content: commentContent,
-      comment_pic: image,
-    });
-    alert("Comment uploaded successfully!");
-
-    // Reset form
-    fetchCommentsData();
-    setIsProcessing(false);
-    setImage("");
-    setCommentContent("");
-    closeCommentUploadModal();
+    try {
+      await addRecipeComment({
+        content: commentContent,
+        comment_pic: image,
+        recipe_id: selectedId || "",
+        user_id: user ? user.id : "",
+      });
+      alert("Comment submitted successfully!");
+      // Refresh comments data
+      await fetchCommentsData();
+    } catch (error) {
+      alert("Error submitting comment. Please try again.");
+    } finally {
+      // Reset form
+      setCommentContent("");
+      setImage("");
+      setIsProcessing(false);
+      closeCommentUploadModal();
+    }
   };
 
   const closeCommentUploadModal = () => {
@@ -105,6 +108,7 @@ const CommentUploadModal: React.FC<CommentUploadModalProps> = ({
               <TouchableScale
                 onPress={handleSubmit}
                 className="bg-green rounded-md py-2 px-4 items-center mt-4"
+                disabled={isProcessing}
               >
                 <Text className="text-blue font-semibold text-base">
                   Submit

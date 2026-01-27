@@ -11,7 +11,7 @@ const LoadMore = ({ onClick }: { onClick: () => void }) => {
   return (
     <TouchableScale
       onPress={onClick}
-      className="justify-center items-center mt-4 w-64 self-center border-2 border-blue rounded-full p-2 flex-row"
+      className="justify-center items-center mt-8 w-64 self-center border-2 border-blue rounded-full p-2 flex-row"
     >
       <Text className="text-blue font-koulen pt-3 text-2xl mr-2">
         Load More

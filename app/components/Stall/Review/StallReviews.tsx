@@ -11,34 +11,39 @@ import StallReviewCard from "@/app/components/Stall/Review/StallReviewCard";
 import StallReviewHeader from "@/app/components/Stall/Review/StallReviewHeader";
 
 interface StallReviewProps {
-  selectedId: string | null;
+  selectedId: string | "";
 }
+
 const StallReview: React.FC<StallReviewProps> = (selectedId) => {
   const [numOfReviews, setNumOfReviews] = useState(3);
   const [arrangement, setArrangement] = useState("most_liked");
   // Get reviews from backend based on selectedId
   const [reviewsData, setReviewsData] = useState<any[]>([]);
+  const [reviewsLength, setReviewsLength] = useState(0);
 
   // Fetch reviews when selectedId changes
   useEffect(() => {
     if (selectedId.selectedId) {
-      arrangeReviews();
+      arrangeReviews(arrangement, numOfReviews);
     }
-  }, [selectedId.selectedId, arrangement]);
+  }, [selectedId.selectedId, arrangement, numOfReviews]);
 
   // Get names from user IDs in reviewsData, and format dates
-  const arrangeReviews = () => {
-    getReviewArranged(selectedId.selectedId, arrangement).then(
-      async (data: any[]) => {
-        if (data) {
+  const arrangeReviews = (arrangement: string, numOfReviews: number) => {
+    getReviewArranged(selectedId.selectedId, arrangement, numOfReviews).then(
+      async (data) => {
+        if (data && Array.isArray(data.data)) {
           const reviewsWithNames = await Promise.all(
-            data.map(async (review) => {
-              review.reviewDate = formatDate(review.timestamp);
-              review.name = await getUserName(review.user_id);
-              return review;
-            })
+            data.data.map(async (review) => ({
+              ...review,
+              reviewDate: formatDate(review.timestamp),
+              name: await getUserName(review.user_id),
+            }))
           );
           setReviewsData(reviewsWithNames);
+          setReviewsLength(data.length);
+        } else {
+          setReviewsData([]);
         }
       }
     );
@@ -59,12 +64,20 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
     return `${month}/${day}/${year}`;
   };
 
+  const handleMoreReviews = () => {
+    let newNumOfReviews = numOfReviews + 2;
+    if (newNumOfReviews > reviewsLength) {
+      newNumOfReviews = reviewsLength;
+    }
+    setNumOfReviews(newNumOfReviews);
+    arrangeReviews(arrangement, newNumOfReviews);
+  };
+
   return (
     <View className="flex-col gap-4 mt-8" pointerEvents="box-none">
       <StallReviewHeader
         arrangement={arrangement}
         setArrangement={setArrangement}
-        arrangeReviews={arrangeReviews}
       />
       <View className="flex-col gap-4">
         {!reviewsData ||
@@ -73,7 +86,7 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
               No reviews currently available.
             </Text>
           ))}
-        {reviewsData.slice(0, numOfReviews).map((review, index) => (
+        {reviewsData.map((review, index) => (
           <StallReviewCard
             key={index}
             reviewID={review.id}
@@ -85,16 +98,10 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
           />
         ))}
       </View>
-      {reviewsData.length > numOfReviews && (
+      {reviewsLength > numOfReviews && (
         <TouchableOpacity
           className="border-2 border-blue rounded-2xl p-4 flex-row justify-center"
-          onPress={() =>
-            setNumOfReviews(
-              numOfReviews + 1 < reviewsData.length
-                ? numOfReviews + 2
-                : reviewsData.length
-            )
-          }
+          onPress={() => handleMoreReviews()}
         >
           <Text className="text-blue font-inter font-bold text-lg">
             View More Reviews

@@ -7,6 +7,7 @@ interface TouchableScaleProps {
   className?: string; // NativeWind className support
   onPress: () => void;
   scaleTo?: number; // Scale factor (default: 0.95)
+  disabled?: boolean;
 }
 
 const TouchableScale: React.FC<TouchableScaleProps> = ({
@@ -14,6 +15,7 @@ const TouchableScale: React.FC<TouchableScaleProps> = ({
   onPress,
   className,
   scaleTo = 0.95, // Default scale factor
+  disabled = false,
 }) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
 
@@ -36,6 +38,7 @@ const TouchableScale: React.FC<TouchableScaleProps> = ({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       onPress={onPress}
+      disabled={disabled}
     >
       <Animated.View
         style={{ transform: [{ scale: scaleValue }] }}

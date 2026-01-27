@@ -6,7 +6,7 @@ import { Image, ScrollView, Text, View } from "react-native";
 import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
 
 // Utilities
-import { fetchStallData, searchStallsByName } from "@/utils/stallServices";
+import { getStallsArranged, searchStallsByName } from "@/utils/stallServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
@@ -33,27 +33,33 @@ export default function EatWhat({
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
+  const [arrangement, setArrangement] = useState<string>("most_saved");
   const [stallsShown, setStallsShown] = useState<number>(4);
   const [stallDataLength, setStallDataLength] = useState<number>(0);
 
   // Fetch stall data function
-  const fetchStallFunction = (limitNumber: number) => {
-    fetchStallData().then(({ data, length }) => {
+  const fetchStallFunction = (arrangement: string, limitNumber: number) => {
+    getStallsArranged(arrangement, limitNumber).then(({ data, length }) => {
       setStallData(data);
       setStallDataLength(length);
     });
   };
+
   useEffect(() => {
     if (currentPage !== "eat-what") return;
-    setStallsShown(4); // Reset stalls shown when leaving the page
-    fetchStallFunction(stallsShown);
+    const stallsToShow = 4; // Reset stalls shown when leaving the page
+    setStallsShown(stallsToShow);
+    fetchStallFunction(arrangement, stallsToShow);
   }, [currentPage]);
 
   // Fetch more stalls
   const loadMoreStalls = () => {
-    const newLimit = stallsShown + 4;
+    let newLimit = stallsShown + 2;
+    if (newLimit > stallDataLength) {
+      newLimit = stallDataLength;
+    }
     setStallsShown(newLimit);
-    fetchStallFunction(newLimit);
+    fetchStallFunction(arrangement, newLimit);
   };
 
   // Search bar functionality

@@ -1,5 +1,6 @@
 // Firebase imports
 import { db, uploadImageAsync } from "@/utils/firebase";
+import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import {
   addDoc,
   collection,
@@ -39,13 +40,60 @@ export const fetchStallData = async () => {
   try {
     const q = collection(db, "stalls");
     const querySnapshot = await getDocs(q);
+
     const stallsData = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    return { data: stallsData, length: stallsData.length };
+
+    const stallsDataWithSaves = await Promise.all(
+      stallsData.map(async (stall) => {
+        const saves = await fetchTotalLikesByItemId(
+          "stalls_saved",
+          "stall_id",
+          stall.id
+        );
+        return { ...stall, saves };
+      })
+    );
+
+    return { data: stallsDataWithSaves, length: stallsData.length };
   } catch (error) {
     console.error("Error fetching stall data: ", error);
+    return { data: [], length: 0 };
+  }
+};
+
+// Function to arrange stalls
+export const getStallsArranged = async (arrangement, limitNum) => {
+  try {
+    const { data: stallsData, length } = await fetchStallData();
+
+    let arrangedStalls = [...stallsData];
+
+    if (arrangement === "most_saved") {
+      arrangedStalls.sort((a, b) => b.saves - a.saves);
+    } else if (arrangement === "alphabetical") {
+      arrangedStalls.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (arrangement === "price_low_to_high") {
+      const priceOrder = { $: 1, $$: 2, $$$: 3, $$$$: 4 };
+      arrangedStalls.sort(
+        (a, b) => priceOrder[a.price_symbol] - priceOrder[b.price_symbol]
+      );
+    } else if (arrangement === "price_high_to_low") {
+      const priceOrder = { $: 1, $$: 2, $$$: 3, $$$$: 4 };
+      arrangedStalls.sort(
+        (a, b) => priceOrder[b.price_symbol] - priceOrder[a.price_symbol]
+      );
+    }
+
+    if (typeof limitNum === "number" && limitNum > 0) {
+      arrangedStalls = arrangedStalls.slice(0, limitNum);
+    }
+
+    return { data: arrangedStalls, length };
+  } catch (error) {
+    console.error("Error arranging stalls: ", error);
     return { data: [], length: 0 };
   }
 };

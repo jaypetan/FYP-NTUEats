@@ -35,16 +35,18 @@ export default function CookWhat({
   const { currentPage, setCurrentPage } = useAppContext();
   const [recipesData, setRecipesData] = useState<any[]>([]);
   const [recipesShown, setRecipesShown] = useState(4);
+  const [recipesDataLength, setRecipesDataLength] = useState(0);
 
   // Fetch all recipes on component mount
   const fetchRecipesFunction = async (recipesToShow: number) => {
     const recipes = await getRecipesArranged("most_likes", recipesToShow);
     setRecipesData(recipes.content);
+    setRecipesDataLength(recipes.length);
   };
   useEffect(() => {
     if (currentPage !== "cook-what") return;
-    const recipesToShow = 4;
-    setRecipesShown(recipesToShow); // Reset to initial number of recipes
+    const recipesToShow = 4; // Reset stalls shown when leaving the page
+    setRecipesShown(recipesToShow);
     fetchRecipesFunction(recipesToShow);
   }, [currentPage]);
 
@@ -128,7 +130,7 @@ export default function CookWhat({
                 />
               ))}
             </View>
-            {recipesData.length >= recipesShown && (
+            {recipesDataLength > recipesShown && (
               <LoadMore onClick={loadMoreRecipes} />
             )}
             <Text className="py-24" />

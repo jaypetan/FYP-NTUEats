@@ -11,7 +11,7 @@ import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
 
 // Utilities
 import { fetchTopReviewImageByStallId } from "@/utils/reviewServices";
-import { fetchStallData } from "@/utils/stallServices";
+import { getStallsArranged } from "@/utils/stallServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
@@ -27,7 +27,7 @@ const HomeEatWHAT = () => {
 
   useEffect(() => {
     // Fetch only 4 stalls
-    fetchStallData().then(async (data) => {
+    getStallsArranged("most_saved", 4).then(async (data) => {
       // Fetch review images for each stall
       const stallsWithImages = await Promise.all(
         data.data.map(async (stall) => {

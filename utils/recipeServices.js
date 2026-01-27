@@ -92,16 +92,16 @@ export const getRecipesArranged = async (arrangementType, limitNum) => {
       console.log("Invalid arrangement type. Returning unsorted recipes.");
     }
 
-    const total = recipes.length; // Store total before slicing
+    const length = recipes.length; // Store length before slicing
     const limitedRecipes =
       typeof limitNum === "number" && limitNum > 0
         ? recipes.slice(0, limitNum)
         : recipes;
 
-    return { content: limitedRecipes, total };
+    return { content: limitedRecipes, length };
   } catch (error) {
     console.error("Error arranging recipes: ", error);
-    return { content: [], total: 0 };
+    return { content: [], length: 0 };
   }
 };
 
