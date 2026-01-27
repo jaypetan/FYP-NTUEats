@@ -4,7 +4,6 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 // Utilities
 import { getReviewArranged } from "@/utils/reviewServices";
-import { fetchUserByDocId } from "@/utils/userServices";
 
 // Components
 import StallReviewCard from "@/app/components/Stall/Review/StallReviewCard";
@@ -33,35 +32,13 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
     getReviewArranged(selectedId.selectedId, arrangement, numOfReviews).then(
       async (data) => {
         if (data && Array.isArray(data.data)) {
-          const reviewsWithNames = await Promise.all(
-            data.data.map(async (review) => ({
-              ...review,
-              reviewDate: formatDate(review.timestamp),
-              name: await getUserName(review.user_id),
-            }))
-          );
-          setReviewsData(reviewsWithNames);
+          setReviewsData(data.data);
           setReviewsLength(data.length);
         } else {
           setReviewsData([]);
         }
       }
     );
-  };
-
-  // Get names from user IDs in reviewsData
-  const getUserName = async (userId: string) => {
-    const userData = await fetchUserByDocId(userId);
-    return userData ? userData.username : "Unknown User";
-  };
-
-  // Convert date format from ISO to MM/DD/YYYY
-  const formatDate = (input: { seconds: number }) => {
-    const date = new Date(input.seconds * 1000);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
   };
 
   const handleMoreReviews = () => {
@@ -72,6 +49,12 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
     setNumOfReviews(newNumOfReviews);
     arrangeReviews(arrangement, newNumOfReviews);
   };
+
+  useEffect(() => {
+    console.log("Reviews Data:", reviewsData);
+    console.log("Reviews Length:", reviewsLength);
+    console.log("Number of Reviews to Show:", numOfReviews);
+  }, [reviewsData, reviewsLength, numOfReviews]);
 
   return (
     <View className="flex-col gap-4 mt-8" pointerEvents="box-none">

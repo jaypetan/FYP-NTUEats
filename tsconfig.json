@@ -8,11 +8,14 @@
     }
   },
   "include": [
+    "**/*.js",
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts",
-    "components/SafeScreen.jsx"
+    "components/SafeScreen.jsx",
+    "utils/reviewServices.js",
+    "utils/stallServices.js"
   ]
 }
