@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 
@@ -66,6 +67,40 @@ const fetchUserByDocId = async (docId: string) => {
     }
   } catch (error) {
     console.error("Error fetching user by document ID: ", error);
+    return null;
+  }
+};
+
+// Function to create user data if it doesn't already exist
+export const createUserData = async (
+  clerkId: string,
+  username: string,
+  role: string
+) => {
+  try {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("clerk_id", "==", clerkId));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      // If no user exists with that clerk_id, create a new user document
+      const newUserRef = doc(usersRef);
+      await setDoc(newUserRef, {
+        clerk_id: clerkId,
+        username: username,
+        role: role,
+      });
+      return {
+        id: newUserRef.id,
+        clerk_id: clerkId,
+        username: username,
+        role: role,
+      } as UserData;
+    } else {
+      // User already exists
+      return null;
+    }
+  } catch (error) {
+    console.error("Error creating user data: ", error);
     return null;
   }
 };

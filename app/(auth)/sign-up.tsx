@@ -9,6 +9,9 @@ import { Link, useRouter } from "expo-router";
 // Project components
 import InputField from "@/app/components/InputField";
 
+// Utilities
+import { createUserData } from "@/utils/userServices";
+
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
@@ -19,7 +22,6 @@ export default function SignUpScreen() {
     password: "",
     confirmPassword: "",
   });
-  // TODO: use when connect to backend
 
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState("");
@@ -35,11 +37,15 @@ export default function SignUpScreen() {
 
     // Start sign-up process using email and password provided
     try {
-      await signUp.create({
+      const result = await signUp.create({
         emailAddress: formData.emailAddress,
         username: formData.username,
         password: formData.password,
       });
+
+      // Create user data in Firestore
+      let clerkUserId = result.id ? result.id : "";
+      await createUserData(clerkUserId, formData.username, "user");
 
       // Send user an email with verification code
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
