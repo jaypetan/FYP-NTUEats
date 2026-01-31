@@ -66,7 +66,7 @@ const StallAdd: React.FC<StallAddProps> = ({ setAdminCurrentPage }) => {
       <Text className="text-2xl font-koulen py-2 px-4 text-blue">
         New Stall
       </Text>
-      <View className="w-full h-5/6">
+      <View className="w-80 h-5/6">
         <ScrollView>
           <LabeledInput
             label="Stall Name"

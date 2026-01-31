@@ -22,17 +22,23 @@ export default function ProfilePage() {
 
   const tabs = [
     { key: "profile", logo: ProfileLogo, content: <ProfileContent /> },
-    { key: "comments", logo: CommentsLogo, content: <CommentsContent /> },
-    { key: "recipes", logo: RecipesLogo, content: <RecipesContent /> },
+    {
+      key: "comments",
+      logo: CommentsLogo,
+      content: <CommentsContent activeTab={activeTab} />,
+    },
+    {
+      key: "recipes",
+      logo: RecipesLogo,
+      content: <RecipesContent />,
+    },
   ];
-
-  const [page, setPage] = useState(1); // used to trigger re-render for animation
 
   return (
     <View className="items-center">
       <ClosePage right={"right-6"} />
 
-      <Text className="font-koulen text-3xl text-blue pt-2">Settings</Text>
+      <Text className="font-koulen text-3xl text-blue pt-2">{activeTab}</Text>
       {/* Navigation within profile */}
       <ProfileNav
         tabs={tabs}

@@ -45,9 +45,6 @@ const ProfileContent = () => {
 
   return (
     <ScrollView className="p-8 mt-4 bg-darkcream/80 w-full h-full rounded-3xl">
-      <Text className="text-center text-4xl font-koulen text-blue mb-4 pt-4">
-        Profile
-      </Text>
       {/* User information */}
       <UserInfo />
 
