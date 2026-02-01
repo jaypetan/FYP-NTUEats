@@ -249,6 +249,35 @@ export const getRecipeCommentsByUserId = async (userId) => {
   }
 };
 
+// Arrange recipe comments by user ID
+export const arrangeRecipeCommentsByUserId = async (
+  userId,
+  arrangementType,
+  limitNum
+) => {
+  try {
+    const comments = await getRecipeCommentsByUserId(userId);
+
+    // Sort by arrangementType
+    if (arrangementType === "most_likes") {
+      comments.sort((a, b) => b.likes - a.likes);
+    } else if (arrangementType === "most_recent") {
+      comments.sort((a, b) => b.timestamp - a.timestamp);
+    }
+
+    const total = comments.length;
+    const limitedComments =
+      typeof limitNum === "number" && limitNum > 0
+        ? comments.slice(0, limitNum)
+        : comments;
+
+    return { content: limitedComments, total };
+  } catch (error) {
+    console.error("Error arranging user recipe comments: ", error);
+    return { content: [], total: 0 };
+  }
+};
+
 // Add a comment to a recipe
 export const addRecipeComment = async (commentData) => {
   try {

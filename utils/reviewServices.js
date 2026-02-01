@@ -169,3 +169,66 @@ export const fetchTopReviewImageByStallId = async (stallId) => {
     return null;
   }
 };
+
+// Function to get reviews by a specific user
+export const getReviewsByUserId = async (userId) => {
+  try {
+    const reviewsRef = collection(db, "reviews");
+    const q = query(reviewsRef, where("user_id", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    const reviews = await Promise.all(
+      querySnapshot.docs.map(async (reviewDoc) => {
+        const data = reviewDoc.data();
+        const likes = await fetchTotalLikesByItemId(
+          "reviews_likes",
+          "review_id",
+          reviewDoc.id
+        );
+        const stallSnap = await getDoc(doc(db, "stalls", data.stall_id));
+        const stallData = stallSnap.data();
+        const stallName = stallData ? stallData.name : "Unknown Stall";
+        return {
+          id: reviewDoc.id,
+          likes,
+          stall_name: stallName,
+          ...data,
+        };
+      })
+    );
+
+    return reviews;
+  } catch (error) {
+    console.error("Error fetching reviews by user: ", error);
+    return [];
+  }
+};
+
+// Arrange reviews by user ID, with sorting and limiting options
+export const arrangeReviewsByUserId = async (
+  userId,
+  arrangementType,
+  limitNum
+) => {
+  try {
+    const reviews = await getReviewsByUserId(userId);
+
+    // Sort by arrangementType
+    if (arrangementType === "most_likes") {
+      reviews.sort((a, b) => b.likes - a.likes);
+    } else if (arrangementType === "most_recent") {
+      reviews.sort((a, b) => b.timestamp - a.timestamp);
+    }
+
+    const total = reviews.length;
+    const limitedReviews =
+      typeof limitNum === "number" && limitNum > 0
+        ? reviews.slice(0, limitNum)
+        : reviews;
+
+    return { content: limitedReviews, total };
+  } catch (error) {
+    console.error("Error arranging user reviews: ", error);
+    return { content: [], total: 0 };
+  }
+};

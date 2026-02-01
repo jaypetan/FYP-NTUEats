@@ -5,15 +5,14 @@ import { Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 // Components
-import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
-interface ProfileCommentsCardProps {
+interface ProfileReviewCommentsCardProps {
   comment: {
-    comment_pic: string | "";
-    content: string;
-    id: string;
+    recipe_pic: string | "";
     title: string;
+    id: string;
+    stall_name: string;
     likes: number;
     recipe_id: string;
     formatted_date: string;
@@ -21,21 +20,15 @@ interface ProfileCommentsCardProps {
   };
 }
 
-const ProfileCommentsCard: React.FC<ProfileCommentsCardProps> = ({
+const ProfileReviewCommentsCard: React.FC<ProfileReviewCommentsCardProps> = ({
   comment,
 }) => {
   return (
-    <View className="bg-cream mb-4 py-4 px-6 rounded-2xl">
-      {comment.comment_pic && (
-        <ImageLoader
-          image={comment.comment_pic}
-          className="w-full h-48 rounded-2xl mb-4"
-        />
-      )}
+    <View className="bg-cream mb-4 py-4 px-6 rounded-2xl border-2 border-blue">
       <View className="flex-col">
         <View className="flex-row justify-between items-center">
-          <Text className="text-xl font-semibold text-blue">
-            {comment.title}
+          <Text className="text-xl font-semibold text-blue max-w-72">
+            {comment.stall_name}
           </Text>
           <View className="flex-row items-center gap-2">
             <Text className="text-lg text-blue font-semibold">
@@ -44,14 +37,16 @@ const ProfileCommentsCard: React.FC<ProfileCommentsCardProps> = ({
             <FontAwesome name="heart" size={16} color="red" />
           </View>
         </View>
-        <Text className="text-blue text-lg mb-4">"{comment.content}"</Text>
+        <Text className="text-blue text-lg mb-4 max-w-72">
+          "{comment.title}"
+        </Text>
         <View className="flex-row justify-between items-end">
           <Text className="text-gray-600">{comment.formatted_date}</Text>
           <TouchableScale
-            className="border-2 border-blue px-4 py-1 rounded-xl"
+            className="border-2 border-blue px-4 py-2 rounded-xl"
             onPress={() => {}}
           >
-            <Text className="text-blue font-semibold">Edit Recipe</Text>
+            <Text className="text-blue font-semibold">Edit</Text>
           </TouchableScale>
         </View>
       </View>
@@ -59,4 +54,4 @@ const ProfileCommentsCard: React.FC<ProfileCommentsCardProps> = ({
   );
 };
 
-export default ProfileCommentsCard;
+export default ProfileReviewCommentsCard;

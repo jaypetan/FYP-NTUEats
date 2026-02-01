@@ -9,12 +9,12 @@ import TouchableScale from "@/app/components/TouchableScale";
 
 interface ProfileCommentsHeaderProps {
   pageInfo: string;
-  setPageInfo: (info: string) => void;
+  handlePageInfoChange: () => void;
 }
 
 const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
   pageInfo,
-  setPageInfo,
+  handlePageInfoChange,
 }) => {
   return (
     <View className="flex-row justify-between items-center mb-4">
@@ -30,7 +30,7 @@ const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
         <TouchableScale
           className="rounded-2xl border-2 border-blue px-4 py-1 flex-row items-center gap-2 mb-4 bg-green/50"
           onPress={() => {
-            setPageInfo(pageInfo === "comments" ? "reviews" : "comments");
+            handlePageInfoChange();
           }}
         >
           <FontAwesome name="exchange" size={16} color="#264653" />
