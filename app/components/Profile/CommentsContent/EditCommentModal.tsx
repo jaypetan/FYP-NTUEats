@@ -1,0 +1,168 @@
+// React and React Native imports
+import { BlurView } from "expo-blur";
+import { useEffect, useState } from "react";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+
+// External libraries
+import { AntDesign, Feather } from "@expo/vector-icons";
+
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
+// Component Props
+import ImagePickerField from "@/app/components/ImagePickerField";
+import InputField from "@/app/components/InputField";
+import TouchableScale from "@/app/components/TouchableScale";
+
+// Utilities
+import {
+  deleteRecipeCommentById,
+  editRecipeCommentById,
+  getRecipeCommentById,
+} from "@/utils/recipeServices";
+
+interface EditCommentModalProps {
+  editModalVisible: string;
+  toggleModalVisibility: (type: string) => void;
+}
+const EditCommentModal: React.FC<EditCommentModalProps> = ({
+  editModalVisible,
+  toggleModalVisibility,
+}) => {
+  const { selectedId } = useAppContext();
+  const [commentDetails, setCommentDetails] = useState({
+    content: "",
+    comment_pic: "",
+  });
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Fetch comment details
+  const fetchCommentDetails = async () => {
+    if (selectedId) {
+      const commentData = await getRecipeCommentById(selectedId);
+      if (commentData) {
+        setCommentDetails({
+          content: commentData.content || "",
+          comment_pic: commentData.comment_pic || "",
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (editModalVisible === "comment") {
+      fetchCommentDetails();
+    }
+  }, [editModalVisible]);
+
+  // Handle submit and delete functions can be added here
+  const handleSubmitChanges = () => {
+    setIsProcessing(true);
+
+    // Call the edit service
+    editRecipeCommentById(selectedId || "", commentDetails)
+      .then(() => {
+        alert("Comment updated successfully!");
+        toggleModalVisibility("comment");
+      })
+      .catch(() => {
+        alert("Error updating comment. Please try again.");
+      })
+      .finally(() => {
+        setIsProcessing(false);
+      });
+  };
+
+  // Handle delete function can be added here
+  const handleDeleteComment = () => {
+    setIsProcessing(true);
+
+    // Call the delete service
+    deleteRecipeCommentById(selectedId || "")
+      .then(() => {
+        alert("Comment deleted successfully!");
+        toggleModalVisibility("comment");
+      })
+      .catch(() => {
+        alert("Error deleting comment. Please try again.");
+      })
+      .finally(() => {
+        setIsProcessing(false);
+      });
+  };
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={editModalVisible === "comment"}
+      className="w-full h-full bg-cream/20"
+      onRequestClose={() => {
+        toggleModalVisibility("comment");
+      }}
+    >
+      <BlurView intensity={20} className="w-full h-full ">
+        <View className="my-auto mx-4 bg-darkcream border-2 border-blue pb-8">
+          <Pressable onPress={() => toggleModalVisibility("comment")}>
+            <View className="border-b-2 border-blue text-center bg-red items-end p-2">
+              <AntDesign name="close" size={32} color="#264653" />
+            </View>
+          </Pressable>
+          <Text className="text-blue font-koulen text-3xl pt-4 mt-4 text-center">
+            Edit Comment
+          </Text>
+          <ScrollView>
+            <View className="px-6 mt-6">
+              <InputField
+                label="Content"
+                placeholder="Update your comment..."
+                value={commentDetails.content}
+                onChangeText={(text) =>
+                  setCommentDetails({ ...commentDetails, content: text })
+                }
+                multiline
+                maxLength={120}
+                numberOfLines={4}
+              />
+              <ImagePickerField
+                label="Picture"
+                imageUri={commentDetails.comment_pic}
+                onImagePicked={(uri: string) =>
+                  setCommentDetails({ ...commentDetails, comment_pic: uri })
+                }
+                optional
+              />
+            </View>
+          </ScrollView>
+          <View className="flex-row w-full justify-between px-6 pt-4">
+            <TouchableScale
+              className="border-2 border-blue bg-red px-4 py-2 rounded-xl items-center flex-row gap-2"
+              onPress={() => {
+                handleDeleteComment();
+              }}
+              disabled={isProcessing}
+            >
+              <Feather name="trash-2" size={20} color="#264653" />
+              <Text className="text-blue font-semibold text-base text-center">
+                {isProcessing ? "Deleting..." : "Delete"}
+              </Text>
+            </TouchableScale>
+            <TouchableScale
+              className="border-2 border-blue bg-green px-4 py-2 rounded-xl items-center"
+              onPress={() => {
+                handleSubmitChanges();
+              }}
+              disabled={isProcessing}
+            >
+              <Text className="text-blue font-semibold text-base text-center">
+                {isProcessing ? "Submitting..." : "Submit Changes"}
+              </Text>
+            </TouchableScale>
+          </View>
+        </View>
+      </BlurView>
+    </Modal>
+  );
+};
+
+export default EditCommentModal;

@@ -10,7 +10,7 @@ import StallReviewCard from "@/app/components/Stall/Review/StallReviewCard";
 import StallReviewHeader from "@/app/components/Stall/Review/StallReviewHeader";
 
 interface StallReviewProps {
-  selectedId: string | "";
+  selectedId: string | null;
 }
 
 const StallReview: React.FC<StallReviewProps> = (selectedId) => {
@@ -49,12 +49,6 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
     setNumOfReviews(newNumOfReviews);
     arrangeReviews(arrangement, newNumOfReviews);
   };
-
-  useEffect(() => {
-    console.log("Reviews Data:", reviewsData);
-    console.log("Reviews Length:", reviewsLength);
-    console.log("Number of Reviews to Show:", numOfReviews);
-  }, [reviewsData, reviewsLength, numOfReviews]);
 
   return (
     <View className="flex-col gap-4 mt-8" pointerEvents="box-none">

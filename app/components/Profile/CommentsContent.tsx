@@ -48,9 +48,15 @@ type ReviewComment = {
 };
 
 interface CommentsContentProps {
-  activeTab?: string;
+  activeTab: string;
+  toggleModalVisibility: (type: string) => void;
+  editModalVisible: string;
 }
-const CommentsContent: React.FC<CommentsContentProps> = ({ activeTab }) => {
+const CommentsContent: React.FC<CommentsContentProps> = ({
+  activeTab,
+  toggleModalVisibility,
+  editModalVisible,
+}) => {
   // To choose between comments and recipes
   const [pageInfo, setPageInfo] = useState("comments");
 
@@ -79,8 +85,7 @@ const CommentsContent: React.FC<CommentsContentProps> = ({ activeTab }) => {
     } else {
       fetchAndSetReviewComments(4);
     }
-    console.log(pageInfo);
-  }, [userId, pageInfo]);
+  }, [userId, pageInfo, editModalVisible]);
 
   // Fetch and set recipe comments
   const fetchAndSetRecipeComments = async (limitNumber: number) => {
@@ -168,13 +173,19 @@ const CommentsContent: React.FC<CommentsContentProps> = ({ activeTab }) => {
 
   const recipeCommentCards = comments.map((comment) => (
     <View key={comment.id}>
-      <ProfileRecipeCommentsCard comment={comment} />
+      <ProfileRecipeCommentsCard
+        comment={comment}
+        toggleModalVisibility={toggleModalVisibility}
+      />
     </View>
   ));
 
   const reviewCommentCards = comments.map((comment) => (
     <View key={comment.id}>
-      <ProfileReviewCommentsCard comment={comment} />
+      <ProfileReviewCommentsCard
+        comment={comment}
+        toggleModalVisibility={toggleModalVisibility}
+      />
     </View>
   ));
 

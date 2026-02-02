@@ -232,3 +232,54 @@ export const arrangeReviewsByUserId = async (
     return { content: [], total: 0 };
   }
 };
+
+// Function to edit an existing review
+export const editReviewById = async (reviewId, updatedData) => {
+  try {
+    const reviewRef = doc(db, "reviews", reviewId);
+
+    // If there's a new review_pic, upload it
+    if (updatedData.review_pic) {
+      const reviewSnap = await getDoc(reviewRef);
+      const reviewData = reviewSnap.data();
+      if (!reviewData)
+        throw new Error("Review not found for the given reviewId");
+
+      const stallSnap = await getDoc(doc(db, "stalls", reviewData.stall_id));
+      const stallData = stallSnap.data();
+      if (!stallData) throw new Error("Stall not found for the given stall_id");
+
+      const location = stallData.location.toLowerCase().replace(/\s+/g, ""); // remove spaces
+      const name = stallData.name.toLowerCase().replace(/\s+/g, ""); // remove spaces
+
+      // Use existing review number from the review data
+      const reviews = await fetchReviewsByStallId(reviewData.stall_id);
+      const reviewIndex = reviews.data.findIndex((r) => r.id === reviewId);
+      const reviewNumber = reviewIndex + 1;
+
+      // Upload new review image and get URL
+      const path = `eatWHAT/review-${location}-${name}-${reviewNumber}.jpeg`;
+      const imageUrl = await uploadImageAsync(updatedData.review_pic, path);
+      updatedData.review_pic = imageUrl;
+    }
+
+    // Update the review document
+    await reviewRef.update(updatedData);
+    return true;
+  } catch (error) {
+    console.error("Error editing review: ", error);
+    return false;
+  }
+};
+
+// Function to delete a review by ID
+export const deleteReviewById = async (reviewId) => {
+  try {
+    const reviewRef = doc(db, "reviews", reviewId);
+    await reviewRef.delete();
+    return true;
+  } catch (error) {
+    console.error("Error deleting review: ", error);
+    return false;
+  }
+};

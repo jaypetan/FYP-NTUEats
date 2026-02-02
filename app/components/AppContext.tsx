@@ -29,7 +29,14 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   useEffect(() => {
-    setPrevPage((prev) => ({ prev: prev.next, next: currentPage }));
+    // Update previous page when currentPage changes
+    if (currentPage === "profile-page") {
+      // Reset to home-page when navigating to profile-page
+      setPrevPage({ prev: "home-page", next: "profile-page" });
+      return;
+    } else {
+      setPrevPage((prev) => ({ prev: prev.next, next: currentPage }));
+    }
   }, [currentPage]);
 
   const returnToPreviousPage = () => {

@@ -319,6 +319,8 @@ export const addRecipeComment = async (commentData) => {
 export const editRecipeCommentById = async (commentId, updatedData) => {
   try {
     const commentDoc = doc(db, "recipe_comments", commentId);
+    const timestamp = serverTimestamp();
+    updatedData.timestamp = timestamp;
     await updateDoc(commentDoc, updatedData);
     return true;
   } catch (error) {
@@ -336,5 +338,29 @@ export const deleteRecipeCommentById = async (commentId) => {
   } catch (error) {
     console.error("Error deleting recipe comment: ", error);
     return false;
+  }
+};
+
+// Get recipe comment by ID
+export const getRecipeCommentById = async (commentId) => {
+  try {
+    const commentDoc = doc(db, "recipe_comments", commentId);
+    const snapshot = await getDoc(commentDoc);
+    if (snapshot.exists()) {
+      return { id: snapshot.id, ...snapshot.data() };
+    } else {
+      console.log("No such recipe comment!");
+      return {
+        id: "",
+        content: "",
+        recipe_id: "",
+        user_id: "",
+        timestamp: null,
+        comment_pic: "",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching recipe comment: ", error);
+    return null;
   }
 };

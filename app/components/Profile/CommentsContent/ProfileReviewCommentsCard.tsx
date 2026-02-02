@@ -7,6 +7,9 @@ import { FontAwesome } from "@expo/vector-icons";
 // Components
 import TouchableScale from "@/app/components/TouchableScale";
 
+// App Context
+import { useAppContext } from "@/app/components/AppContext";
+
 interface ProfileReviewCommentsCardProps {
   comment: {
     recipe_pic: string | "";
@@ -18,11 +21,18 @@ interface ProfileReviewCommentsCardProps {
     formatted_date: string;
     user_id: string;
   };
+  toggleModalVisibility: (type: string) => void;
 }
 
 const ProfileReviewCommentsCard: React.FC<ProfileReviewCommentsCardProps> = ({
   comment,
+  toggleModalVisibility,
 }) => {
+  const { setSelectedId } = useAppContext();
+  const handleEditPress = () => {
+    toggleModalVisibility("review");
+    setSelectedId(comment.id);
+  };
   return (
     <View className="bg-cream mb-4 py-4 px-6 rounded-2xl border-2 border-blue">
       <View className="flex-col">
@@ -44,7 +54,9 @@ const ProfileReviewCommentsCard: React.FC<ProfileReviewCommentsCardProps> = ({
           <Text className="text-gray-600">{comment.formatted_date}</Text>
           <TouchableScale
             className="border-2 border-blue px-4 py-2 rounded-xl"
-            onPress={() => {}}
+            onPress={() => {
+              handleEditPress();
+            }}
           >
             <Text className="text-blue font-semibold">Edit</Text>
           </TouchableScale>

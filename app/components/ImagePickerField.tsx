@@ -37,7 +37,7 @@ export default function ImagePickerField({
 
   return (
     <>
-      <View className="flex-row items-center mt-2">
+      <View className="flex-row items-center mt-2 mb-2">
         <Text className={`${textbold ? "font-bold" : ""} text-xl text-blue`}>
           {label}
         </Text>
