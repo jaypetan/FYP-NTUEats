@@ -1,7 +1,7 @@
 // React and React Native imports
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
 // External libraries
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -34,7 +34,7 @@ const EditCommentModal: React.FC<EditCommentModalProps> = ({
     content: "",
     comment_pic: "",
   });
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState("");
 
   // Fetch comment details
   const fetchCommentDetails = async () => {
@@ -52,43 +52,58 @@ const EditCommentModal: React.FC<EditCommentModalProps> = ({
   useEffect(() => {
     if (editModalVisible === "comment") {
       fetchCommentDetails();
+      setIsProcessing("");
     }
   }, [editModalVisible]);
 
   // Handle submit and delete functions can be added here
   const handleSubmitChanges = () => {
-    setIsProcessing(true);
+    setIsProcessing("edit");
 
     // Call the edit service
     editRecipeCommentById(selectedId || "", commentDetails)
       .then(() => {
-        alert("Comment updated successfully!");
+        Alert.alert("Comment updated successfully!");
         toggleModalVisibility("comment");
       })
       .catch(() => {
-        alert("Error updating comment. Please try again.");
+        Alert.alert("Error updating comment. Please try again.");
       })
       .finally(() => {
-        setIsProcessing(false);
+        setIsProcessing("");
       });
   };
 
   // Handle delete function can be added here
   const handleDeleteComment = () => {
-    setIsProcessing(true);
-
-    // Call the delete service
-    deleteRecipeCommentById(selectedId || "")
-      .then(() => {
-        alert("Comment deleted successfully!");
-        toggleModalVisibility("comment");
-      })
-      .catch(() => {
-        alert("Error deleting comment. Please try again.");
-      })
-      .finally(() => {
-        setIsProcessing(false);
-      });
+    setIsProcessing("delete");
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this review?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            deleteRecipeCommentById(selectedId || "")
+              .then(() => {
+                Alert.alert("Comment deleted successfully!");
+                toggleModalVisibility("comment");
+              })
+              .catch(() => {
+                Alert.alert("Error deleting comment. Please try again.");
+              })
+              .finally(() => {
+                setIsProcessing("");
+              });
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -140,11 +155,11 @@ const EditCommentModal: React.FC<EditCommentModalProps> = ({
               onPress={() => {
                 handleDeleteComment();
               }}
-              disabled={isProcessing}
+              disabled={isProcessing !== ""}
             >
               <Feather name="trash-2" size={20} color="#264653" />
               <Text className="text-blue font-semibold text-base text-center">
-                {isProcessing ? "Deleting..." : "Delete"}
+                {isProcessing === "delete" ? "Deleting..." : "Delete"}
               </Text>
             </TouchableScale>
             <TouchableScale
@@ -152,10 +167,10 @@ const EditCommentModal: React.FC<EditCommentModalProps> = ({
               onPress={() => {
                 handleSubmitChanges();
               }}
-              disabled={isProcessing}
+              disabled={isProcessing !== ""}
             >
               <Text className="text-blue font-semibold text-base text-center">
-                {isProcessing ? "Submitting..." : "Submit Changes"}
+                {isProcessing === "edit" ? "Submitting..." : "Submit Changes"}
               </Text>
             </TouchableScale>
           </View>

@@ -5,6 +5,7 @@ import { Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 // Components
+import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 // App Context
@@ -12,12 +13,12 @@ import { useAppContext } from "@/app/components/AppContext";
 
 interface ProfileReviewCommentsCardProps {
   comment: {
-    recipe_pic: string | "";
+    review_pic: string | "";
     title: string;
     id: string;
     stall_name: string;
     likes: number;
-    recipe_id: string;
+    stall_id: string;
     formatted_date: string;
     user_id: string;
   };
@@ -50,6 +51,15 @@ const ProfileReviewCommentsCard: React.FC<ProfileReviewCommentsCardProps> = ({
         <Text className="text-blue text-lg mb-4 max-w-72">
           "{comment.title}"
         </Text>
+        {comment.review_pic && (
+          <View className="h-48 w-48 mb-4">
+            <ImageLoader
+              image={comment.review_pic}
+              className="w-full h-48 mb-4 rounded-xl"
+              loaderClassName="h-48"
+            />
+          </View>
+        )}
         <View className="flex-row justify-between items-end">
           <Text className="text-gray-600">{comment.formatted_date}</Text>
           <TouchableScale

@@ -6,11 +6,13 @@ import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -131,7 +133,16 @@ export const getReviewDataById = async (reviewId) => {
       };
     } else {
       console.log("No such review!");
-      return null;
+      return {
+        id: null,
+        stall_id: null,
+        user_id: null,
+        rating: null,
+        title: null,
+        content: null,
+        review_pic: null,
+        timestamp: null,
+      };
     }
   } catch (error) {
     console.error("Error getting review data: ", error);
@@ -264,7 +275,7 @@ export const editReviewById = async (reviewId, updatedData) => {
     }
 
     // Update the review document
-    await reviewRef.update(updatedData);
+    await updateDoc(reviewRef, updatedData);
     return true;
   } catch (error) {
     console.error("Error editing review: ", error);
@@ -276,7 +287,7 @@ export const editReviewById = async (reviewId, updatedData) => {
 export const deleteReviewById = async (reviewId) => {
   try {
     const reviewRef = doc(db, "reviews", reviewId);
-    await reviewRef.delete();
+    await deleteDoc(reviewRef);
     return true;
   } catch (error) {
     console.error("Error deleting review: ", error);

@@ -1,7 +1,7 @@
 // React and React Native imports
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
 // External libraries
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -35,7 +35,7 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
     content: "",
     review_pic: "",
   });
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState("");
 
   // Fetch review details
   const fetchReviewDetails = async () => {
@@ -54,35 +54,58 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
   useEffect(() => {
     if (editModalVisible === "review") {
       fetchReviewDetails();
+      setIsProcessing("");
     }
   }, [editModalVisible]);
 
   // Handle submit and delete functions can be added here
   const handleSubmitChanges = () => {
-    setIsProcessing(true);
+    setIsProcessing("edit");
     // Implementation for submitting changes
     editReviewById(selectedId || "", reviewDetails)
       .then(() => {
-        setIsProcessing(false);
+        Alert.alert("Review updated successfully!");
         toggleModalVisibility("review");
       })
       .catch(() => {
-        setIsProcessing(false);
+        Alert.alert("Error updating review. Please try again.");
+      })
+      .finally(() => {
+        setIsProcessing("");
       });
   };
 
   // Handle delete function
   const handleDeleteReview = () => {
-    setIsProcessing(true);
+    setIsProcessing("delete");
     // Implementation for deleting review
-    deleteReviewById(selectedId || "")
-      .then(() => {
-        setIsProcessing(false);
-        toggleModalVisibility("review");
-      })
-      .catch(() => {
-        setIsProcessing(false);
-      });
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this review?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            deleteReviewById(selectedId || "")
+              .then(() => {
+                Alert.alert("Review deleted successfully!");
+                toggleModalVisibility("review");
+              })
+              .catch(() => {
+                Alert.alert("Error deleting review. Please try again.");
+              })
+              .finally(() => {
+                setIsProcessing("");
+              });
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -143,11 +166,11 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
               onPress={() => {
                 handleDeleteReview();
               }}
-              disabled={isProcessing}
+              disabled={isProcessing !== ""}
             >
               <Feather name="trash-2" size={20} color="#264653" />
               <Text className="text-blue font-semibold text-base text-center">
-                {isProcessing ? "Deleting..." : "Delete"}
+                {isProcessing === "delete" ? "Deleting..." : "Delete"}
               </Text>
             </TouchableScale>
             <TouchableScale
@@ -155,10 +178,10 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
               onPress={() => {
                 handleSubmitChanges();
               }}
-              disabled={isProcessing}
+              disabled={isProcessing !== ""}
             >
               <Text className="text-blue font-semibold text-base text-center">
-                {isProcessing ? "Submitting..." : "Submit Changes"}
+                {isProcessing === "edit" ? "Submitting..." : "Submit Changes"}
               </Text>
             </TouchableScale>
           </View>

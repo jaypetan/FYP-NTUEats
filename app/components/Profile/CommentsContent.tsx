@@ -137,7 +137,6 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
         limitNumber
       );
 
-      console.log(userComments);
       // Type assertion to specify the type of content
       const userCommentsArray =
         userComments.content as unknown as ReviewComment[];
