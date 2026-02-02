@@ -195,35 +195,37 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
   };
 
   return (
-    <ScrollView className="px-8 pt-8 mt-4 bg-darkcream/80 w-full h-4/5 rounded-3xl">
+    <View className="rounded-3xl w-full h-full items-center bg-darkcream/80 px-8 pt-8 mt-4">
       <ProfileCommentsHeader
         pageInfo={pageInfo}
         handlePageInfoChange={handlePageInfoChange}
       />
-      {comments.length === 0 ? (
-        <Text className="text-center text-lg text-blue mt-8">
-          No comments yet.
-        </Text>
-      ) : comments[0] === "loading" ? (
-        <View className="h-full justify-center items-center">
-          <Loader />
-        </View>
-      ) : (
-        <ListWithSeeMore
-          content={
-            pageInfo === "comments" ? recipeCommentCards : reviewCommentCards
-          }
-          maxCount={maxLength}
-          fetchFn={(arrangement, limitNumber) =>
-            pageInfo === "comments"
-              ? fetchAndSetRecipeComments(limitNumber)
-              : fetchAndSetReviewComments(limitNumber)
-          }
-          arrangement="most_recent"
-        />
-      )}
-      <View className="mt-16"></View>
-    </ScrollView>
+      <ScrollView className="flex-col w-full max-h-[500px]">
+        {comments.length === 0 ? (
+          <Text className="text-center text-lg text-blue mt-8">
+            No comments yet.
+          </Text>
+        ) : comments[0] === "loading" ? (
+          <View className="h-full justify-center items-center">
+            <Loader />
+          </View>
+        ) : (
+          <ListWithSeeMore
+            content={
+              pageInfo === "comments" ? recipeCommentCards : reviewCommentCards
+            }
+            maxCount={maxLength}
+            fetchFn={(arrangement, limitNumber) =>
+              pageInfo === "comments"
+                ? fetchAndSetRecipeComments(limitNumber)
+                : fetchAndSetReviewComments(limitNumber)
+            }
+            arrangement="most_recent"
+          />
+        )}
+        <View className="mt-16"></View>
+      </ScrollView>
+    </View>
   );
 };
 

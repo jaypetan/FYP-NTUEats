@@ -2,11 +2,7 @@
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
-import {
-  FontAwesome,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 // Components
 import DietryButton from "@/app/components/Profile/ProfileContent/DietryButton";
@@ -33,14 +29,6 @@ const ProfileContent = () => {
       label: "No Seafood",
       icon: <MaterialCommunityIcons name="fish" size={24} color="green" />,
     },
-    {
-      label: "No Beef",
-      icon: <MaterialCommunityIcons name="cow" size={24} color="green" />,
-    },
-    {
-      label: "No Milk",
-      icon: <MaterialCommunityIcons name="cup" size={24} color="green" />,
-    },
   ];
 
   return (
@@ -50,15 +38,14 @@ const ProfileContent = () => {
 
       {/* Favourites button */}
       <TouchableScale
-        className="bg-green/80 p-6 rounded-2xl flex flex-row justify-between items-center mt-4"
+        className="bg-cream border-2 border-blue p-6 rounded-2xl flex flex-row justify-between items-center mt-4"
         onPress={() => {}}
       >
-        <View className="flex flex-row items-center gap-4">
-          <FontAwesome
-            name="heart"
-            size={22}
-            color="red"
-            className="opacity-70"
+        <View className="flex flex-row items-center gap-2">
+          <MaterialCommunityIcons
+            name="heart-outline"
+            size={24}
+            color="#264653"
           />
           <Text className="text-2xl pt-4 font-koulen text-blue">
             Favourites
@@ -68,7 +55,7 @@ const ProfileContent = () => {
       </TouchableScale>
 
       {/* Dietry Preferences Section */}
-      <View className="bg-green/80 p-6 rounded-2xl mt-4 flex flex-col gap-2">
+      <View className="bg-cream border-2 border-blue p-6 rounded-2xl mt-4 flex flex-col gap-2">
         <Text className="text-2xl font-koulen text-blue">
           Dietary Preferences
         </Text>

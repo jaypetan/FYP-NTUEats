@@ -16,7 +16,7 @@ const DietryButton: React.FC<DietryButtonProps> = ({
   return (
     <TouchableOpacity
       className={`p-3 rounded-2xl border-2 border-blue flex flex-row gap-2 ${
-        selectedState ? "bg-cream " : "bg-darkcream/50"
+        selectedState ? "bg-green/50 " : "bg-darkcream/50"
       }`}
       onPress={() => setSelectedState(!selectedState)}
     >

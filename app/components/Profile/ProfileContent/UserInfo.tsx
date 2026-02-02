@@ -10,7 +10,7 @@ import TouchableScale from "@/app/components/TouchableScale";
 const UserInfo = () => {
   const { user } = useUser();
   return (
-    <View className="bg-green/80 p-6 rounded-2xl flex flex-col">
+    <View className="bg-cream border-2 border-blue p-6 rounded-2xl flex flex-col">
       <Text className="text-2xl font-koulen text-blue">User Information</Text>
       <View className="justify-between items-center flex flex-row">
         <View>
@@ -22,10 +22,10 @@ const UserInfo = () => {
           </Text>
         </View>
         <TouchableScale
-          className="p-4 rounded-xl items-center border-2 border-blue"
+          className="self-end px-4 py-2 rounded-xl items-center bg-green/50 border-2 border-blue"
           onPress={() => {}}
         >
-          <Text className="text-blue font-bold">Edit</Text>
+          <Text className="text-blue font-bold text-lg">Edit</Text>
         </TouchableScale>
       </View>
     </View>

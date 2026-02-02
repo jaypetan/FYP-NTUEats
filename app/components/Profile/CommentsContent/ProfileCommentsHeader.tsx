@@ -17,7 +17,7 @@ const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
   handlePageInfoChange,
 }) => {
   return (
-    <View className="flex-row justify-between items-center mb-4">
+    <View className="flex-row justify-between items-center mb-4 w-full">
       <View className="flex-row items-center gap-1">
         <Text className="text-center text-4xl font-koulen text-blue pt-4">
           {pageInfo === "comments" ? "Comments" : "Reviews"}
