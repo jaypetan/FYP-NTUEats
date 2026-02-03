@@ -2,7 +2,7 @@
 import { Text, View } from "react-native";
 
 // External libraries
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
@@ -30,7 +30,7 @@ const ProfileRecipeCard: React.FC<ProfileRecipeCardProps> = ({
   recipe,
   toggleModalVisibility,
 }) => {
-  const { setSelectedId } = useAppContext();
+  const { setSelectedId, setCurrentPage } = useAppContext();
   const handleEditPress = () => {
     toggleModalVisibility("recipe");
     setSelectedId(recipe.id);
@@ -63,14 +63,30 @@ const ProfileRecipeCard: React.FC<ProfileRecipeCardProps> = ({
         )}
         <View className="flex-row justify-between items-end">
           <Text className="text-blue text-lg">{recipe.formatted_date}</Text>
-          <TouchableScale
-            className="border-2 border-blue px-4 py-2 rounded-xl"
-            onPress={() => {
-              handleEditPress();
-            }}
-          >
-            <Text className="text-blue font-semibold">Edit</Text>
-          </TouchableScale>
+          <View className="flex-row gap-2 items-center">
+            <TouchableScale
+              className="border-2 border-blue px-4 py-2 rounded-xl"
+              onPress={() => {
+                handleEditPress();
+              }}
+            >
+              <Text className="text-blue font-semibold">Edit</Text>
+            </TouchableScale>
+            <TouchableScale
+              className="border-2 border-blue bg-green/50 px-4 py-2 rounded-xl flex-row items-center gap-1"
+              onPress={() => {
+                setSelectedId(recipe.id);
+                setCurrentPage("recipe-page");
+              }}
+            >
+              <Text className="text-blue font-semibold">Recipe</Text>
+              <MaterialCommunityIcons
+                name="arrow-right"
+                size={16}
+                color="black"
+              />
+            </TouchableScale>
+          </View>
         </View>
       </View>
     </View>

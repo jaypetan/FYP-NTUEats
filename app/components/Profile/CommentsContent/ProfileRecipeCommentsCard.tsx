@@ -2,7 +2,7 @@
 import { Text, View } from "react-native";
 
 // External libraries
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
@@ -29,7 +29,7 @@ const ProfileRecipeCommentsCard: React.FC<ProfileRecipeCommentsCardProps> = ({
   comment,
   toggleModalVisibility,
 }) => {
-  const { setSelectedId } = useAppContext();
+  const { setSelectedId, setCurrentPage } = useAppContext();
   const handleEditPress = () => {
     toggleModalVisibility("comment");
     setSelectedId(comment.id);
@@ -52,7 +52,7 @@ const ProfileRecipeCommentsCard: React.FC<ProfileRecipeCommentsCardProps> = ({
           "{comment.content}"
         </Text>
         {comment.comment_pic && (
-          <View className="h-48 w-48 mb-4">
+          <View className="h-48 w-48 mb-4 border-2 border-blue rounded-xl overflow-hidden">
             <ImageLoader
               image={comment.comment_pic}
               className="w-full h-48 mb-4 rounded-xl"
@@ -62,14 +62,30 @@ const ProfileRecipeCommentsCard: React.FC<ProfileRecipeCommentsCardProps> = ({
         )}
         <View className="flex-row justify-between items-end">
           <Text className="text-gray-600">{comment.formatted_date}</Text>
-          <TouchableScale
-            className="border-2 border-blue px-4 py-2 rounded-xl"
-            onPress={() => {
-              handleEditPress();
-            }}
-          >
-            <Text className="text-blue font-semibold">Edit</Text>
-          </TouchableScale>
+          <View className="flex-row gap-2 items-center">
+            <TouchableScale
+              className="border-2 border-blue px-4 py-2 rounded-xl"
+              onPress={() => {
+                handleEditPress();
+              }}
+            >
+              <Text className="text-blue font-semibold">Edit</Text>
+            </TouchableScale>
+            <TouchableScale
+              className="border-2 border-blue bg-green/50 px-4 py-2 rounded-xl flex-row items-center gap-1"
+              onPress={() => {
+                setSelectedId(comment.recipe_id);
+                setCurrentPage("recipe-page");
+              }}
+            >
+              <Text className="text-blue font-semibold">Recipe</Text>
+              <MaterialCommunityIcons
+                name="arrow-right"
+                size={16}
+                color="black"
+              />
+            </TouchableScale>
+          </View>
         </View>
       </View>
     </View>
