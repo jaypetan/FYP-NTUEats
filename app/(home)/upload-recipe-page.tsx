@@ -112,29 +112,28 @@ export default function UploadRecipePage() {
               }
               placeholder="e.g. 30 mins"
             />
+
+            {/* Dynamic Ingredient List */}
+            <DynamicInputList
+              items={ingredients}
+              onChange={setIngredients}
+              label="Ingredients"
+              placeholderPrefix="Ingredient"
+            />
+            <DynamicInputList
+              items={instructions}
+              onChange={setInstructions}
+              label="Instructions"
+              placeholderPrefix="Step"
+            />
+
+            {/* Image Upload */}
+            <ImagePickerField
+              label="Recipe Image:"
+              imageUri={recipe.recipe_pic}
+              onImagePicked={(uri) => setRecipe({ ...recipe, recipe_pic: uri })}
+            />
           </View>
-
-          {/* Dynamic Ingredient List */}
-          <DynamicInputList
-            items={ingredients}
-            onChange={setIngredients}
-            label="Ingredients"
-            placeholderPrefix="Ingredient"
-          />
-          <DynamicInputList
-            items={instructions}
-            onChange={setInstructions}
-            label="Instructions"
-            placeholderPrefix="Step"
-          />
-
-          {/* Image Upload */}
-          <ImagePickerField
-            label="Recipe Image:"
-            imageUri={recipe.recipe_pic}
-            onImagePicked={(uri) => setRecipe({ ...recipe, recipe_pic: uri })}
-          />
-
           {/* Submit Button */}
           <TouchableScale
             onPress={handleSubmit}

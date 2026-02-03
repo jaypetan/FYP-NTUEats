@@ -36,7 +36,7 @@ export default function DynamicInputList({
 
   return (
     <View>
-      <Text className="text-xl text-blue font-bold mt-4 mb-2">{label}:</Text>
+      <Text className="text-xl text-blue font-bold mb-2">{label}:</Text>
       <View className="flex-col gap-2">
         {items.map((item, idx) => (
           <View key={idx} className="flex-row w-full gap-2 items-center">

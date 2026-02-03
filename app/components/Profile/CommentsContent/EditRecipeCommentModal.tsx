@@ -21,11 +21,11 @@ import {
   getRecipeCommentById,
 } from "@/utils/recipeServices";
 
-interface EditCommentModalProps {
+interface EditRecipeCommentModalProps {
   editModalVisible: string;
   toggleModalVisibility: (type: string) => void;
 }
-const EditCommentModal: React.FC<EditCommentModalProps> = ({
+const EditRecipeCommentModal: React.FC<EditRecipeCommentModalProps> = ({
   editModalVisible,
   toggleModalVisibility,
 }) => {
@@ -180,4 +180,4 @@ const EditCommentModal: React.FC<EditCommentModalProps> = ({
   );
 };
 
-export default EditCommentModal;
+export default EditRecipeCommentModal;

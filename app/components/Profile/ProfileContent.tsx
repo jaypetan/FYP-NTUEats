@@ -41,15 +41,20 @@ const ProfileContent = () => {
         className="bg-cream border-2 border-blue p-6 rounded-2xl flex flex-row justify-between items-center mt-4"
         onPress={() => {}}
       >
-        <View className="flex flex-row items-center gap-2">
+        <View className="flex flex-row items-start gap-2">
           <MaterialCommunityIcons
             name="heart-outline"
             size={24}
             color="#264653"
           />
-          <Text className="text-2xl pt-4 font-koulen text-blue">
-            Favourites
-          </Text>
+          <View className="flex flex-col">
+            <Text className="text-2xl pt-1 font-koulen text-blue">
+              Favourites
+            </Text>
+            <Text className="text-lg text-gray-600 leading-4">
+              View your saved recipes/stalls
+            </Text>
+          </View>
         </View>
         <MaterialIcons name="arrow-forward" size={24} color="black" />
       </TouchableScale>

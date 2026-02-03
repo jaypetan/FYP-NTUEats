@@ -1,4 +1,5 @@
 // Firebase imports
+import { formatDate } from "@/utils/dateFormat";
 import { db, uploadImageAsync } from "@/utils/firebase";
 import { fetchTotalLikesByItemId } from "@/utils/likeServices";
 import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
@@ -105,6 +106,41 @@ export const getRecipesArranged = async (arrangementType, limitNum) => {
   }
 };
 
+// Get recipes arranged by a specific user
+export const getRecipesByUserIdArranged = async (
+  userId,
+  arrangementType,
+  limitNum
+) => {
+  try {
+    const allRecipes = await getRecipes();
+    const userRecipes = allRecipes.filter(
+      (recipe) => recipe.user_id === userId
+    );
+    // Sort by arrangementType
+    if (arrangementType === "most_likes") {
+      userRecipes.sort((a, b) => b.likes - a.likes);
+    } else if (arrangementType === "most_recent") {
+      userRecipes.sort((a, b) => b.timestamp - a.timestamp);
+    }
+    // Get total before limiting
+    const total = userRecipes.length;
+    const limitedRecipes =
+      typeof limitNum === "number" && limitNum > 0
+        ? userRecipes.slice(0, limitNum)
+        : userRecipes;
+
+    // Get formatted date for each recipe
+    limitedRecipes.forEach((recipe) => {
+      recipe.formatted_date = formatDate(recipe.timestamp);
+    });
+    return { content: limitedRecipes, total };
+  } catch (error) {
+    console.error("Error arranging user recipes: ", error);
+    return { content: [], total: 0 };
+  }
+};
+
 // Get a recipe by ID
 export const getRecipeById = async (recipeId) => {
   try {
@@ -114,16 +150,36 @@ export const getRecipeById = async (recipeId) => {
       return { id: snapshot.id, ...snapshot.data() };
     } else {
       console.log("No such recipe!");
-      return null;
+      return {
+        id: "",
+        title: "",
+        description: "",
+        cooking_time: "",
+        ingredients: "",
+        instructions: "",
+        recipe_pic: "",
+        user_id: "",
+        timestamp: null,
+      };
     }
   } catch (error) {
     console.error("Error fetching recipe: ", error);
-    return null;
+    return {
+      id: "",
+      title: "",
+      description: "",
+      cooking_time: "",
+      ingredients: "",
+      instructions: "",
+      recipe_pic: "",
+      user_id: "",
+      timestamp: null,
+    };
   }
 };
 
-// Update a recipe by ID
-export const updateRecipeById = async (recipeId, updatedData) => {
+// Edit a recipe by ID
+export const editRecipeById = async (recipeId, updatedData) => {
   try {
     const recipeDoc = doc(db, "recipes", recipeId);
     await updateDoc(recipeDoc, updatedData);

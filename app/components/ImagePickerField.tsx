@@ -36,7 +36,7 @@ export default function ImagePickerField({
   };
 
   return (
-    <>
+    <View className="flex-col items-start">
       <View className="flex-row items-center mt-2 mb-2">
         <Text className={`${textbold ? "font-bold" : ""} text-xl text-blue`}>
           {label}
@@ -61,6 +61,6 @@ export default function ImagePickerField({
           </View>
         )}
       </TouchableScale>
-    </>
+    </View>
   );
 }

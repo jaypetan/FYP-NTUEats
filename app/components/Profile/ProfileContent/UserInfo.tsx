@@ -13,11 +13,11 @@ const UserInfo = () => {
     <View className="bg-cream border-2 border-blue p-6 rounded-2xl flex flex-col">
       <Text className="text-2xl font-koulen text-blue">User Information</Text>
       <View className="justify-between items-center flex flex-row">
-        <View>
-          <Text className="text-2xl capitalize text-blue">
-            {user?.username}
-          </Text>
-          <Text className="text-xl text-blue">
+        <View className="flex-col">
+          <Text className="text-lg text-blue font-semibold">Username: </Text>
+          <Text className="text-lg capitalize text-blue">{user?.username}</Text>
+          <Text className="text-lg text-blue font-semibold mt-2">Email: </Text>
+          <Text className="text-lg text-blue">
             {user?.emailAddresses[0]?.emailAddress}
           </Text>
         </View>

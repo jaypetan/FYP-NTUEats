@@ -13,11 +13,12 @@ import RecipesLogo from "@/assets/images/logos/Recipes-logo.png";
 // Components
 import ClosePage from "@/app/components/ClosePage";
 import CommentsContent from "@/app/components/Profile/CommentsContent";
-import EditCommentModal from "@/app/components/Profile/CommentsContent/EditCommentModal";
+import EditCommentModal from "@/app/components/Profile/CommentsContent/EditRecipeCommentModal";
 import EditReviewModal from "@/app/components/Profile/CommentsContent/EditReviewModal";
 import ProfileContent from "@/app/components/Profile/ProfileContent";
 import ProfileNav from "@/app/components/Profile/ProfileNav";
 import RecipesContent from "@/app/components/Profile/RecipesContent";
+import EditRecipeModal from "@/app/components/Profile/RecipesContent/EditRecipeModal";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -47,7 +48,13 @@ export default function ProfilePage() {
     {
       key: "recipes",
       logo: RecipesLogo,
-      content: <RecipesContent />,
+      content: (
+        <RecipesContent
+          activeTab={activeTab}
+          toggleModalVisibility={toggleModalVisibility}
+          editModalVisible={editModalVisible}
+        />
+      ),
     },
   ];
 
@@ -58,6 +65,10 @@ export default function ProfilePage() {
         toggleModalVisibility={toggleModalVisibility}
       />
       <EditReviewModal
+        editModalVisible={editModalVisible}
+        toggleModalVisibility={toggleModalVisibility}
+      />
+      <EditRecipeModal
         editModalVisible={editModalVisible}
         toggleModalVisibility={toggleModalVisibility}
       />
