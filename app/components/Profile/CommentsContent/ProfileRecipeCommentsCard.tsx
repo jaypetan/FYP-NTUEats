@@ -2,7 +2,11 @@
 import { Text, View } from "react-native";
 
 // External libraries
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
@@ -64,12 +68,13 @@ const ProfileRecipeCommentsCard: React.FC<ProfileRecipeCommentsCardProps> = ({
           <Text className="text-gray-600">{comment.formatted_date}</Text>
           <View className="flex-row gap-2 items-center">
             <TouchableScale
-              className="border-2 border-blue px-4 py-2 rounded-xl"
+              className="border-2 border-blue px-4 py-2 rounded-xl flex-row items-center gap-1"
               onPress={() => {
                 handleEditPress();
               }}
             >
               <Text className="text-blue font-semibold">Edit</Text>
+              <Feather name="edit" size={16} color="#264653" />
             </TouchableScale>
             <TouchableScale
               className="border-2 border-blue bg-green/50 px-4 py-2 rounded-xl flex-row items-center gap-1"
@@ -82,7 +87,7 @@ const ProfileRecipeCommentsCard: React.FC<ProfileRecipeCommentsCardProps> = ({
               <MaterialCommunityIcons
                 name="arrow-right"
                 size={16}
-                color="black"
+                color="#264653"
               />
             </TouchableScale>
           </View>
