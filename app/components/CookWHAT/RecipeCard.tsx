@@ -108,7 +108,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   };
 
   return (
-    <View className="mt-8">
+    <View className="mt-8 border-2 border-blue rounded-2xl">
       <TouchableScale
         onPress={() => handlePress()}
         className="w-full rounded-2xl bg-green/50 flex-row items-center p-4"

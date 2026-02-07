@@ -7,6 +7,7 @@ import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 // Assets
 import CommentsLogo from "@/assets/images/logos/Comments-logo.png";
+import FavouriteLogo from "@/assets/images/logos/Favourites-logo.png";
 import ProfileLogo from "@/assets/images/logos/Profile-logo.png";
 import RecipesLogo from "@/assets/images/logos/Recipes-logo.png";
 
@@ -19,6 +20,7 @@ import ProfileContent from "@/app/components/Profile/ProfileContent";
 import ProfileNav from "@/app/components/Profile/ProfileNav";
 import RecipesContent from "@/app/components/Profile/RecipesContent";
 import EditRecipeModal from "@/app/components/Profile/RecipesContent/EditRecipeModal";
+import FavouriteContent from "../components/Profile/FavouriteContent";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -33,12 +35,21 @@ export default function ProfilePage() {
   };
 
   const tabs = [
-    { key: "profile", logo: ProfileLogo, content: <ProfileContent /> },
     {
-      key: "comments",
-      logo: CommentsLogo,
+      key: "profile",
+      logo: ProfileLogo,
+      content: <ProfileContent setActiveTab={setActiveTab} />,
+    },
+    {
+      key: "favourites",
+      logo: FavouriteLogo,
+      content: <FavouriteContent />,
+    },
+    {
+      key: "recipes",
+      logo: RecipesLogo,
       content: (
-        <CommentsContent
+        <RecipesContent
           activeTab={activeTab}
           toggleModalVisibility={toggleModalVisibility}
           editModalVisible={editModalVisible}
@@ -46,10 +57,10 @@ export default function ProfilePage() {
       ),
     },
     {
-      key: "recipes",
-      logo: RecipesLogo,
+      key: "comments",
+      logo: CommentsLogo,
       content: (
-        <RecipesContent
+        <CommentsContent
           activeTab={activeTab}
           toggleModalVisibility={toggleModalVisibility}
           editModalVisible={editModalVisible}

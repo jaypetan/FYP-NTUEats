@@ -18,12 +18,16 @@ const ProfileNav: React.FC<ProfileNavProps> = ({
   return (
     <View className="flex-row gap-4 items-end justify-center">
       {tabs.map((tab) => (
-        <TouchableScale key={tab.key} onPress={() => setActiveTab(tab.key)}>
+        <TouchableScale
+          key={tab.key}
+          onPress={() => setActiveTab(tab.key)}
+          className="border-blue border-2 aspect-square bg-cream/80 rounded-full"
+        >
           <Image
             source={tab.logo}
             className={`${
               activeTab === tab.key ? "h-24 p-3" : "h-16 p-2"
-            } border-blue border-2 aspect-square bg-cream/80 rounded-full`}
+            } aspect-square`}
             resizeMode="contain"
           />
         </TouchableScale>

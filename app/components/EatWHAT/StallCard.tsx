@@ -28,7 +28,7 @@ const StallCard: React.FC<StallCardProps> = ({
   const { setCurrentPage, setSelectedId } = useAppContext();
 
   return (
-    <View className="mt-8">
+    <View className="mt-8 border-2 border-blue rounded-2xl">
       <TouchableScale
         onPress={() => {
           setCurrentPage("stall-page");

@@ -16,7 +16,7 @@ const Loader = () => {
       <Text className="text-blue mt-2">Loading...</Text> */}
       <Text className="text-blue text-2xl font-koulen ml-3">Loading...</Text>
       <Image
-        source={require("@/assets/images/logos/cat-loading-nobg.gif")}
+        source={require("@/assets/images/logos/cat-loading.gif")}
         style={{ width: 80, height: 80 }}
       />
     </View>

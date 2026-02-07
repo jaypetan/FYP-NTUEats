@@ -57,7 +57,6 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
       if (fetchedRecipes) {
         setRecipes(fetchedRecipes.content);
         setMaxLength(fetchedRecipes.total);
-        console.log("Fetched Recipes:", fetchedRecipes);
       }
     }
   };
@@ -73,7 +72,7 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
 
   return (
     <View className="rounded-3xl w-full h-full items-center bg-darkcream/80 px-8 pt-8 mt-4">
-      <Text className="text-center text-4xl font-koulen text-blue mb-4 pt-4">
+      <Text className="text-4xl self-start font-koulen text-blue mb-4 pt-4">
         Your Recipes
       </Text>
       <ScrollView className="flex-col w-full max-h-[500px]">

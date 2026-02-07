@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 
 // External libraries
 import { useUser } from "@clerk/clerk-expo";
+import { Feather } from "@expo/vector-icons";
 
 // Components
 import TouchableScale from "@/app/components/TouchableScale";
@@ -22,10 +23,11 @@ const UserInfo = () => {
           </Text>
         </View>
         <TouchableScale
-          className="self-end px-4 py-2 rounded-xl items-center bg-green/50 border-2 border-blue"
+          className="self-end px-4 py-2 rounded-xl items-center  border-2 border-blue flex-row gap-2"
           onPress={() => {}}
         >
           <Text className="text-blue font-bold text-lg">Edit</Text>
+          <Feather name="edit" size={20} color="gray" />
         </TouchableScale>
       </View>
     </View>
