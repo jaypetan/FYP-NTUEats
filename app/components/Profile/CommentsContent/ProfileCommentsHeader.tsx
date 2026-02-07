@@ -1,5 +1,6 @@
 // React and React Native
 import { Text, View } from "react-native";
+import * as Animatable from "react-native-animatable";
 
 // External libraries
 import { FontAwesome } from "@expo/vector-icons";
@@ -17,18 +18,28 @@ const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
   handlePageInfoChange,
 }) => {
   return (
-    <View className="flex-row justify-between items-center mb-4 w-full">
+    <View className="flex-col items-start mb-8 w-full">
       <View className="flex-row items-center gap-1">
-        <Text className="text-center text-4xl font-koulen text-blue pt-4">
+        <Animatable.Text
+          animation="bounceInLeft"
+          duration={400}
+          key={pageInfo}
+          className="text-center text-4xl font-koulen text-blue pt-4"
+        >
           {pageInfo === "comments" ? "Comments" : "Reviews"}
-        </Text>
-        <Text className="text-center text-xl text-blue">
+        </Animatable.Text>
+        <Animatable.Text
+          animation="bounceInLeft"
+          duration={400}
+          key={pageInfo + "sub"}
+          className="text-center text-xl text-blue"
+        >
           on {pageInfo === "comments" ? "recipes" : "stalls"}
-        </Text>
+        </Animatable.Text>
       </View>
       <View className="">
         <TouchableScale
-          className="rounded-2xl border-2 border-blue px-4 py-1 flex-row items-center gap-2 mb-4 bg-green/50"
+          className="rounded-2xl border-2 border-blue px-4 py-1 flex-row items-center gap-2 bg-green/50"
           onPress={() => {
             handlePageInfoChange();
           }}

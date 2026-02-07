@@ -51,19 +51,19 @@ export default function Page() {
         break;
       case "recipe-page":
         setContent(<RecipePage />);
-        setPage(2);
+        setPage(3);
         break;
       case "profile-page":
         setContent(<ProfilePage />);
-        setPage(2);
+        setPage(4);
         break;
       case "admin-page":
         setContent(<AdminPage />);
-        setPage(3);
+        setPage(5);
         break;
       case "upload-recipe-page":
         setContent(<UploadRecipePage />);
-        setPage(4);
+        setPage(6);
         break;
       default:
         // home-page, eat-what, and cook-what will set to default

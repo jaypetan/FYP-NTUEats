@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
-import { useUser } from "@clerk/clerk-expo";
 import { Timestamp } from "firebase/firestore";
 
 // Utils
@@ -14,7 +13,6 @@ import {
 } from "@/utils/recipeServices";
 import { arrangeReviewsByUserId } from "@/utils/reviewServices";
 import { getStallDataById } from "@/utils/stallServices";
-import { fetchUserByClerkId } from "@/utils/userServices";
 
 // Components
 import ListWithSeeMore from "@/app/components/ListWithLoadMore";
@@ -48,35 +46,20 @@ type ReviewComment = {
 };
 
 interface CommentsContentProps {
-  activeTab: string;
+  userId: string;
   toggleModalVisibility: (type: string) => void;
   editModalVisible: string;
 }
 const CommentsContent: React.FC<CommentsContentProps> = ({
-  activeTab,
+  userId,
   toggleModalVisibility,
   editModalVisible,
 }) => {
   // To choose between comments and recipes
   const [pageInfo, setPageInfo] = useState("comments");
 
-  const { user } = useUser();
-  const [userId, setUserId] = useState("");
   const [comments, setComments] = useState<any[]>([]);
   const [maxLength, setMaxLength] = useState(0);
-
-  // Fetch user ID based on Clerk ID when activeTab changes
-  useEffect(() => {
-    const fetchAndSetUserId = async () => {
-      if (user) {
-        const fetchedUser = await fetchUserByClerkId(user.id);
-        if (fetchedUser) {
-          setUserId(fetchedUser.id);
-        }
-      }
-    };
-    fetchAndSetUserId();
-  }, [activeTab, user]);
 
   // Fetch comments when userId changes
   useEffect(() => {

@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
 import { useUser } from "@clerk/clerk-expo";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
@@ -49,9 +49,10 @@ const HomeProfile = () => {
           </Text>
         </ScrollView>
         <TouchableOpacity
-          className="self-end mt-4 flex-row gap-2 items-center border-2 border-blue rounded-xl px-4 bg-cream"
+          className="self-end mt-4 flex-row gap-2 items-center border-2 border-blue rounded-xl px-4"
           onPress={() => appContext.setCurrentPage("profile-page")}
         >
+          <Feather name="user" size={24} color="#264653" />
           <Text className="font-koulen pt-2 text-blue text-xl ">Profile</Text>
           <MaterialCommunityIcons
             name="arrow-right"

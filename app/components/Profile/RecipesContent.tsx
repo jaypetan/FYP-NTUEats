@@ -3,42 +3,25 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
-import { useUser } from "@clerk/clerk-expo";
 
 // Utils
 import { getRecipesByUserIdArranged } from "@/utils/recipeServices";
-import { fetchUserByClerkId } from "@/utils/userServices";
 
 import ListWithSeeMore from "@/app/components/ListWithLoadMore";
 import ProfileRecipeCard from "@/app/components/Profile/RecipesContent/ProfileRecipeCard";
 
 interface RecipesContentProps {
-  activeTab: string;
+  userId: string;
   toggleModalVisibility: (type: string) => void;
   editModalVisible: string;
 }
 const RecipesContent: React.FC<RecipesContentProps> = ({
-  activeTab,
+  userId,
   toggleModalVisibility,
   editModalVisible,
 }) => {
-  const { user } = useUser();
-  const [userId, setUserId] = useState("");
   const [recipes, setRecipes] = useState<any[]>([]);
   const [maxLength, setMaxLength] = useState(0);
-
-  // Fetch user ID based on Clerk ID
-  useEffect(() => {
-    const fetchAndSetUserId = async () => {
-      if (user) {
-        const fetchedUser = await fetchUserByClerkId(user.id);
-        if (fetchedUser) {
-          setUserId(fetchedUser.id);
-        }
-      }
-    };
-    fetchAndSetUserId();
-  }, [user, activeTab]);
 
   // Fetch recipes when userId changes
   useEffect(() => {

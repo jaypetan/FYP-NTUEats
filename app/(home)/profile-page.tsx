@@ -1,5 +1,5 @@
 // React and React Native core
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 // External libraries
@@ -22,7 +22,26 @@ import RecipesContent from "@/app/components/Profile/RecipesContent";
 import EditRecipeModal from "@/app/components/Profile/RecipesContent/EditRecipeModal";
 import FavouriteContent from "../components/Profile/FavouriteContent";
 
+// Utils
+import { fetchUserByClerkId } from "@/utils/userServices";
+import { useUser } from "@clerk/clerk-expo";
+
 export default function ProfilePage() {
+  const { user } = useUser();
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const fetchAndSetUserId = async () => {
+      if (user) {
+        const fetchedUser = await fetchUserByClerkId(user.id);
+        if (fetchedUser) {
+          setUserId(fetchedUser.id);
+        }
+      }
+    };
+    fetchAndSetUserId();
+  }, [user]);
+
   const [activeTab, setActiveTab] = useState("profile");
   const [editModalVisible, setEditModalVisible] = useState("");
 
@@ -43,14 +62,14 @@ export default function ProfilePage() {
     {
       key: "favourites",
       logo: FavouriteLogo,
-      content: <FavouriteContent />,
+      content: <FavouriteContent userId={userId} />,
     },
     {
       key: "recipes",
       logo: RecipesLogo,
       content: (
         <RecipesContent
-          activeTab={activeTab}
+          userId={userId}
           toggleModalVisibility={toggleModalVisibility}
           editModalVisible={editModalVisible}
         />
@@ -61,7 +80,7 @@ export default function ProfilePage() {
       logo: CommentsLogo,
       content: (
         <CommentsContent
-          activeTab={activeTab}
+          userId={userId}
           toggleModalVisibility={toggleModalVisibility}
           editModalVisible={editModalVisible}
         />
