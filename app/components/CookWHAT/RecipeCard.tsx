@@ -122,14 +122,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             />
           </View>
           <View className="absolute bottom-2 right-2 flex-row gap-2">
-            {spicy && (
-              <MaterialCommunityIcons
-                name="fire"
-                size={16}
-                color="white"
-                className="p-2 rounded-full bg-red/80"
-              />
-            )}
             {vegetarian && (
               <FontAwesome
                 name="leaf"

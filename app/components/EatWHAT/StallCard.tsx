@@ -8,6 +8,9 @@ import { useAppContext } from "@/app/components/AppContext";
 import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
+// External libraries
+import FoodPreference from "@/app/FoodPreference";
+
 interface StallCardProps {
   imageSource: any;
   title: string;
@@ -15,6 +18,8 @@ interface StallCardProps {
   description: string;
   priceSymbol: string;
   stallId: string;
+  vegetarian?: boolean;
+  halal?: boolean;
 }
 
 const StallCard: React.FC<StallCardProps> = ({
@@ -24,26 +29,35 @@ const StallCard: React.FC<StallCardProps> = ({
   description,
   priceSymbol,
   stallId,
+  vegetarian,
+  halal,
 }) => {
   const { setCurrentPage, setSelectedId } = useAppContext();
 
   return (
-    <View className="mt-8 border-2 border-blue rounded-2xl">
+    <View className="mt-8">
       <TouchableScale
         onPress={() => {
           setCurrentPage("stall-page");
           setSelectedId(stallId);
         }}
+        className="border-2 border-blue rounded-2xl overflow-hidden"
       >
+        <FoodPreference
+          className="top-2 right-2"
+          halal={halal}
+          vegetarian={vegetarian}
+        />
+
         <View className="w-full h-48">
           <ImageLoader
             image={imageSource}
-            className="w-full h-full rounded-2xl absolute"
-            loaderClassName="w-full h-full rounded-2xl"
+            className="w-full h-full absolute"
+            loaderClassName="w-full h-full"
           />
         </View>
 
-        <View className="absolute bottom-0 w-full px-4 pt-2 bg-green/70 rounded-b-2xl flex-col justify-end">
+        <View className="absolute bottom-0 w-full px-4 pt-2 bg-green flex-col justify-end">
           <View className="flex-row justify-between">
             <Text className="text-3xl font-koulen text-blue leading-10 -mb-[1rem]">
               {title}

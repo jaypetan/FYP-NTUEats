@@ -53,7 +53,10 @@ const ProfileRecipeCard: React.FC<ProfileRecipeCardProps> = ({
             <FontAwesome name="heart" size={16} color="red" />
           </View>
         </View>
-        <Text className="text-blue text-lg mb-4 max-w-72 leading-5 mt-2">
+        <Text
+          className="text-blue text-lg mb-4 max-w-72 leading-5 mt-2"
+          numberOfLines={3}
+        >
           "{recipe.description}"
         </Text>
         {recipe.recipe_pic && (

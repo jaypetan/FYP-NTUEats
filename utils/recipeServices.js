@@ -43,8 +43,8 @@ export const addNewRecipe = async (recipeData) => {
 
     console.log("Adding new recipe with data: ", recipeData);
     const recipesCollection = collection(db, "recipes");
-    await addDoc(recipesCollection, recipeData);
-    return true;
+    const docRef = await addDoc(recipesCollection, recipeData);
+    return docRef.id;
   } catch (error) {
     console.error("Error adding new recipe: ", error);
     return false;

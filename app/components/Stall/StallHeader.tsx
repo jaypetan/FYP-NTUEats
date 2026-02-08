@@ -7,16 +7,21 @@ import { FontAwesome } from "@expo/vector-icons";
 // Components
 import ClosePage from "@/app/components/ClosePage";
 import ImageLoader from "@/app/components/ImageLoader";
+import FoodPreference from "@/app/FoodPreference";
 
 interface StallHeaderProps {
   stallImage: any;
   stallName: string;
   stallLocation: string;
+  halal?: boolean;
+  vegetarian?: boolean;
 }
 const StallHeader: React.FC<StallHeaderProps> = ({
   stallImage,
   stallName,
   stallLocation,
+  halal,
+  vegetarian,
 }) => {
   return (
     <View>
@@ -26,6 +31,11 @@ const StallHeader: React.FC<StallHeaderProps> = ({
           image={stallImage}
           className="h-full w-full rounded-t-full"
           loaderClassName="w-full h-full absolute"
+        />
+        <FoodPreference
+          halal={halal}
+          vegetarian={vegetarian}
+          className="bottom-4 right-12"
         />
       </View>
       <View className="flex-row justify-between items-center bg-black py-4 px-8">

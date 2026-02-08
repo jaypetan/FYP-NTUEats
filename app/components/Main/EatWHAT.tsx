@@ -6,6 +6,7 @@ import { Image, ScrollView, Text, View } from "react-native";
 import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
 
 // Utilities
+import { fetchDietaryByStallId } from "@/utils/dietaryServices";
 import { getStallsArranged, searchStallsByName } from "@/utils/stallServices";
 
 // App Context
@@ -37,12 +38,25 @@ export default function EatWhat({
   const [stallsShown, setStallsShown] = useState<number>(4);
   const [stallDataLength, setStallDataLength] = useState<number>(0);
 
-  // Fetch stall data function
-  const fetchStallFunction = (arrangement: string, limitNumber: number) => {
-    getStallsArranged(arrangement, limitNumber).then(({ data, length }) => {
-      setStallData(data);
-      setStallDataLength(length);
-    });
+  // Function to fetch stalls based on arrangement and limit
+  const fetchStallFunction = async (
+    arrangement: string,
+    limitNumber: number
+  ) => {
+    const { data, length } = await getStallsArranged(arrangement, limitNumber);
+    // Fetch dietary info for each stall
+    const updatedStalls = await Promise.all(
+      data.map(async (stall) => {
+        const dietaryInfo = await fetchDietaryByStallId(stall.id);
+        return {
+          ...stall,
+          vegetarian: dietaryInfo?.vegetarian ?? false,
+          halal: dietaryInfo?.halal ?? false,
+        };
+      })
+    );
+    setStallData(updatedStalls);
+    setStallDataLength(length);
   };
 
   useEffect(() => {
@@ -125,6 +139,8 @@ export default function EatWhat({
                   description={stall.description}
                   priceSymbol={stall.price_symbol}
                   stallId={stall.id}
+                  vegetarian={stall.vegetarian}
+                  halal={stall.halal}
                 />
               ))}
             </View>

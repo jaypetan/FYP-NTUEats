@@ -18,12 +18,17 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Component Props
+import CheckboxInput from "@/app/(admin)/components/CheckboxInput";
 import DynamicInputList from "@/app/components/DynamicInputList";
 import ImagePickerField from "@/app/components/ImagePickerField";
 import InputField from "@/app/components/InputField";
 import TouchableScale from "@/app/components/TouchableScale";
 
 // Utilities
+import {
+  fetchDietaryByRecipeId,
+  updateRecipeDietary,
+} from "@/utils/dietaryServices";
 import {
   deleteRecipeById,
   editRecipeById,
@@ -47,6 +52,10 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
   });
   const [ingredients, setIngredients] = useState<string[]>([""]);
   const [instructions, setInstructions] = useState<string[]>([""]);
+  const [dietaryInfo, setDietaryInfo] = useState({
+    isHalal: false,
+    isVegetarian: false,
+  });
 
   const [isProcessing, setIsProcessing] = useState("");
 
@@ -64,6 +73,13 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
       });
       setIngredients(recipeData.ingredients || []);
       setInstructions(recipeData.instructions || []);
+
+      // Fetch dietary info
+      const dietaryData = await fetchDietaryByRecipeId(selectedId);
+      setDietaryInfo({
+        isHalal: dietaryData.halal ? true : false,
+        isVegetarian: dietaryData.vegetarian ? true : false,
+      });
     } catch (error) {
       Alert.alert("Error fetching recipe details. Please try again.");
     }
@@ -81,8 +97,12 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
     setIsProcessing("edit");
 
     // Call the edit service
-    editRecipeById(selectedId || "", recipe)
+    editRecipeById(selectedId, recipe)
       .then(() => {
+        updateRecipeDietary(selectedId, {
+          halal: dietaryInfo.isHalal ? 1 : 0,
+          vegetarian: dietaryInfo.isVegetarian ? 1 : 0,
+        });
         Alert.alert("Recipe updated successfully!");
         toggleModalVisibility("recipe");
       })
@@ -192,6 +212,33 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
                 label="Instructions"
                 placeholderPrefix="Step"
               />
+
+              {/*Dietary Preferences */}
+              <View>
+                <Text className="text-blue text-xl text-left font-bold">
+                  Dietary Preferences:
+                </Text>
+                <CheckboxInput
+                  label="Halal"
+                  bool={dietaryInfo.isHalal}
+                  setBool={() => {
+                    setDietaryInfo({
+                      ...dietaryInfo,
+                      isHalal: !dietaryInfo.isHalal,
+                    });
+                  }}
+                />
+                <CheckboxInput
+                  label="Vegetarian"
+                  bool={dietaryInfo.isVegetarian}
+                  setBool={() => {
+                    setDietaryInfo({
+                      ...dietaryInfo,
+                      isVegetarian: !dietaryInfo.isVegetarian,
+                    });
+                  }}
+                />
+              </View>
 
               {/* Image Upload */}
               <ImagePickerField

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Keyboard, ScrollView, View } from "react-native";
 
 // Utilities
+import { fetchDietaryByStallId } from "@/utils/dietaryServices";
 import { getStallDataById } from "@/utils/stallServices";
 
 // App Context
@@ -25,6 +26,10 @@ export default function StallPage() {
     location: "",
     price_symbol: "",
     stall_pic: "",
+    dietry: {
+      halal: false,
+      vegetarian: false,
+    },
   });
 
   const [menuModalVisible, setMenuModalVisible] = useState(false);
@@ -37,12 +42,24 @@ export default function StallPage() {
     getStallDataById(selectedId).then((data) => {
       if (data) {
         setStallData({
+          ...stallData,
           name: data.name || "",
           description: data.description || "",
           location: data.location || "",
           price_symbol: data.price_symbol || "",
           stall_pic: data.stall_pic || "",
         });
+      }
+    });
+    fetchDietaryByStallId(selectedId).then((dietaryInfo) => {
+      if (dietaryInfo) {
+        setStallData((prevData) => ({
+          ...prevData,
+          dietry: {
+            halal: dietaryInfo.halal || false,
+            vegetarian: dietaryInfo.vegetarian || false,
+          },
+        }));
       }
     });
   }, [selectedId]);
@@ -67,6 +84,8 @@ export default function StallPage() {
         stallImage={stallData.stall_pic}
         stallName={stallData.name}
         stallLocation={stallData.location.toUpperCase()}
+        halal={stallData.dietry.halal}
+        vegetarian={stallData.dietry.vegetarian}
       />
       <View className="h-[55vh] w-full bg-cream pt-4 pb-8 px-8">
         <ScrollView

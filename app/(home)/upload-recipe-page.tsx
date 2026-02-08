@@ -7,12 +7,14 @@ import { useUser } from "@clerk/clerk-expo";
 import { ScrollView } from "react-native-gesture-handler";
 
 // Utilities
+import { updateRecipeDietary } from "@/utils/dietaryServices";
 import { addNewRecipe } from "@/utils/recipeServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
+import CheckboxInput from "@/app/(admin)/components/CheckboxInput";
 import ClosePage from "@/app/components/ClosePage";
 import DynamicInputList from "@/app/components/DynamicInputList";
 import ImagePickerField from "@/app/components/ImagePickerField";
@@ -30,6 +32,11 @@ export default function UploadRecipePage() {
   });
   const [ingredients, setIngredients] = useState<string[]>([""]);
   const [instructions, setInstructions] = useState<string[]>([""]);
+  const [dietaryInfo, setDietaryInfo] = useState({
+    isHalal: false,
+    isVegetarian: false,
+  });
+  const [loading, setLoading] = useState(false);
 
   // Function to handle recipe submission
   const handleSubmit = async () => {
@@ -57,10 +64,16 @@ export default function UploadRecipePage() {
 
     // Submit the new recipe
     try {
-      await addNewRecipe(newRecipe);
+      setLoading(true);
+      const newId = await addNewRecipe(newRecipe);
+      await updateRecipeDietary(newId, {
+        halal: dietaryInfo.isHalal ? 1 : 0,
+        vegetarian: dietaryInfo.isVegetarian ? 1 : 0,
+      });
       alert("Recipe submitted successfully!");
 
       // Reset form
+      setLoading(false);
       setRecipe({
         title: "",
         description: "",
@@ -131,6 +144,33 @@ export default function UploadRecipePage() {
               placeholderPrefix="Step"
             />
 
+            {/*Dietary Preferences */}
+            <View>
+              <Text className="text-blue text-xl text-left font-bold">
+                Dietary Preferences:
+              </Text>
+              <CheckboxInput
+                label="Halal"
+                bool={dietaryInfo.isHalal}
+                setBool={() => {
+                  setDietaryInfo({
+                    ...dietaryInfo,
+                    isHalal: !dietaryInfo.isHalal,
+                  });
+                }}
+              />
+              <CheckboxInput
+                label="Vegetarian"
+                bool={dietaryInfo.isVegetarian}
+                setBool={() => {
+                  setDietaryInfo({
+                    ...dietaryInfo,
+                    isVegetarian: !dietaryInfo.isVegetarian,
+                  });
+                }}
+              />
+            </View>
+
             {/* Image Upload */}
             <ImagePickerField
               label="Recipe Image:"
@@ -142,9 +182,10 @@ export default function UploadRecipePage() {
           <TouchableScale
             onPress={handleSubmit}
             className="bg-green rounded-md py-2 px-4 items-center mt-4  border-2 border-blue mb-8"
+            disabled={loading}
           >
             <Text className="text-blue font-semibold text-base">
-              Submit Review
+              {loading ? "Submitting..." : "Submit Recipe"}
             </Text>
           </TouchableScale>
           <Text className="py-12" />
