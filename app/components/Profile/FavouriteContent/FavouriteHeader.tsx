@@ -8,33 +8,28 @@ import { FontAwesome } from "@expo/vector-icons";
 // Components
 import TouchableScale from "@/app/components/TouchableScale";
 
-interface ProfileCommentsHeaderProps {
+interface FavouriteHeaderProps {
   pageInfo: string;
   handlePageInfoChange: () => void;
 }
 
-const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
+const FavouriteHeader: React.FC<FavouriteHeaderProps> = ({
   pageInfo,
   handlePageInfoChange,
 }) => {
   return (
     <View className="flex-col items-start mb-8 w-full">
-      <View className="flex-row items-center gap-1">
-        <Animatable.Text
-          animation="bounceIn"
-          duration={400}
-          key={pageInfo}
-          className="text-center text-4xl font-koulen text-blue pt-4"
-        >
-          {pageInfo === "comments" ? "Comments" : "Reviews"}
-        </Animatable.Text>
+      <View className="flex-row items-center gap-2">
+        <Text className="text-center text-4xl font-koulen text-blue pt-4">
+          Favourite
+        </Text>
         <Animatable.Text
           animation="bounceIn"
           duration={400}
           key={pageInfo + "sub"}
-          className="text-center text-xl text-blue"
+          className="text-center text-4xl font-koulen text-blue pt-4"
         >
-          on {pageInfo === "comments" ? "recipes" : "stalls"}
+          {pageInfo === "stalls" ? "stalls" : "recipes"}
         </Animatable.Text>
       </View>
       <View className="">
@@ -46,7 +41,7 @@ const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
         >
           <FontAwesome name="exchange" size={16} color="#264653" />
           <Text className="text-center text-lg text-blue font-semibold">
-            {pageInfo === "comments" ? "Reviews" : "Comments"}
+            {pageInfo === "stalls" ? "recipes" : "stalls"}
           </Text>
         </TouchableScale>
       </View>
@@ -54,4 +49,4 @@ const ProfileCommentsHeader: React.FC<ProfileCommentsHeaderProps> = ({
   );
 };
 
-export default ProfileCommentsHeader;
+export default FavouriteHeader;

@@ -33,10 +33,10 @@ const FavouriteCard: React.FC<FavouriteCardProps> = ({
   const handlePress = () => {
     if (stallData) {
       setSelectedId(stallData.id);
-      setCurrentPage("StallDetails");
+      setCurrentPage("stall-page");
     } else if (recipeData) {
       setSelectedId(recipeData.id);
-      setCurrentPage("RecipeDetails");
+      setCurrentPage("recipe-page");
     }
   };
   return (

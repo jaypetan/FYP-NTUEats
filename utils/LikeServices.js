@@ -32,11 +32,12 @@ export const fetchTotalLikesByItemId = async (
   }
 };
 
-// Function to get liked items by a specific user
+// Function to get liked items by a specific user, limited by input, and return max length
 export const fetchLikedItemsByUserId = async (
   collectionName,
   itemIdField,
-  user_id
+  user_id,
+  limitCount
 ) => {
   try {
     const likeRef = collection(db, collectionName);
@@ -46,10 +47,17 @@ export const fetchLikedItemsByUserId = async (
     querySnapshot.forEach((doc) => {
       likedItems.push(doc.data()[itemIdField]);
     });
-    return likedItems;
+    const maxLength = likedItems.length;
+    return {
+      items: likedItems.slice(0, limitCount),
+      maxLength,
+    };
   } catch (error) {
     console.error("Error fetching liked items: ", error);
-    return [];
+    return {
+      items: [],
+      maxLength: 0,
+    };
   }
 };
 
@@ -135,3 +143,5 @@ export const unlikeItem = async (
     return false;
   }
 };
+
+// Get ID of like document

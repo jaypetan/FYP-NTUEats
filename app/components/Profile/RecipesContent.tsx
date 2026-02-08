@@ -10,6 +10,8 @@ import { getRecipesByUserIdArranged } from "@/utils/recipeServices";
 import ListWithSeeMore from "@/app/components/ListWithLoadMore";
 import ProfileRecipeCard from "@/app/components/Profile/RecipesContent/ProfileRecipeCard";
 
+import * as Animatable from "react-native-animatable";
+
 interface RecipesContentProps {
   userId: string;
   toggleModalVisibility: (type: string) => void;
@@ -58,22 +60,24 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
       <Text className="text-4xl self-start font-koulen text-blue mb-4 pt-4">
         Your Recipes
       </Text>
-      <ScrollView className="flex-col w-full max-h-[500px]">
-        {recipes.length === 0 ? (
-          <Text className="text-center text-lg text-blue mt-8">
-            No recipes yet.
-          </Text>
-        ) : (
-          <ListWithSeeMore
-            content={reviewCard}
-            fetchFn={(arrangement, limitNumber) =>
-              fetchAndSetRecipes(arrangement, limitNumber)
-            }
-            maxCount={maxLength}
-            arrangement="most_recent"
-          />
-        )}
-      </ScrollView>
+      <Animatable.View animation="fadeInUpBig" className="w-full">
+        <ScrollView className="flex-col w-full max-h-[500px]">
+          {recipes.length === 0 ? (
+            <Text className="text-center text-lg text-blue mt-8">
+              No recipes yet.
+            </Text>
+          ) : (
+            <ListWithSeeMore
+              content={reviewCard}
+              fetchFn={(arrangement, limitNumber) =>
+                fetchAndSetRecipes(arrangement, limitNumber)
+              }
+              maxCount={maxLength}
+              arrangement="most_recent"
+            />
+          )}
+        </ScrollView>
+      </Animatable.View>
     </View>
   );
 };

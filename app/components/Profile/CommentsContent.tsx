@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from "react-native";
 
 // External libraries
 import { Timestamp } from "firebase/firestore";
+import * as Animatable from "react-native-animatable";
 
 // Utils
 import { formatDate } from "@/utils/dateFormat";
@@ -183,30 +184,37 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
         pageInfo={pageInfo}
         handlePageInfoChange={handlePageInfoChange}
       />
-      <ScrollView className="flex-col w-full max-h-[500px]">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="flex-col w-full max-h-[500px]"
+      >
         {comments.length === 0 ? (
           <Text className="text-center text-lg text-blue mt-8">
             No comments yet.
           </Text>
         ) : comments[0] === "loading" ? (
-          <View className="h-full justify-center items-center">
+          <View className="h-full mt-24 scale-150">
             <Loader />
           </View>
         ) : (
-          <ListWithSeeMore
-            content={
-              pageInfo === "comments" ? recipeCommentCards : reviewCommentCards
-            }
-            maxCount={maxLength}
-            fetchFn={(arrangement, limitNumber) =>
-              pageInfo === "comments"
-                ? fetchAndSetRecipeComments(limitNumber)
-                : fetchAndSetReviewComments(limitNumber)
-            }
-            arrangement="most_recent"
-          />
+          <Animatable.View animation="fadeInUpBig" key={pageInfo}>
+            <ListWithSeeMore
+              content={
+                pageInfo === "comments"
+                  ? recipeCommentCards
+                  : reviewCommentCards
+              }
+              maxCount={maxLength}
+              fetchFn={(arrangement, limitNumber) =>
+                pageInfo === "comments"
+                  ? fetchAndSetRecipeComments(limitNumber)
+                  : fetchAndSetReviewComments(limitNumber)
+              }
+              arrangement="most_recent"
+            />
+          </Animatable.View>
         )}
-        <View className="mt-16"></View>
+        <View className="mt-16" />
       </ScrollView>
     </View>
   );

@@ -14,7 +14,7 @@ const TouchableScale: React.FC<TouchableScaleProps> = ({
   children,
   onPress,
   className,
-  scaleTo = 0.95, // Default scale factor
+  scaleTo = 0.9, // Default scale factor
   disabled = false,
 }) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
