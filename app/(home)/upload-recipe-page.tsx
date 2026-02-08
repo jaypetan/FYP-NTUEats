@@ -13,6 +13,7 @@ import { addNewRecipe } from "@/utils/recipeServices";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
+import ClosePage from "@/app/components/ClosePage";
 import DynamicInputList from "@/app/components/DynamicInputList";
 import ImagePickerField from "@/app/components/ImagePickerField";
 import InputField from "@/app/components/InputField";
@@ -76,15 +77,18 @@ export default function UploadRecipePage() {
 
   return (
     <View className="h-full w-full bg-cream pt-4 pb-8 px-8 rounded-3xl mt-4">
+      <View>
+        <ClosePage right="-right-4" />
+      </View>
+      <Text className="text-4xl font-koulen text-blue pt-4 text-center mt-8">
+        Upload Recipe
+      </Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         onScrollBeginDrag={Keyboard.dismiss}
       >
-        <View className="flex-col gap-2 mt-8">
-          <Text className="text-4xl font-koulen text-blue pt-4 text-center">
-            Upload Recipe
-          </Text>
+        <View className="flex-col gap-2 mt-4">
           <View className="flex-col gap-6">
             <InputField
               label="Title:"

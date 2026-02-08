@@ -1,6 +1,6 @@
 // React and React Native core imports
 import { useEffect, useState } from "react";
-import { Alert, Text, TouchableOpacity } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 // External libraries
@@ -8,11 +8,16 @@ import * as ImagePicker from "expo-image-picker";
 
 // Project components
 import PriceRangeInput from "@/app/(admin)//components/PriceRangeInput";
+import CheckboxInput from "@/app/(admin)/components/CheckboxInput";
 import LabeledInput from "@/app/(admin)/components/LabeledInput";
 import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
-// Project utilities
+// Utilities
+import {
+  fetchDietaryByStallId,
+  updateStallDietary,
+} from "@/utils/dietaryServices";
 import { getStallDataById, updateStallById } from "@/utils/stallServices";
 
 interface StallEditProps {
@@ -30,6 +35,10 @@ const StallEdit: React.FC<StallEditProps> = ({
     price_symbol: "",
     stall_pic: "",
   });
+  const [dietaryInfo, setDietaryInfo] = useState({
+    isHalal: false,
+    isVegetarian: false,
+  });
 
   // Fetch existing stall details from propId
   useEffect(() => {
@@ -44,6 +53,14 @@ const StallEdit: React.FC<StallEditProps> = ({
               ? (data.price_symbol.split("$").length - 1).toString()
               : "",
             stall_pic: data.stall_pic,
+          });
+        }
+      });
+      fetchDietaryByStallId(propId).then((dietaryData) => {
+        if (dietaryData) {
+          setDietaryInfo({
+            isHalal: dietaryData.halal ? true : false,
+            isVegetarian: dietaryData.vegetarian ? true : false,
           });
         }
       });
@@ -87,6 +104,11 @@ const StallEdit: React.FC<StallEditProps> = ({
 
     // update stall
     updateStallById(propId!, updatedDetails);
+    // update dietary info
+    updateStallDietary(propId!, {
+      halal: dietaryInfo.isHalal,
+      vegetarian: dietaryInfo.isVegetarian,
+    });
     Alert.alert("Stall Updated Successfully");
 
     // Navigate back to stall list
@@ -94,54 +116,83 @@ const StallEdit: React.FC<StallEditProps> = ({
   };
 
   return (
-    <ScrollView className="h-5/6 w-full">
-      <LabeledInput
-        label="Stall Name"
-        maxLength={30}
-        value={details.name}
-        onChangeText={(text) => setDetails({ ...details, name: text })}
-        placeholder="stall name"
-      />
-      <LabeledInput
-        label="Location"
-        maxLength={30}
-        value={details.location}
-        onChangeText={(text) => setDetails({ ...details, location: text })}
-        placeholder="location name"
-      />
-      <LabeledInput
-        label="Description"
-        maxLength={100}
-        value={details.description}
-        onChangeText={(text) => setDetails({ ...details, description: text })}
-        placeholder="types of food served"
-        multiline
-      />
-      <PriceRangeInput
-        value={details.price_symbol}
-        onChangeText={(text) => setDetails({ ...details, price_symbol: text })}
-      />
-
-      {/* Image Upload */}
-      <Text className="text-xl pt-2">Stall Image</Text>
-      <TouchableOpacity
-        onPress={pickImage}
-        className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
-      >
-        <ImageLoader
-          image={details.stall_pic}
-          className="absolute w-64 h-64"
-          loaderClassName="w-64 h-64"
+    <View className="flex-col items-center h-[600px]">
+      <Text className="text-2xl font-koulen py-2 px-4 text-blue">
+        Edit Stall
+      </Text>
+      <ScrollView className="px-8 w-full">
+        <LabeledInput
+          label="Stall Name"
+          maxLength={30}
+          value={details.name}
+          onChangeText={(text) => setDetails({ ...details, name: text })}
+          placeholder="stall name"
         />
-      </TouchableOpacity>
+        <LabeledInput
+          label="Location"
+          maxLength={30}
+          value={details.location}
+          onChangeText={(text) => setDetails({ ...details, location: text })}
+          placeholder="location name"
+        />
+        <LabeledInput
+          label="Description"
+          maxLength={100}
+          value={details.description}
+          onChangeText={(text) => setDetails({ ...details, description: text })}
+          placeholder="types of food served"
+          multiline
+        />
+        <PriceRangeInput
+          value={details.price_symbol}
+          onChangeText={(text) =>
+            setDetails({ ...details, price_symbol: text })
+          }
+        />
 
-      {/* Submit Button */}
-      <TouchableScale onPress={handleSubmit}>
-        <Text className="py-2 mt-4 bg-green/80 rounded-full border-2 border-blue  text-center text-blue text-lg font-bold">
-          Confirm Edit
-        </Text>
-      </TouchableScale>
-    </ScrollView>
+        {/* Dietary Restrictions */}
+        <View className="flex-col">
+          <Text className="text-xl pt-2">Dietary Restrictions</Text>
+          <CheckboxInput
+            label="Halal"
+            bool={dietaryInfo.isHalal}
+            setBool={() => {
+              setDietaryInfo({ ...dietaryInfo, isHalal: !dietaryInfo.isHalal });
+            }}
+          />
+          <CheckboxInput
+            label="Vegetarian"
+            bool={dietaryInfo.isVegetarian}
+            setBool={() => {
+              setDietaryInfo({
+                ...dietaryInfo,
+                isVegetarian: !dietaryInfo.isVegetarian,
+              });
+            }}
+          />
+        </View>
+
+        {/* Image Upload */}
+        <Text className="text-xl pt-2">Stall Image</Text>
+        <TouchableOpacity
+          onPress={pickImage}
+          className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
+        >
+          <ImageLoader
+            image={details.stall_pic}
+            className="absolute w-64 h-64"
+            loaderClassName="w-64 h-64"
+          />
+        </TouchableOpacity>
+
+        {/* Submit Button */}
+        <TouchableScale onPress={handleSubmit}>
+          <Text className="py-2 mt-4 bg-green/80 rounded-full border-2 border-blue  text-center text-blue text-lg font-bold">
+            Confirm Edit
+          </Text>
+        </TouchableScale>
+      </ScrollView>
+    </View>
   );
 };
 export default StallEdit;

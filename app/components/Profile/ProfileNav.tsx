@@ -21,7 +21,9 @@ const ProfileNav: React.FC<ProfileNavProps> = ({
         <TouchableScale
           key={tab.key}
           onPress={() => setActiveTab(tab.key)}
-          className="border-blue border-2 aspect-square bg-cream/80 rounded-full"
+          className={`border-blue ${
+            activeTab === tab.key ? "border-2" : "border"
+          } aspect-square bg-cream/80 rounded-full`}
         >
           <Image
             source={tab.logo}

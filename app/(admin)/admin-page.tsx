@@ -58,9 +58,9 @@ export default function AdminPage() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View className="h-full w-full items-center bg-cream mt-4 rounded-3xl relative">
+      <View className="h-full w-full items-center bg-darkcream mt-4 rounded-3xl relative">
         <Text className="font-koulen text-3xl pt-4 px-4 mt-8 mb-4 text-blue border-b-2 border-blue">
-          Admin Page
+          Admin Dashboard
         </Text>
         {adminCurrentPage !== "default" && (
           <TouchableScale
@@ -75,7 +75,12 @@ export default function AdminPage() {
             />
           </TouchableScale>
         )}
-        <Animated.View key={page} entering={FadeInLeft} exiting={FadeOutRight}>
+        <Animated.View
+          key={page}
+          entering={FadeInLeft}
+          exiting={FadeOutRight}
+          className="px-8 pb-8"
+        >
           {content}
         </Animated.View>
       </View>

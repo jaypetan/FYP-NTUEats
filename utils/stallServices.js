@@ -27,8 +27,8 @@ export const addNewStall = async (stallData) => {
 
     console.log("Adding new stall with data: ", stallData);
     const stallsCollection = collection(db, "stalls");
-    await addDoc(stallsCollection, stallData);
-    return true;
+    const docRef = await addDoc(stallsCollection, stallData);
+    return docRef.id;
   } catch (error) {
     console.error("Error adding new stall: ", error);
     return false;
@@ -112,6 +112,8 @@ export const getStallDataById = async (stallId) => {
         location: data.location,
         price_symbol: data.price_symbol,
         stall_pic: data.stall_pic,
+        halal: data.halal ?? false,
+        vegetarian: data.vegetarian ?? false,
       };
     } else {
       console.log("No such stall!");

@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
 // Utils
 import { getRecipesByUserIdArranged } from "@/utils/recipeServices";
 
+// Components
+import { useAppContext } from "@/app/components/AppContext";
 import ListWithSeeMore from "@/app/components/ListWithLoadMore";
 import ProfileRecipeCard from "@/app/components/Profile/RecipesContent/ProfileRecipeCard";
-
-import * as Animatable from "react-native-animatable";
+import TouchableScale from "@/app/components/TouchableScale";
 
 interface RecipesContentProps {
   userId: string;
@@ -22,6 +25,7 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
   toggleModalVisibility,
   editModalVisible,
 }) => {
+  const { setCurrentPage } = useAppContext();
   const [recipes, setRecipes] = useState<any[]>([]);
   const [maxLength, setMaxLength] = useState(0);
 
@@ -57,9 +61,17 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
 
   return (
     <View className="rounded-3xl w-full h-full items-center bg-darkcream/80 px-8 pt-8 mt-4">
-      <Text className="text-4xl self-start font-koulen text-blue mb-4 pt-4">
-        Your Recipes
-      </Text>
+      <View className="flex-row justify-between w-full items-start">
+        <Text className="text-4xl self-start font-koulen text-blue mb-4 pt-4">
+          Your Recipes
+        </Text>
+        <TouchableScale
+          onPress={() => setCurrentPage("upload-recipe-page")}
+          className="rounded-2xl p-2 border-2 border-blue bg-cream/80 mb-4"
+        >
+          <MaterialCommunityIcons name="plus" size={24} color="#264653" />
+        </TouchableScale>
+      </View>
       <Animatable.View animation="fadeInUpBig" className="w-full">
         <ScrollView className="flex-col w-full max-h-[500px]">
           {recipes.length === 0 ? (
