@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // Utilities
+import { fetchDietaryByRecipeId } from "@/utils/dietaryServices";
 import {
   getRecipeById,
   getRecipeCommentsArranged,
@@ -33,8 +34,13 @@ export default function RecipePage() {
   // Fetch Data based on selectedId
   const fetchRecipeData = async () => {
     if (selectedId) {
-      const data = await getRecipeById(selectedId);
-      setRecipeData(data);
+      const recipe = await getRecipeById(selectedId);
+      const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
+      setRecipeData({
+        ...recipe,
+        halal: dietaryInfo?.halal || false,
+        vegetarian: dietaryInfo?.vegetarian || false,
+      });
     }
   };
 
@@ -65,6 +71,8 @@ export default function RecipePage() {
         recipeName={recipeData.title}
         page={page}
         setPage={setPage}
+        halal={recipeData.halal}
+        vegetarian={recipeData.vegetarian}
       />
       <ScrollView
         ref={scrollViewRef}

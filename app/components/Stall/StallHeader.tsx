@@ -6,8 +6,8 @@ import { FontAwesome } from "@expo/vector-icons";
 
 // Components
 import ClosePage from "@/app/components/ClosePage";
+import FoodPreference from "@/app/components/FoodPreference";
 import ImageLoader from "@/app/components/ImageLoader";
-import FoodPreference from "@/app/FoodPreference";
 
 interface StallHeaderProps {
   stallImage: any;

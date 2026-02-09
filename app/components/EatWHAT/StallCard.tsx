@@ -9,7 +9,7 @@ import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 // External libraries
-import FoodPreference from "@/app/FoodPreference";
+import FoodPreference from "@/app/components/FoodPreference";
 
 interface StallCardProps {
   imageSource: any;

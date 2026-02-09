@@ -6,6 +6,7 @@ import { Image, ScrollView, Text, View } from "react-native";
 import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
 
 // Utilities
+import { fetchDietaryByRecipeId } from "@/utils/dietaryServices";
 import {
   getRecipesArranged,
   searchRecipesByTitleArranged,
@@ -40,7 +41,17 @@ export default function CookWhat({
   // Fetch all recipes on component mount
   const fetchRecipesFunction = async (recipesToShow: number) => {
     const recipes = await getRecipesArranged("most_likes", recipesToShow);
-    setRecipesData(recipes.content);
+    const recipesWithDietary = await Promise.all(
+      recipes.content.map(async (recipe: any) => {
+        const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
+        return {
+          ...recipe,
+          halal: dietaryInfo?.halal || false,
+          vegetarian: dietaryInfo?.vegetarian || false,
+        };
+      })
+    );
+    setRecipesData(recipesWithDietary);
     setRecipesDataLength(recipes.length);
   };
   useEffect(() => {
@@ -126,7 +137,6 @@ export default function CookWhat({
                   duration={recipe.cooking_time}
                   halal={recipe.halal}
                   vegetarian={recipe.vegetarian}
-                  spicy={recipe.spicy}
                 />
               ))}
             </View>

@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
 import { useUser } from "@clerk/clerk-expo";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 // Utilities
 import {
@@ -19,6 +19,7 @@ import { fetchUserByClerkId } from "@/utils/userServices";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
+import FoodPreference from "@/app/components/FoodPreference";
 import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
@@ -30,7 +31,6 @@ interface RecipeCardProps {
   duration: string;
   halal?: boolean;
   vegetarian?: boolean;
-  spicy?: boolean;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({
@@ -41,7 +41,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   duration,
   halal,
   vegetarian,
-  spicy,
 }) => {
   const { setCurrentPage, setSelectedId } = useAppContext();
   const handlePress = () => {
@@ -121,24 +120,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
               loaderClassName="absolute w-full h-full bottom-0 translate-y-3"
             />
           </View>
-          <View className="absolute bottom-2 right-2 flex-row gap-2">
-            {vegetarian && (
-              <FontAwesome
-                name="leaf"
-                size={16}
-                color="white"
-                className="p-2 rounded-full bg-green/80"
-              />
-            )}
-            {halal && (
-              <MaterialCommunityIcons
-                name="food-halal"
-                size={16}
-                color="white"
-                className="p-2 rounded-full bg-green/80"
-              />
-            )}
-          </View>
+          <FoodPreference
+            halal={halal}
+            vegetarian={vegetarian}
+            className="top-2 right-2"
+          />
         </View>
 
         <View className="flex-1 flex-col px-4 py-2 justify-between h-32">
