@@ -83,15 +83,15 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
   };
 
   return (
-    <View>
+    <View className="rounded-lg overflow-hidden border-2 border-blue">
       <View className="w-64 h-64">
         <ImageLoader
           image={item.image}
           className="w-64 h-64"
-          loaderClassName="w-full h-full absolute"
+          loaderClassName="w-full h-full"
         />
       </View>
-      <View className="flex-row items-center justify-end p-2 bg-green/80">
+      <View className="flex-row items-center justify-end p-2 bg-green/80 border-t-2 border-blue">
         <Text className="text-blue text-xl mr-2 font-koulen pt-2 ">
           {menuLikesCount > 0 ? menuLikesCount : ""}
         </Text>

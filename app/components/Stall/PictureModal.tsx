@@ -76,13 +76,13 @@ const PictureModal: React.FC<PictureModalProps> = ({
                     setSelectedImageIndex(index);
                     setEnlargedImageVisible(true);
                   }}
-                  className="mr-4"
+                  className="mr-4 border-2 border-blue rounded-lg overflow-hidden"
                 >
                   <View className="w-64 h-64">
                     <ImageLoader
                       image={item.uri}
                       className="w-64 h-64"
-                      loaderClassName="w-full h-full absolute"
+                      loaderClassName="w-full h-full"
                     />
                   </View>
                 </Pressable>

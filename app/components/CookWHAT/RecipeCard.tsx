@@ -117,7 +117,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             <ImageLoader
               image={foodImage}
               className="w-32 h-32 rounded-2xl"
-              loaderClassName="absolute w-full h-full bottom-0 translate-y-3"
+              loaderClassName="w-full h-full"
+              small
             />
           </View>
           <FoodPreference
@@ -126,7 +127,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             className="top-2 right-2"
           />
         </View>
-
         <View className="flex-1 flex-col px-4 py-2 justify-between h-32">
           <View className="flex-row justify-between items-center">
             <View className="flex-col">

@@ -30,7 +30,7 @@ const StallHeader: React.FC<StallHeaderProps> = ({
         <ImageLoader
           image={stallImage}
           className="h-full w-full rounded-t-full"
-          loaderClassName="w-full h-full absolute"
+          loaderClassName="overflow-hidden absolute w-full h-full rounded-t-full"
         />
         <FoodPreference
           halal={halal}

@@ -1,14 +1,22 @@
 // React and React Native core
 import { Image, Text, View } from "react-native";
 
-const Loader = () => {
+interface LoaderProps {
+  small?: boolean;
+}
+
+const Loader: React.FC<LoaderProps> = ({ small }) => {
   return (
     <View
       style={{
         position: "absolute",
         top: "50%",
         left: "50%",
-        transform: [{ translateX: -40 }, { translateY: -60 }],
+        transform: [
+          { translateX: -40 },
+          { translateY: -50 },
+          { scale: small ? 0.7 : 1 },
+        ],
         zIndex: 10,
       }}
     >

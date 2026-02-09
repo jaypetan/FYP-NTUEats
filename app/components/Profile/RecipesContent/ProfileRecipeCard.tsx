@@ -63,7 +63,7 @@ const ProfileRecipeCard: React.FC<ProfileRecipeCardProps> = ({
           <View className="h-48 w-48 mb-4 border-2 border-blue rounded-xl overflow-hidden">
             <ImageLoader
               image={recipe.recipe_pic}
-              className="w-full h-48 mb-4 rounded-xl"
+              className="w-full h-48"
               loaderClassName="h-48"
             />
           </View>

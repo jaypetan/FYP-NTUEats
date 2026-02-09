@@ -132,11 +132,11 @@ const StallReviewCard = ({
           } flex-row items-end`}
         >
           {reviewImage && (
-            <View className="w-48 h-48">
+            <View className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-blue">
               <TouchableOpacity onPress={() => setIsImageViewVisible(true)}>
                 <ImageLoader
                   image={reviewImage}
-                  className="w-48 rounded-2xl h-48"
+                  className="w-48 h-48"
                   loaderClassName="w-full h-full absolute"
                 />
               </TouchableOpacity>

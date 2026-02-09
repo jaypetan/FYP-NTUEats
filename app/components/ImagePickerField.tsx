@@ -1,11 +1,12 @@
 // React and React Native core
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 // External libraries
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 // Components
+import ImageLoader from "@/app/components/ImageLoader";
 import TouchableScale from "@/app/components/TouchableScale";
 
 type ImagePickerFieldProps = {
@@ -47,12 +48,13 @@ export default function ImagePickerField({
       </View>
       <TouchableScale
         onPress={pickImage}
-        className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
+        className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2 overflow-hidden rounded-xl"
       >
         {imageUri ? (
-          <Image
-            className="w-64 h-64 border-2 border-blue"
-            source={{ uri: imageUri }}
+          <ImageLoader
+            className="w-64 h-64"
+            image={imageUri}
+            loaderClassName="w-64 h-64"
           />
         ) : (
           <View className="items-center">

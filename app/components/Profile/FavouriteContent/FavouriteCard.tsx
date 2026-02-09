@@ -53,8 +53,9 @@ const FavouriteCard: React.FC<FavouriteCardProps> = ({
               ? recipeData.recipe_pic
               : ""
           }
-          className="w-full h-32 rounded-xl mb-4"
-          loaderClassName="h-32 scale-75"
+          className="w-full h-32 mb-4"
+          loaderClassName="h-32"
+          small
         />
       </View>
       <View className="flex-col justify-center max-w-40">

@@ -137,10 +137,10 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
       <Text className="text-xl text-blue">{comment.content}</Text>
       <View className="flex-row py-4">
         {comment.comment_pic && (
-          <View className="w-64 h-64">
+          <View className="w-64 h-64 border-2 border-blue rounded-lg overflow-hidden">
             <ImageLoader
               image={comment.comment_pic}
-              className="w-64 h-64 rounded-lg"
+              className="w-64 h-64"
               loaderClassName="w-64 h-64"
             />
           </View>
