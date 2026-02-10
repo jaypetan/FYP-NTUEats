@@ -1,80 +1,88 @@
 // React and React Native core
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
-
-// External libraries
-import { MaterialIcons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 
 // Components
-import TouchableScale from "@/app/components/TouchableScale";
+import CustomDropdown from "@/app/components/CustomDropdown";
+
+// Utilities
+import { fetchCanteenList } from "@/utils/stallServices";
 
 interface StallFilterProps {
   arrangement: string;
   setArrangement: (arrangement: string) => void;
+  restrictionsFilter: {
+    canteen: string;
+    vegetarian: boolean;
+    halal: boolean;
+  };
+  setRestrictionsFilter: (restrictionsFilter: {
+    canteen: string;
+    vegetarian: boolean;
+    halal: boolean;
+  }) => void;
 }
 
 const StallFilter: React.FC<StallFilterProps> = ({
   arrangement,
   setArrangement,
+  restrictionsFilter,
+  setRestrictionsFilter,
 }) => {
-  const [arrangementDropdown, setArrangementDropdown] = useState(false);
   const arrangementOptions = [
     { label: "Popularity", value: "most_saved" },
     { label: "Price (High to Low)", value: "price_high_to_low" },
     { label: "Price (Low to High)", value: "price_low_to_high" },
   ];
 
+  const [canteen, setCanteen] = useState<{ label: string; value: string }[]>(
+    []
+  );
+
+  const fetchCanteens = async () => {
+    await fetchCanteenList().then((data) => {
+      // set data to label and value pairs
+      const canteenOptions = data.map((canteenName) => ({
+        label: canteenName
+          .replaceAll("_", " ")
+          .toLowerCase()
+          .replace(/^./, (c: string) => c.toUpperCase()),
+        value: canteenName,
+      }));
+      setCanteen(canteenOptions);
+    });
+  };
+
+  useEffect(() => {
+    fetchCanteens();
+  }, []);
+
   return (
-    <View className="mt-4 p-4 bg-cream rounded-2xl w-full border-2 border-blue">
+    <View className="mt-4 p-4 pb-8 bg-cream rounded-2xl w-full border-2 border-blue">
       <Text className="text-2xl text-blue font-koulen">Filter</Text>
-
-      {/* Arrangement Dropdown */}
-      <Text className="font-koulen text-blue text-2xl pt-2">Arrange By: </Text>
-      <Pressable
-        className="border-2 border-blue px-4 py-2 flex-row justify-between"
-        onPress={() => setArrangementDropdown(!arrangementDropdown)}
-      >
-        <Text className="text-blue text-lg font-bold">
-          {
-            arrangementOptions.find((option) => option.value === arrangement)
-              ?.label
-          }
-        </Text>
-        <MaterialIcons
-          style={{
-            transform: [{ rotate: arrangementDropdown ? "180deg" : "0deg" }],
-          }}
-          name="arrow-drop-down"
-          size={24}
-          color="#264653"
+      <View className="flex-col gap-2">
+        {/* Arrangement Dropdown */}
+        <CustomDropdown
+          label="Arrange By:"
+          variable={arrangement}
+          setVar={setArrangement}
+          customOptions={arrangementOptions}
         />
-      </Pressable>
-      {arrangementDropdown && (
-        <View className="flex-col border-x-2 border-b-2 border-blue bg-darkcream">
-          {arrangementOptions.map((option, index) => (
-            <View
-              key={option.value}
-              className={`${
-                index === arrangementOptions.length - 1 ? "" : "border-b-2"
-              } ${arrangement === option.value ? "hidden" : ""} border-blue`}
-            >
-              <TouchableScale
-                className="w-full py-2 px-4"
-                onPress={() => {
-                  setArrangement(option.value);
-                  setArrangementDropdown(false);
-                }}
-              >
-                <Text className="text-blue text-lg font-semibold">
-                  {option.label}
-                </Text>
-              </TouchableScale>
-            </View>
-          ))}
-        </View>
-      )}
 
-      {/* Canteen Dropdown */}
+        {/* Canteen Dropdown */}
+        <CustomDropdown
+          label="Canteen:"
+          variable={restrictionsFilter.canteen}
+          setVar={(value: string) => {
+            setRestrictionsFilter({
+              ...restrictionsFilter,
+              canteen: value,
+            });
+          }}
+          customOptions={canteen}
+          placeholder="Filter by canteen"
+        />
+      </View>
     </View>
   );
 };

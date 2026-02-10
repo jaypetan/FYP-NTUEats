@@ -203,3 +203,24 @@ export const searchStallsByName = async (searchTerm) => {
     return [];
   }
 };
+
+// Function to get list of canteens
+export const fetchCanteenList = async () => {
+  try {
+    const q = collection(db, "stalls");
+    const querySnapshot = await getDocs(q);
+
+    const canteenSet = new Set();
+    querySnapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data.location.trim()) {
+        canteenSet.add(data.location.trim());
+      }
+    });
+
+    return Array.from(canteenSet);
+  } catch (error) {
+    console.error("Error fetching canteen list: ", error);
+    return [];
+  }
+};

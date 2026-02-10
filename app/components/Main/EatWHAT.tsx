@@ -75,7 +75,7 @@ export default function EatWhat({
     const stallsToShow = 4; // Reset stalls shown when leaving the page
     setStallsShown(stallsToShow);
     fetchStallFunction(arrangement, stallsToShow);
-  }, [currentPage, arrangement]);
+  }, [currentPage, arrangement, restrictionsFilter]);
 
   // Fetch more stalls
   const loadMoreStalls = () => {
@@ -147,6 +147,8 @@ export default function EatWhat({
             <StallFilter
               arrangement={arrangement}
               setArrangement={setArrangement}
+              restrictionsFilter={restrictionsFilter}
+              setRestrictionsFilter={setRestrictionsFilter}
             />
 
             {/* Stalls */}
