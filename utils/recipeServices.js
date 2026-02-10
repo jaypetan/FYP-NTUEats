@@ -1,7 +1,7 @@
 // Firebase imports
-import { formatDate } from "@/utils/dateFormat";
 import { db, uploadImageAsync } from "@/utils/firebase";
 import { fetchTotalLikesByItemId } from "@/utils/likeServices";
+import { formatDate } from "@/utils/sharedFunctions";
 import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 import {
   addDoc,

@@ -1,6 +1,8 @@
 // Firebase imports
+import { fetchAllStallsWithSelectedRestriction } from "@/utils/dietaryServices";
 import { db, uploadImageAsync } from "@/utils/firebase";
 import { fetchTotalLikesByItemId } from "@/utils/likeServices";
+import { compareDatas } from "@/utils/sharedFunctions";
 import {
   addDoc,
   collection,
@@ -64,10 +66,52 @@ export const fetchStallData = async () => {
   }
 };
 
-// Function to arrange stalls
-export const getStallsArranged = async (arrangement, limitNum) => {
+// Function to filter stall data with restrictions
+export const getStallsWithRestrictions = async (restrictions) => {
   try {
     const { data: stallsData, length } = await fetchStallData();
+    if (!restrictions) {
+      return { data: stallsData, length };
+    }
+
+    let filteredStalls = stallsData;
+    // Filter stalls based on restrictions
+    if (restrictions.halal) {
+      const halalStallIds = await fetchAllStallsWithSelectedRestriction(
+        "halal"
+      );
+      filteredStalls = compareDatas(filteredStalls, halalStallIds, "id", "id");
+    }
+    if (restrictions.vegetarian) {
+      const vegStallIds = await fetchAllStallsWithSelectedRestriction(
+        "vegetarian"
+      );
+      filteredStalls = compareDatas(
+        filteredStalls,
+        vegStallIds,
+        "id",
+        "stall_id"
+      );
+    }
+    filteredStalls = filteredStalls.filter((stall) => {
+      if (restrictions.canteen && stall.location !== restrictions.canteen)
+        return false;
+      return true;
+    });
+
+    return { data: filteredStalls, length: filteredStalls.length };
+  } catch (error) {
+    console.error("Error filtering stalls with restrictions: ", error);
+    return { data: [], length: 0 };
+  }
+};
+
+// Function to arrange stalls
+export const getStallsArranged = async (arrangement, limitNum, restriction) => {
+  try {
+    const { data: stallsData, length } = await getStallsWithRestrictions(
+      restriction
+    );
 
     let arrangedStalls = [...stallsData];
 

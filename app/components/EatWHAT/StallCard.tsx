@@ -35,7 +35,7 @@ const StallCard: React.FC<StallCardProps> = ({
   const { setCurrentPage, setSelectedId } = useAppContext();
 
   return (
-    <View className="mt-8">
+    <View>
       <TouchableScale
         onPress={() => {
           setCurrentPage("stall-page");
@@ -67,7 +67,10 @@ const StallCard: React.FC<StallCardProps> = ({
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-base font-inter font-semibold text-blue">
+            <Text
+              className="text-base font-inter font-semibold text-blue max-w-72"
+              numberOfLines={1}
+            >
               {description}
             </Text>
             <Text className="text-2xl font-koulen text-blue">

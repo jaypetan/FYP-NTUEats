@@ -85,6 +85,25 @@ export const updateStallDietary = async (stall_id, dietaryInfo) => {
   }
 };
 
+// Function to fetch all stalls with a selected dietary restriction
+export const fetchAllStallsWithSelectedRestriction = async (
+  selectedRestriction
+) => {
+  try {
+    const dietaryRef = collection(db, "stalls_dietary");
+    const q = query(dietaryRef, where(selectedRestriction, "==", true));
+    const querySnapshot = await getDocs(q);
+
+    const stallsWithSelectedRestriction = querySnapshot.docs.map((doc) => ({
+      id: doc.data().stall_id,
+    }));
+    return stallsWithSelectedRestriction;
+  } catch (error) {
+    console.error("Error fetching stalls with selected restriction: ", error);
+    return [];
+  }
+};
+
 // Dietary Services for recipes
 // Function to get dietary preferences by recipe id
 export const fetchDietaryByRecipeId = async (recipe_id) => {

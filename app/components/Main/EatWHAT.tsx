@@ -14,6 +14,7 @@ import { useAppContext } from "@/app/components/AppContext";
 
 // Components
 import StallCard from "@/app/components/EatWHAT/StallCard";
+import StallFilter from "@/app/components/EatWHAT/StallFilter";
 import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
@@ -38,12 +39,22 @@ export default function EatWhat({
   const [stallsShown, setStallsShown] = useState<number>(4);
   const [stallDataLength, setStallDataLength] = useState<number>(0);
 
+  const [restrictionsFilter, setRestrictionsFilter] = useState({
+    canteen: "",
+    vegetarian: false,
+    halal: false,
+  });
+
   // Function to fetch stalls based on arrangement and limit
   const fetchStallFunction = async (
     arrangement: string,
     limitNumber: number
   ) => {
-    const { data, length } = await getStallsArranged(arrangement, limitNumber);
+    const { data, length } = await getStallsArranged(
+      arrangement,
+      limitNumber,
+      restrictionsFilter
+    );
     // Fetch dietary info for each stall
     const updatedStalls = await Promise.all(
       data.map(async (stall) => {
@@ -64,7 +75,7 @@ export default function EatWhat({
     const stallsToShow = 4; // Reset stalls shown when leaving the page
     setStallsShown(stallsToShow);
     fetchStallFunction(arrangement, stallsToShow);
-  }, [currentPage]);
+  }, [currentPage, arrangement]);
 
   // Fetch more stalls
   const loadMoreStalls = () => {
@@ -93,6 +104,8 @@ export default function EatWhat({
       scrollViewRef.current.scrollTo({ y: 200, animated: true });
     }
   };
+
+  // Filter Functionality
 
   return (
     <View className="h-full w-full flex-col">
@@ -124,12 +137,20 @@ export default function EatWhat({
             <Text className="text-4xl font-koulen pt-4 text-blue">
               What are we eating today?
             </Text>
+
+            {/* Search Bar & Filter */}
             <SearchBar
               handleSearch={handleSearch}
               searchTerm={searchTerm}
               handleScroll={handleScroll}
             />
-            <View className="min-h-[50vh] flex-col gap-4 mt-6">
+            <StallFilter
+              arrangement={arrangement}
+              setArrangement={setArrangement}
+            />
+
+            {/* Stalls */}
+            <View className="min-h-[50vh] flex-col gap-8 mt-8">
               {stallData.map((stall, index) => (
                 <StallCard
                   key={index}

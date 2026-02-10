@@ -7,12 +7,12 @@ import { Timestamp } from "firebase/firestore";
 import * as Animatable from "react-native-animatable";
 
 // Utils
-import { formatDate } from "@/utils/dateFormat";
 import {
   arrangeRecipeCommentsByUserId,
   getRecipeById,
 } from "@/utils/recipeServices";
 import { arrangeReviewsByUserId } from "@/utils/reviewServices";
+import { formatDate } from "@/utils/sharedFunctions";
 import { getStallDataById } from "@/utils/stallServices";
 
 // Components

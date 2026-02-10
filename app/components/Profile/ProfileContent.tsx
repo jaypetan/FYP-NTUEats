@@ -24,50 +24,41 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ setActiveTab }) => {
       label: "Vegetarian",
       icon: <MaterialCommunityIcons name="leaf" size={24} color="green" />,
     },
+  ];
+
+  const profileNavigation = [
     {
-      label: "Vegan",
-      icon: <MaterialCommunityIcons name="sprout" size={24} color="green" />,
+      label: "Favourites",
+      description: "View your saved recipes/stalls",
+      icon: <MaterialCommunityIcons name="heart" size={24} color="#264653" />,
+      onPress: () => setActiveTab("favourites"),
     },
     {
-      label: "No Seafood",
-      icon: <MaterialCommunityIcons name="fish" size={24} color="green" />,
+      label: "Recipes",
+      description: "Manage your personal recipes",
+      icon: (
+        <MaterialCommunityIcons name="book-open" size={24} color="#264653" />
+      ),
+      onPress: () => setActiveTab("recipes"),
+    },
+    {
+      label: "Comments",
+      description: "Manage your reviews/comments",
+      icon: (
+        <MaterialCommunityIcons
+          name="comment-multiple"
+          size={24}
+          color="#264653"
+        />
+      ),
+      onPress: () => setActiveTab("comments"),
     },
   ];
 
   return (
-    <ScrollView className="p-8 mt-4 bg-darkcream/80 w-full h-full rounded-3xl pt-12">
+    <ScrollView className="p-8 mt-4 bg-darkcream/80 w-full h-[600px] rounded-3xl pt-12">
       {/* User information */}
       <UserInfo />
-
-      {/* Favourites button */}
-      <TouchableScale
-        className="bg-cream border-2 border-blue p-6 rounded-2xl flex flex-row justify-between items-center mt-4"
-        onPress={() => {
-          setActiveTab("favourites");
-        }}
-      >
-        <View className="flex flex-row items-start gap-2">
-          <View className="relative">
-            <MaterialCommunityIcons
-              name="heart-outline"
-              size={24}
-              color="#264653"
-              className="absolute z-10"
-            />
-            <MaterialCommunityIcons name="heart" size={24} color="red" />
-          </View>
-
-          <View className="flex flex-col">
-            <Text className="text-2xl pt-1 font-koulen text-blue">
-              Favourites
-            </Text>
-            <Text className="text-lg text-gray-600 leading-4">
-              View your saved recipes/stalls
-            </Text>
-          </View>
-        </View>
-        <MaterialIcons name="arrow-forward" size={24} color="black" />
-      </TouchableScale>
 
       {/* Dietry Preferences Section */}
       <View className="bg-cream border-2 border-blue p-6 rounded-2xl mt-4 flex flex-col gap-2">
@@ -84,6 +75,29 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ setActiveTab }) => {
           ))}
         </View>
       </View>
+
+      {/* Navigation button */}
+      {profileNavigation.map((item) => (
+        <TouchableScale
+          key={item.label}
+          className="bg-cream border-2 border-blue p-6 rounded-2xl flex flex-row justify-between items-center mt-4"
+          onPress={item.onPress}
+        >
+          <View className="flex flex-row items-start gap-2">
+            {item.icon}
+            <View className="flex flex-col">
+              <Text className="text-2xl pt-1 font-koulen text-blue">
+                {item.label}
+              </Text>
+              <Text className="text-lg text-gray-600 leading-4">
+                {item.description}
+              </Text>
+            </View>
+          </View>
+          <MaterialIcons name="arrow-forward" size={24} color="black" />
+        </TouchableScale>
+      ))}
+      <View className="mt-12" />
     </ScrollView>
   );
 };
