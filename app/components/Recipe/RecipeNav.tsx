@@ -3,6 +3,7 @@ import { Text, TouchableWithoutFeedback, View } from "react-native";
 
 // External libraries
 import { FontAwesome } from "@expo/vector-icons";
+import Animated from "react-native-reanimated";
 
 // Assets
 import Subtract from "@/assets/design/Subtract.svg";
@@ -31,23 +32,41 @@ const RecipeNav: React.FC<RecipeNavProps> = ({ page, setPage }) => {
                 <Subtract color="#FFE6A7" />
               </View>
             )}
-            <View
-              className={`${
+            <Animated.View
+              style={[
                 page === p.name
-                  ? "bg-darkcream px-8 pt-6 pb-2 rounded-t-2xl"
-                  : "bg-cream/80 px-6 pt-4 pb-2"
-              } ${
+                  ? {
+                      backgroundColor: "#FFE6A7",
+                      paddingHorizontal: 20,
+                      paddingTop: 24,
+                      paddingBottom: 8,
+                      borderTopLeftRadius: 16,
+                      borderTopRightRadius: 16,
+                    }
+                  : {
+                      backgroundColor: "rgba(255, 230, 167, 0.8)",
+                      paddingHorizontal: 24,
+                      paddingTop: 16,
+                      paddingBottom: 8,
+                    },
                 index === 0
-                  ? "rounded-tl-2xl"
+                  ? { borderTopLeftRadius: 16 }
                   : index === 2
-                  ? "rounded-tr-2xl"
-                  : ""
-              } z-10 flex-row items-center justify-center`}
+                  ? { borderTopRightRadius: 16 }
+                  : {},
+                {
+                  zIndex: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transitionDuration: "200ms",
+                },
+              ]}
             >
               <FontAwesome
                 name={p.icon as any}
                 size={page === p.name ? 24 : 20}
-                color="gray"
+                color="#264653"
                 className="mr-2 pb-2"
               />
               <Text
@@ -57,7 +76,7 @@ const RecipeNav: React.FC<RecipeNavProps> = ({ page, setPage }) => {
               >
                 {p.name}
               </Text>
-            </View>
+            </Animated.View>
             {page === p.name && (
               <View className="absolute rotate-90 right-0 translate-x-full">
                 <Subtract color="#FFE6A7" />

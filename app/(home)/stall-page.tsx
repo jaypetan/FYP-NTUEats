@@ -2,6 +2,14 @@
 import { useEffect, useState } from "react";
 import { Keyboard, ScrollView, View } from "react-native";
 
+// Components
+import Animated, {
+  FadeInLeft,
+  FadeInRight,
+  FadeOutLeft,
+  FadeOutRight,
+} from "react-native-reanimated";
+
 // Utilities
 import { fetchDietaryByStallId } from "@/utils/dietaryServices";
 import { getStallDataById } from "@/utils/stallServices";
@@ -101,10 +109,23 @@ export default function StallPage() {
             stallId={selectedId || ""}
           />
           {addReview ? (
-            <AddReviewPage setAddReview={setAddReview} />
+            <Animated.View
+              key="addReview"
+              entering={FadeInRight.delay(150)}
+              exiting={FadeOutRight}
+            >
+              <AddReviewPage setAddReview={setAddReview} />
+            </Animated.View>
           ) : (
-            <StallReviews selectedId={selectedId} />
+            <Animated.View
+              key="stallReviews"
+              entering={FadeInLeft.delay(150)}
+              exiting={FadeOutLeft}
+            >
+              <StallReviews selectedId={selectedId} />
+            </Animated.View>
           )}
+          <View className="mt-8" />
         </ScrollView>
       </View>
     </View>

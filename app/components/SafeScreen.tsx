@@ -1,5 +1,6 @@
 // React and React Native core
 import { KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // External libraries
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,17 +8,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const SafeScreen = ({ children }: { children: React.ReactNode }) => {
   const insets = useSafeAreaInsets();
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{
-        flex: 1,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        backgroundColor: "black",
-      }}
-    >
-      {children}
-    </KeyboardAvoidingView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{
+          flex: 1,
+        }}
+      >
+        {children}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

@@ -2,6 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
+// External libraries
+import Animated, { FadeInUp, FadeOutDown } from "react-native-reanimated";
+
 // Utilities
 import { fetchDietaryByRecipeId } from "@/utils/dietaryServices";
 import {
@@ -84,19 +87,25 @@ export default function RecipePage() {
             : "rounded-tl-2xl"
         }`}
       >
-        {page === "about" ? (
-          <RecipeAbout
-            desc={recipeData.description}
-            ingredients={recipeData.ingredients}
-          />
-        ) : page === "steps" ? (
-          <RecipeSteps steps={recipeData.instructions} />
-        ) : page === "comments" ? (
-          <RecipeComments
-            comments={commentsData}
-            fetchCommentsData={fetchCommentsData}
-          />
-        ) : null}
+        <Animated.View
+          entering={FadeInUp.delay(200)}
+          exiting={FadeOutDown}
+          key={page}
+        >
+          {page === "about" ? (
+            <RecipeAbout
+              desc={recipeData.description}
+              ingredients={recipeData.ingredients}
+            />
+          ) : page === "steps" ? (
+            <RecipeSteps steps={recipeData.instructions} />
+          ) : page === "comments" ? (
+            <RecipeComments
+              comments={commentsData}
+              fetchCommentsData={fetchCommentsData}
+            />
+          ) : null}
+        </Animated.View>
         <Text className="py-8" />
       </ScrollView>
     </View>

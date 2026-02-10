@@ -3,8 +3,7 @@ import { Text, View } from "react-native";
 
 // External libraries
 import { MaterialIcons } from "@expo/vector-icons";
-
-// Utilities
+import Animated, { FlipInEasyX } from "react-native-reanimated";
 
 // Components
 import TouchableScale from "@/app/components/TouchableScale";
@@ -33,20 +32,23 @@ const StallReviewHeader: React.FC<StallReviewHeaderProps> = ({
         className="justify-center py-2 items-center rounded-full border-2 border-blue w-44"
       >
         {arrangement === "most_liked" ? (
-          <View className="flex-row items-center gap-1">
-            <MaterialIcons
-              name="swap-vert"
-              size={24}
-              color="#000"
-              style={{ transform: [{ scaleX: -1 }] }}
-            />
+          <Animated.View
+            className="flex-row items-center gap-1"
+            key="most_liked"
+            entering={FlipInEasyX}
+          >
+            <MaterialIcons name="swap-vert" size={24} color="#000" />
             <Text className="text-blue text-center text-xl">Most Liked</Text>
-          </View>
+          </Animated.View>
         ) : (
-          <View className="flex-row items-center gap-1">
+          <Animated.View
+            className="flex-row items-center gap-1"
+            key="most_recent"
+            entering={FlipInEasyX}
+          >
             <MaterialIcons name="swap-vert" size={24} color="#000" />
             <Text className="text-blue text-center text-xl">Most Recent</Text>
-          </View>
+          </Animated.View>
         )}
       </TouchableScale>
     </View>

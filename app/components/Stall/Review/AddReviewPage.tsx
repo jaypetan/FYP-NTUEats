@@ -63,12 +63,12 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
 
   return (
     <View className="flex-col gap-2 mt-8">
-      <Text className="text-blue font-inter font-bold text-3xl w-full text-center">
-        Add Review
+      <Text className="text-blue font-inter font-bold text-3xl w-full text-left">
+        Add Review:
       </Text>
 
       {/* Input Fields */}
-      <View className="flex-col gap-4">
+      <View className="flex-col gap-4 mt-2">
         <InputField
           label="Title:"
           value={details.title}
@@ -100,7 +100,7 @@ const AddReviewPage: React.FC<AddReviewPageProps> = ({ setAddReview }) => {
       <TouchableScale
         onPress={handleSubmit}
         disabled={isProcessing}
-        className={`bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue mb-8 ${
+        className={`bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue ${
           isProcessing ? "opacity-50" : ""
         }`}
       >

@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
+// External libraries
+import Animated, { SequencedTransition } from "react-native-reanimated";
+
 // Utilities
 import { getReviewArranged } from "@/utils/reviewServices";
 
@@ -64,17 +67,20 @@ const StallReview: React.FC<StallReviewProps> = (selectedId) => {
             </Text>
           ))}
         {reviewsData.map((review, index) => (
-          <StallReviewCard
-            key={index}
-            reviewID={review.id}
-            reviewImage={review.review_pic}
-            reviewDate={review.reviewDate}
-            reviewTitle={review.title}
-            reviewDescription={review.content}
-            reviewName={review.name}
-          />
+          <Animated.View layout={SequencedTransition} key={review.id}>
+            <StallReviewCard
+              key={index}
+              reviewID={review.id}
+              reviewImage={review.review_pic}
+              reviewDate={review.reviewDate}
+              reviewTitle={review.title}
+              reviewDescription={review.content}
+              reviewName={review.name}
+            />
+          </Animated.View>
         ))}
       </View>
+
       {reviewsLength > numOfReviews && (
         <TouchableOpacity
           className="border-2 border-blue rounded-2xl p-4 flex-row justify-center"
