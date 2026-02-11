@@ -19,6 +19,13 @@ import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 import SearchBar from "@/app/components/SearchBar";
+import Animated, {
+  FadeInRight,
+  FadeInUp,
+  FadeOutLeft,
+  FadeOutUp,
+  LinearTransition,
+} from "react-native-reanimated";
 
 interface EatWhatProps {
   backgroundColor: string;
@@ -39,11 +46,16 @@ export default function EatWhat({
   const [stallsShown, setStallsShown] = useState<number>(4);
   const [stallDataLength, setStallDataLength] = useState<number>(0);
 
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
   const [restrictionsFilter, setRestrictionsFilter] = useState({
     canteen: "",
     vegetarian: false,
     halal: false,
   });
+
+  const handleFilterDropdown = () => {
+    setFilterDropdown(!filterDropdown);
+  };
 
   // Function to fetch stalls based on arrangement and limit
   const fetchStallFunction = async (
@@ -143,28 +155,44 @@ export default function EatWhat({
               handleSearch={handleSearch}
               searchTerm={searchTerm}
               handleScroll={handleScroll}
+              handleFilterDropdown={handleFilterDropdown}
             />
-            <StallFilter
-              arrangement={arrangement}
-              setArrangement={setArrangement}
-              restrictionsFilter={restrictionsFilter}
-              setRestrictionsFilter={setRestrictionsFilter}
-            />
+            {filterDropdown && (
+              <Animated.View
+                className="w-full"
+                entering={FadeInUp}
+                exiting={FadeOutUp}
+              >
+                <StallFilter
+                  arrangement={arrangement}
+                  setArrangement={setArrangement}
+                  restrictionsFilter={restrictionsFilter}
+                  setRestrictionsFilter={setRestrictionsFilter}
+                />
+              </Animated.View>
+            )}
 
             {/* Stalls */}
             <View className="min-h-[50vh] flex-col gap-8 mt-8">
               {stallData.map((stall, index) => (
-                <StallCard
-                  key={index}
-                  imageSource={stall.stall_pic}
-                  title={stall.name}
-                  location={stall.location}
-                  description={stall.description}
-                  priceSymbol={stall.price_symbol}
-                  stallId={stall.id}
-                  vegetarian={stall.vegetarian}
-                  halal={stall.halal}
-                />
+                <Animated.View
+                  entering={FadeInRight.delay(100 + index * 100)}
+                  exiting={FadeOutLeft}
+                  layout={LinearTransition}
+                  key={stall.id}
+                >
+                  <StallCard
+                    key={index}
+                    imageSource={stall.stall_pic}
+                    title={stall.name}
+                    location={stall.location}
+                    description={stall.description}
+                    priceSymbol={stall.price_symbol}
+                    stallId={stall.id}
+                    vegetarian={stall.vegetarian}
+                    halal={stall.halal}
+                  />
+                </Animated.View>
               ))}
             </View>
             {stallDataLength > stallsShown && (
