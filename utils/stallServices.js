@@ -126,7 +126,7 @@ export const getStallsArranged = async (arrangement, limitNum, restriction) => {
         (a, b) => priceOrder[b.price_symbol] - priceOrder[a.price_symbol],
       );
     } else {
-      // Random shuffle using Fisher-Yates algorithm
+      // Default: Random shuffle using Fisher-Yates algorithm
       for (let i = arrangedStalls.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arrangedStalls[i], arrangedStalls[j]] = [
