@@ -1,20 +1,30 @@
 // Import the functions you need from the SDKs you need
+import Constants from "expo-constants";
 import { getApp, getApps, initializeApp } from "firebase/app"; // Analytics service
 import { getFirestore } from "firebase/firestore"; // Firestore service
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Cloud Storage service
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Read config from environment or Expo Constants (safe fallback to current values)
+const getEnv = (key) => {
+  if (typeof process !== "undefined" && process.env && process.env[key])
+    return process.env[key];
+  if (Constants?.expoConfig?.extra && Constants.expoConfig.extra[key])
+    return Constants.expoConfig.extra[key];
+  if (Constants?.manifest?.extra && Constants.manifest.extra[key])
+    return Constants.manifest.extra[key];
+  return undefined;
+};
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAGYy5tb03Nv41xnz_9wh8pjqkccs1D0BA",
-  authDomain: "fyp-backend-14bf3.firebaseapp.com",
-  projectId: "fyp-backend-14bf3",
-  storageBucket: "fyp-backend-14bf3.firebasestorage.app",
-  messagingSenderId: "452074784691",
-  appId: "1:452074784691:web:19523255572c57942d2dc6",
-  measurementId: "G-DCVXFF4WY5",
+  apiKey: getEnv("FIREBASE_API_KEY"),
+  authDomain: getEnv("FIREBASE_AUTH_DOMAIN"),
+  projectId: getEnv("FIREBASE_PROJECT_ID"),
+  storageBucket: getEnv("FIREBASE_STORAGE_BUCKET"),
+  messagingSenderId: getEnv("FIREBASE_MESSAGING_SENDER_ID"),
+  appId: getEnv("FIREBASE_APP_ID"),
+  measurementId: getEnv("FIREBASE_MEASUREMENT_ID"),
 };
 
 // Initialize Firebase

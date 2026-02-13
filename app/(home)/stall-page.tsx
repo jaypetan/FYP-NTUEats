@@ -34,7 +34,7 @@ export default function StallPage() {
     location: "",
     price_symbol: "",
     stall_pic: "",
-    dietry: {
+    dietary: {
       halal: false,
       vegetarian: false,
     },
@@ -49,21 +49,21 @@ export default function StallPage() {
   useEffect(() => {
     getStallDataById(selectedId).then((data) => {
       if (data) {
-        setStallData({
-          ...stallData,
+        setStallData((prevData) => ({
+          ...prevData,
           name: data.name || "",
           description: data.description || "",
           location: data.location || "",
           price_symbol: data.price_symbol || "",
           stall_pic: data.stall_pic || "",
-        });
+        }));
       }
     });
     fetchDietaryByStallId(selectedId).then((dietaryInfo) => {
       if (dietaryInfo) {
         setStallData((prevData) => ({
           ...prevData,
-          dietry: {
+          dietary: {
             halal: dietaryInfo.halal || false,
             vegetarian: dietaryInfo.vegetarian || false,
           },
@@ -92,8 +92,8 @@ export default function StallPage() {
         stallImage={stallData.stall_pic}
         stallName={stallData.name}
         stallLocation={stallData.location.toUpperCase()}
-        halal={stallData.dietry.halal}
-        vegetarian={stallData.dietry.vegetarian}
+        halal={stallData.dietary.halal}
+        vegetarian={stallData.dietary.vegetarian}
       />
       <View className="h-[55vh] w-full bg-cream pt-4 pb-8 px-8">
         <ScrollView
