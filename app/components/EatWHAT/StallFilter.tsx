@@ -36,9 +36,10 @@ const StallFilter: React.FC<StallFilterProps> = ({
   ];
 
   const [canteen, setCanteen] = useState<{ label: string; value: string }[]>(
-    []
+    [],
   );
 
+  // Fetch canteen list from backend
   const fetchCanteens = async () => {
     await fetchCanteenList().then((data) => {
       // set data to label and value pairs
@@ -67,6 +68,7 @@ const StallFilter: React.FC<StallFilterProps> = ({
           variable={arrangement}
           setVar={setArrangement}
           customOptions={arrangementOptions}
+          placeholder="Random"
         />
 
         {/* Canteen Dropdown */}
@@ -80,7 +82,7 @@ const StallFilter: React.FC<StallFilterProps> = ({
             });
           }}
           customOptions={canteen}
-          placeholder="Filter by canteen"
+          placeholder="No Filter"
         />
       </View>
     </View>

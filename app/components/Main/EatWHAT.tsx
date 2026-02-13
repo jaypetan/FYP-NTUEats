@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
 // Assets
@@ -42,7 +42,7 @@ export default function EatWhat({
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
-  const [arrangement, setArrangement] = useState<string>("most_saved");
+  const [arrangement, setArrangement] = useState<string>("");
   const [stallsShown, setStallsShown] = useState<number>(4);
   const [stallDataLength, setStallDataLength] = useState<number>(0);
 
@@ -58,36 +58,36 @@ export default function EatWhat({
   };
 
   // Function to fetch stalls based on arrangement and limit
-  const fetchStallFunction = async (
-    arrangement: string,
-    limitNumber: number
-  ) => {
-    const { data, length } = await getStallsArranged(
-      arrangement,
-      limitNumber,
-      restrictionsFilter
-    );
-    // Fetch dietary info for each stall
-    const updatedStalls = await Promise.all(
-      data.map(async (stall) => {
-        const dietaryInfo = await fetchDietaryByStallId(stall.id);
-        return {
-          ...stall,
-          vegetarian: dietaryInfo?.vegetarian ?? false,
-          halal: dietaryInfo?.halal ?? false,
-        };
-      })
-    );
-    setStallData(updatedStalls);
-    setStallDataLength(length);
-  };
+  const fetchStallFunction = useCallback(
+    async (arrangement: string, limitNumber: number) => {
+      const { data, length } = await getStallsArranged(
+        arrangement,
+        limitNumber,
+        restrictionsFilter,
+      );
+      // Fetch dietary info for each stall
+      const updatedStalls = await Promise.all(
+        data.map(async (stall) => {
+          const dietaryInfo = await fetchDietaryByStallId(stall.id);
+          return {
+            ...stall,
+            vegetarian: dietaryInfo?.vegetarian ?? false,
+            halal: dietaryInfo?.halal ?? false,
+          };
+        }),
+      );
+      setStallData(updatedStalls);
+      setStallDataLength(length);
+    },
+    [restrictionsFilter],
+  );
 
   useEffect(() => {
     if (currentPage !== "eat-what") return;
     const stallsToShow = 4; // Reset stalls shown when leaving the page
     setStallsShown(stallsToShow);
     fetchStallFunction(arrangement, stallsToShow);
-  }, [currentPage, arrangement, restrictionsFilter]);
+  }, [currentPage, arrangement, fetchStallFunction]);
 
   // Fetch more stalls
   const loadMoreStalls = () => {
@@ -116,8 +116,6 @@ export default function EatWhat({
       scrollViewRef.current.scrollTo({ y: 200, animated: true });
     }
   };
-
-  // Filter Functionality
 
   return (
     <View className="h-full w-full flex-col">

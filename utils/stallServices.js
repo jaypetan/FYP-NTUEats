@@ -53,10 +53,10 @@ export const fetchStallData = async () => {
         const saves = await fetchTotalLikesByItemId(
           "stalls_saved",
           "stall_id",
-          stall.id
+          stall.id,
         );
         return { ...stall, saves };
-      })
+      }),
     );
 
     return { data: stallsDataWithSaves, length: stallsData.length };
@@ -77,20 +77,18 @@ export const getStallsWithRestrictions = async (restrictions) => {
     let filteredStalls = stallsData;
     // Filter stalls based on restrictions
     if (restrictions.halal) {
-      const halalStallIds = await fetchAllStallsWithSelectedRestriction(
-        "halal"
-      );
+      const halalStallIds =
+        await fetchAllStallsWithSelectedRestriction("halal");
       filteredStalls = compareDatas(filteredStalls, halalStallIds, "id", "id");
     }
     if (restrictions.vegetarian) {
-      const vegStallIds = await fetchAllStallsWithSelectedRestriction(
-        "vegetarian"
-      );
+      const vegStallIds =
+        await fetchAllStallsWithSelectedRestriction("vegetarian");
       filteredStalls = compareDatas(
         filteredStalls,
         vegStallIds,
         "id",
-        "stall_id"
+        "stall_id",
       );
     }
     filteredStalls = filteredStalls.filter((stall) => {
@@ -109,12 +107,10 @@ export const getStallsWithRestrictions = async (restrictions) => {
 // Function to arrange stalls
 export const getStallsArranged = async (arrangement, limitNum, restriction) => {
   try {
-    const { data: stallsData, length } = await getStallsWithRestrictions(
-      restriction
-    );
+    const { data: stallsData, length } =
+      await getStallsWithRestrictions(restriction);
 
     let arrangedStalls = [...stallsData];
-
     if (arrangement === "most_saved") {
       arrangedStalls.sort((a, b) => b.saves - a.saves);
     } else if (arrangement === "alphabetical") {
@@ -122,13 +118,22 @@ export const getStallsArranged = async (arrangement, limitNum, restriction) => {
     } else if (arrangement === "price_low_to_high") {
       const priceOrder = { $: 1, $$: 2, $$$: 3, $$$$: 4 };
       arrangedStalls.sort(
-        (a, b) => priceOrder[a.price_symbol] - priceOrder[b.price_symbol]
+        (a, b) => priceOrder[a.price_symbol] - priceOrder[b.price_symbol],
       );
     } else if (arrangement === "price_high_to_low") {
       const priceOrder = { $: 1, $$: 2, $$$: 3, $$$$: 4 };
       arrangedStalls.sort(
-        (a, b) => priceOrder[b.price_symbol] - priceOrder[a.price_symbol]
+        (a, b) => priceOrder[b.price_symbol] - priceOrder[a.price_symbol],
       );
+    } else {
+      // Random shuffle using Fisher-Yates algorithm
+      for (let i = arrangedStalls.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arrangedStalls[i], arrangedStalls[j]] = [
+          arrangedStalls[j],
+          arrangedStalls[i],
+        ];
+      }
     }
 
     if (typeof limitNum === "number" && limitNum > 0) {
@@ -195,7 +200,7 @@ export const searchStallsByName = async (searchTerm) => {
         ...doc.data(),
       }))
       .filter((stall) =>
-        stall.name.toLowerCase().includes(searchTerm.toLowerCase())
+        stall.name.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     return stallsData;
   } catch (error) {
