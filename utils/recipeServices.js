@@ -1,7 +1,8 @@
 // Firebase imports
+import { fetchAllRecipesWithSelectedRestriction } from "@/utils/dietaryServices";
 import { db, uploadImageAsync } from "@/utils/firebase";
 import { fetchTotalLikesByItemId } from "@/utils/likeServices";
-import { formatDate } from "@/utils/sharedFunctions";
+import { compareDatas, formatDate } from "@/utils/sharedFunctions";
 import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 import {
   addDoc,
@@ -80,20 +81,71 @@ export const getRecipes = async () => {
   }
 };
 
-// Get recipes arranged by most likes or most recent
-export const getRecipesArranged = async (arrangementType, limitNum) => {
+// Get recipes with restrictions applied
+export const getRecipesWithRestrictions = async (restrictions, otherData) => {
   try {
-    const recipes = await getRecipes();
+    let recipes = [];
+    if (otherData && Array.isArray(otherData)) {
+      recipes = otherData;
+    } else {
+      recipes = await getRecipes();
+    }
+    if (!restrictions) {
+      return recipes;
+    }
+    let filteredRecipes = recipes;
+    // Filter recipes based on restrictions (halal, vegetarian)
+    if (restrictions.halal) {
+      const halalRecipeIds =
+        await fetchAllRecipesWithSelectedRestriction("halal");
+      filteredRecipes = compareDatas(
+        filteredRecipes,
+        halalRecipeIds,
+        "id",
+        "id",
+      );
+    }
+    if (restrictions.vegetarian) {
+      const vegRecipeIds =
+        await fetchAllRecipesWithSelectedRestriction("vegetarian");
+      filteredRecipes = compareDatas(filteredRecipes, vegRecipeIds, "id", "id");
+    }
+    return filteredRecipes;
+  } catch (error) {
+    console.error("Error fetching recipes with restrictions: ", error);
+    return [];
+  }
+};
 
+// Get recipes arranged by most likes or most recent
+export const getRecipesArranged = async (
+  arrangementType,
+  limitNum,
+  restrictions,
+  otherData,
+) => {
+  try {
+    // Get recipes with restrictions applied if restrictions exist, otherwise get all recipes
+    const recipes = otherData
+      ? await getRecipesWithRestrictions(restrictions, otherData)
+      : await getRecipesWithRestrictions(restrictions);
+
+    // Sort by arrangementType
     if (arrangementType === "most_likes") {
       recipes.sort((a, b) => b.likes - a.likes);
     } else if (arrangementType === "most_recent") {
       recipes.sort((a, b) => b.timestamp - a.timestamp);
     } else {
-      console.log("Invalid arrangement type. Returning unsorted recipes.");
+      // Default: Random shuffle using Fisher-Yates algorithm
+      for (let i = recipes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [recipes[i], recipes[j]] = [recipes[j], recipes[i]];
+      }
     }
 
-    const length = recipes.length; // Store length before slicing
+    // Get length before slicing for limit
+    const length = recipes.length;
+    // Apply limit if specified
     const limitedRecipes =
       typeof limitNum === "number" && limitNum > 0
         ? recipes.slice(0, limitNum)
@@ -210,50 +262,18 @@ export const deleteRecipeById = async (recipeId) => {
   }
 };
 
-export const searchRecipesByTitleArranged = async (
-  keyword,
-  arrangementType,
-  limitNum,
-) => {
+// Function to search recipes by title
+export const searchRecipesByTitle = async (searchTerm) => {
   try {
-    const lowerKeyword = keyword.toLowerCase();
+    const lowerSearchTerm = searchTerm.toLowerCase();
     const recipes = await getRecipes();
-
-    // Filter by title
     const filteredRecipes = recipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(lowerKeyword),
+      recipe.title.toLowerCase().includes(lowerSearchTerm),
     );
-
-    // Sort by arrangementType
-    if (arrangementType === "most_likes") {
-      filteredRecipes.sort((a, b) => b.likes - a.likes);
-    } else if (arrangementType === "most_recent") {
-      filteredRecipes.sort((a, b) => b.timestamp - a.timestamp);
-    } else if (arrangementType === "prep_time_short_to_long") {
-      filteredRecipes.sort((a, b) => a.cooking_time - b.cooking_time);
-    } else if (arrangementType === "prep_time_long_to_short") {
-      filteredRecipes.sort((a, b) => b.cooking_time - a.cooking_time);
-    } else {
-      // Default: Random shuffle using Fisher-Yates algorithm
-      for (let i = filteredRecipes.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [filteredRecipes[i], filteredRecipes[j]] = [
-          filteredRecipes[j],
-          filteredRecipes[i],
-        ];
-      }
-    }
-
-    const total = filteredRecipes.length;
-    const limitedRecipes =
-      typeof limitNum === "number" && limitNum > 0
-        ? filteredRecipes.slice(0, limitNum)
-        : filteredRecipes;
-
-    return { content: limitedRecipes, total };
+    return { data: filteredRecipes };
   } catch (error) {
-    console.error("Error searching and arranging recipes: ", error);
-    return { content: [], total: 0 };
+    console.error("Error searching recipes: ", error);
+    return { data: [] };
   }
 };
 

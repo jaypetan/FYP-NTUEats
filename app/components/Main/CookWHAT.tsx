@@ -9,11 +9,12 @@ import CookWHATLogo from "@/assets/images/logos/CookWHAT-logo.png";
 import { fetchDietaryByRecipeId } from "@/utils/dietaryServices";
 import {
   getRecipesArranged,
-  searchRecipesByTitleArranged,
+  searchRecipesByTitle,
 } from "@/utils/recipeServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
+import { useUser } from "@clerk/clerk-expo";
 
 // Components
 import RecipeCard from "@/app/components/CookWHAT/RecipeCard";
@@ -22,6 +23,10 @@ import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 import SearchBar from "@/app/components/SearchBar";
+import {
+  fetchDietaryRestrictions,
+  fetchUserByClerkId,
+} from "@/utils/userServices";
 import Animated, {
   FadeInRight,
   FadeInUp,
@@ -47,18 +52,69 @@ export default function CookWhat({
   const [recipesShown, setRecipesShown] = useState(4);
   const [recipesDataLength, setRecipesDataLength] = useState(0);
 
-  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false); // State for filter dropdown visibility
+  const [restrictionsFilter, setRestrictionsFilter] = useState({
+    vegetarian: false,
+    halal: false,
+  }); // State for dietary restrictions filter
+
+  const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
+  const [searchData, setSearchData] = useState<any[]>([]); // State for search results
 
   const handleFilterDropdown = () => {
     setFilterDropdown(!filterDropdown);
   };
 
+  // Fetch restrictions for current user
+  const { user } = useUser();
+  const fetchUserDietaryRestrictions = useCallback(async () => {
+    if (!user) {
+      console.error("User is not authenticated");
+      return;
+    }
+    const userId = await fetchUserByClerkId(user?.id!);
+    const restrictions = await fetchDietaryRestrictions(userId?.id!);
+    if (restrictions.length > 0) {
+      const userRestrictions = restrictions[0]; // Assuming one restriction document per user
+      setRestrictionsFilter({
+        vegetarian:
+          "vegetarian" in userRestrictions
+            ? userRestrictions.vegetarian
+            : false,
+        halal: "halal" in userRestrictions ? userRestrictions.halal : false,
+      });
+    } else {
+      setRestrictionsFilter({
+        vegetarian: false,
+        halal: false,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentPage === "cook-what") {
+      fetchUserDietaryRestrictions();
+    }
+  }, [currentPage]);
+
   // Fetch all recipes on component mount
   const fetchRecipesFunction = useCallback(
-    async (recipesToShow: number) => {
-      const recipes = await getRecipesArranged(arrangement, recipesToShow);
+    async (arrangement: string, recipesToShow: number) => {
+      const { content, length } =
+        searchData.length > 0 && searchTerm.trim() !== ""
+          ? await getRecipesArranged(
+              arrangement,
+              recipesToShow,
+              restrictionsFilter,
+              searchData, // Pass search results for further filtering and arrangement
+            )
+          : await getRecipesArranged(
+              arrangement,
+              recipesToShow,
+              restrictionsFilter,
+            );
       const recipesWithDietary = await Promise.all(
-        recipes.content.map(async (recipe: any) => {
+        content.map(async (recipe: any) => {
           const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
           return {
             ...recipe,
@@ -68,9 +124,9 @@ export default function CookWhat({
         }),
       );
       setRecipesData(recipesWithDietary);
-      setRecipesDataLength(recipes.length);
+      setRecipesDataLength(length);
     },
-    [arrangement],
+    [arrangement, restrictionsFilter, searchData],
   );
 
   // If currentPage changes to "cook-what", reset recipesShown
@@ -78,13 +134,13 @@ export default function CookWhat({
     if (currentPage !== "cook-what") return;
     const recipesToShow = 4; // Reset stalls shown when leaving the page
     setRecipesShown(recipesToShow);
-  }, [currentPage]);
+  }, [currentPage, arrangement, restrictionsFilter]);
 
   // Fetch recipes whenever arrangement or recipesShown changes
   useEffect(() => {
     if (currentPage !== "cook-what") return;
-    fetchRecipesFunction(recipesShown);
-  }, [currentPage, recipesShown, fetchRecipesFunction]);
+    fetchRecipesFunction(arrangement, recipesShown);
+  }, [currentPage, arrangement, recipesShown, searchData]);
 
   // Fetch more recipes
   const loadMoreRecipes = () => {
@@ -96,18 +152,11 @@ export default function CookWhat({
   };
 
   // Search bar functionality
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const handleSearch = (query: string) => {
     setSearchTerm(query);
-    if (query.trim() === "") {
-      fetchRecipesFunction(recipesShown);
-    } else {
-      searchRecipesByTitleArranged(query, arrangement, recipesShown).then(
-        (results) => {
-          setRecipesData(results.content);
-        },
-      );
-    }
+    searchRecipesByTitle(query).then((result) => {
+      setSearchData(result?.data ?? []);
+    });
   };
 
   // ScrollView reference for scrolling to top on search

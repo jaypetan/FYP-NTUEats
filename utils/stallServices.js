@@ -9,7 +9,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  query,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -67,15 +66,21 @@ export const fetchStallData = async () => {
 };
 
 // Function to filter stall data with restrictions
-export const getStallsWithRestrictions = async (restrictions) => {
+export const getStallsWithRestrictions = async (restrictions, otherData) => {
   try {
-    const { data: stallsData, length } = await fetchStallData();
-    if (!restrictions) {
-      return { data: stallsData, length };
-    }
+    let stallsData = [];
 
+    if (otherData && Array.isArray(otherData)) {
+      stallsData = otherData;
+    } else {
+      const fetched = await fetchStallData();
+      stallsData = fetched.data || [];
+    }
+    if (!restrictions) {
+      return stallsData;
+    }
     let filteredStalls = stallsData;
-    // Filter stalls based on restrictions
+    // Filter stalls based on restrictions (halal, vegetarian)
     if (restrictions.halal) {
       const halalStallIds =
         await fetchAllStallsWithSelectedRestriction("halal");
@@ -84,32 +89,37 @@ export const getStallsWithRestrictions = async (restrictions) => {
     if (restrictions.vegetarian) {
       const vegStallIds =
         await fetchAllStallsWithSelectedRestriction("vegetarian");
-      filteredStalls = compareDatas(
-        filteredStalls,
-        vegStallIds,
-        "id",
-        "stall_id",
-      );
+      filteredStalls = compareDatas(filteredStalls, vegStallIds, "id", "id");
     }
+
+    // Filter stalls based on canteen location
     filteredStalls = filteredStalls.filter((stall) => {
       if (restrictions.canteen && stall.location !== restrictions.canteen)
         return false;
       return true;
     });
 
-    return { data: filteredStalls, length: filteredStalls.length };
+    return filteredStalls;
   } catch (error) {
     console.error("Error filtering stalls with restrictions: ", error);
-    return { data: [], length: 0 };
+    return [];
   }
 };
 
 // Function to arrange stalls
-export const getStallsArranged = async (arrangement, limitNum, restriction) => {
+export const getStallsArranged = async (
+  arrangement,
+  limitNum,
+  restrictions,
+  otherData,
+) => {
   try {
-    const { data: stallsData, length } =
-      await getStallsWithRestrictions(restriction);
+    // Fetch stalls with restrictions applied if restrictions exist, otherwise get all stalls.
+    const stallsData = otherData
+      ? await getStallsWithRestrictions(restrictions, otherData) // use pre-filtered data if provided (e.g., from search results)
+      : await getStallsWithRestrictions(restrictions);
 
+    // Then arrange the filtered stalls based on the selected arrangement
     let arrangedStalls = [...stallsData];
     if (arrangement === "most_saved") {
       arrangedStalls.sort((a, b) => b.saves - a.saves);
@@ -136,6 +146,9 @@ export const getStallsArranged = async (arrangement, limitNum, restriction) => {
       }
     }
 
+    // Get length before slicing for limit
+    const length = arrangedStalls.length;
+    // Apply limit if specified
     if (typeof limitNum === "number" && limitNum > 0) {
       arrangedStalls = arrangedStalls.slice(0, limitNum);
     }
@@ -192,20 +205,15 @@ export const updateStallById = async (stallId, updatedData) => {
 // Function to search stalls by name
 export const searchStallsByName = async (searchTerm) => {
   try {
-    const q = query(collection(db, "stalls"));
-    const querySnapshot = await getDocs(q);
-    const stallsData = querySnapshot.docs
-      .map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-      .filter((stall) =>
-        stall.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-    return stallsData;
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    const fetchedStalls = await fetchStallData();
+    const filteredStalls = fetchedStalls.data.filter((stall) =>
+      stall.name.toLowerCase().includes(lowerSearchTerm),
+    );
+    return { data: filteredStalls };
   } catch (error) {
     console.error("Error searching stalls by name: ", error);
-    return [];
+    return { data: [] };
   }
 };
 

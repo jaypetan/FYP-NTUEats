@@ -6,7 +6,10 @@ import { Text, TouchableOpacity } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 
 // Utilities
-import { editDietaryRestrictions } from "@/utils/userServices";
+import {
+  editDietaryRestrictions,
+  fetchUserByClerkId,
+} from "@/utils/userServices";
 
 interface DietryButtonProps {
   icon?: React.ReactNode;
@@ -22,10 +25,12 @@ const DietryButton: React.FC<DietryButtonProps> = ({
 }) => {
   const { user } = useUser();
   const [selectedState, setSelectedState] = useState(selected);
-  const handlePress = () => {
+  const handlePress = async () => {
     const newState = !selectedState;
+    const userId = await fetchUserByClerkId(user?.id!);
+
     setSelectedState(newState);
-    editDietaryRestrictions(user?.id!, restriction!, newState);
+    editDietaryRestrictions(userId ? userId.id : "", restriction!, newState);
   };
 
   useEffect(() => {

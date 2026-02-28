@@ -8,9 +8,14 @@ import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
 // Utilities
 import { fetchDietaryByStallId } from "@/utils/dietaryServices";
 import { getStallsArranged, searchStallsByName } from "@/utils/stallServices";
+import {
+  fetchDietaryRestrictions,
+  fetchUserByClerkId,
+} from "@/utils/userServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
+import { useUser } from "@clerk/clerk-expo";
 
 // Components
 import StallCard from "@/app/components/EatWHAT/StallCard";
@@ -42,29 +47,68 @@ export default function EatWhat({
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
-  const [arrangement, setArrangement] = useState<string>("");
-  const [stallsShown, setStallsShown] = useState<number>(4);
-  const [stallDataLength, setStallDataLength] = useState<number>(0);
+  const [arrangement, setArrangement] = useState<string>(""); // State for arrangement filter
+  const [stallsShown, setStallsShown] = useState<number>(4); // Number of stalls currently shown
+  const [stallDataLength, setStallDataLength] = useState<number>(0); // Total number of stalls available
 
-  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false); // State for filter dropdown visibility
   const [restrictionsFilter, setRestrictionsFilter] = useState({
     canteen: "",
     vegetarian: false,
     halal: false,
-  });
+  }); // State for dietary restrictions filter
+
+  const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
+  const [searchData, setSearchData] = useState<any[]>([]); // State for search results
 
   const handleFilterDropdown = () => {
     setFilterDropdown(!filterDropdown);
   };
 
+  // Function to fetch user dietry restrictions
+  const { user } = useUser();
+  const fetchUserDietaryRestrictions = useCallback(async () => {
+    if (!user) {
+      console.error("User is not authenticated");
+      return;
+    }
+    const userId = await fetchUserByClerkId(user?.id!);
+    const restrictions = await fetchDietaryRestrictions(userId?.id!);
+    if (restrictions.length > 0) {
+      const userRestrictions = restrictions[0]; // Assuming one restriction document per user
+      setRestrictionsFilter({
+        canteen: "",
+        vegetarian:
+          "vegetarian" in userRestrictions
+            ? userRestrictions.vegetarian
+            : false,
+        halal: "halal" in userRestrictions ? userRestrictions.halal : false,
+      });
+    } else {
+      setRestrictionsFilter({
+        canteen: "",
+        vegetarian: false,
+        halal: false,
+      });
+    }
+  }, []);
+
   // Function to fetch stalls based on arrangement and limit
   const fetchStallFunction = useCallback(
     async (arrangement: string, limitNumber: number) => {
-      const { data, length } = await getStallsArranged(
-        arrangement,
-        limitNumber,
-        restrictionsFilter,
-      );
+      const { data, length } =
+        searchData.length > 0 && searchTerm.trim() !== ""
+          ? await getStallsArranged(
+              arrangement,
+              limitNumber,
+              restrictionsFilter,
+              searchData, // Pass search results for further filtering and arrangement
+            )
+          : await getStallsArranged(
+              arrangement,
+              limitNumber,
+              restrictionsFilter,
+            );
       // Fetch dietary info for each stall
       const updatedStalls = await Promise.all(
         data.map(async (stall) => {
@@ -79,33 +123,40 @@ export default function EatWhat({
       setStallData(updatedStalls);
       setStallDataLength(length);
     },
-    [restrictionsFilter],
+    [arrangement, restrictionsFilter, searchData],
   );
 
+  //Fetch restrictions on page load
+  useEffect(() => {
+    if (currentPage === "eat-what") {
+      fetchUserDietaryRestrictions();
+    }
+  }, [currentPage]);
+
+  // Fetch stalls when arrangement or restrictions filter changes
   useEffect(() => {
     if (currentPage !== "eat-what") return;
     const stallsToShow = 4; // Reset stalls shown when leaving the page
     setStallsShown(stallsToShow);
     fetchStallFunction(arrangement, stallsToShow);
-  }, [currentPage, arrangement, fetchStallFunction]);
+  }, [currentPage, arrangement, restrictionsFilter, searchData]);
 
-  // Fetch more stalls
+  // Function to fetch more stalls
   const loadMoreStalls = () => {
     let newLimit = stallsShown + 2;
     if (newLimit > stallDataLength) {
-      newLimit = stallDataLength;
+      newLimit = stallDataLength; // Don't exceed total stalls available
     }
     setStallsShown(newLimit);
     fetchStallFunction(arrangement, newLimit);
   };
 
   // Search bar functionality
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const handleSearch = (query: string) => {
     setSearchTerm(query);
     // Implement search filtering logic here
-    searchStallsByName(query).then((data) => {
-      setStallData(data);
+    searchStallsByName(query).then((result) => {
+      setSearchData(result?.data ?? []);
     });
   };
 

@@ -189,6 +189,13 @@ export const fetchDietaryRestrictions = async (userId: string) => {
     return restrictionsData;
   } catch (error) {
     console.error("Error fetching dietary restrictions: ", error);
-    return [];
+    return [
+      {
+        id: "",
+        user_id: userId,
+        halal: false,
+        vegetarian: false,
+      },
+    ];
   }
 };

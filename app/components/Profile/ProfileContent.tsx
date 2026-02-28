@@ -6,7 +6,12 @@ import { ScrollView, Text, View } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 // Utilities
-import { fetchDietaryRestrictions } from "@/utils/userServices";
+import {
+  fetchDietaryRestrictions,
+  fetchUserByClerkId,
+} from "@/utils/userServices";
+
+// App Context
 import { useUser } from "@clerk/clerk-expo";
 
 // Components
@@ -23,7 +28,10 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ setActiveTab }) => {
   const [dietaryRestrictions, setDietaryRestrictions] = useState<any[]>([]);
   const fetchDietaryRestrictionsData = async () => {
     try {
-      const restrictions = await fetchDietaryRestrictions(user?.id!);
+      const userId = await fetchUserByClerkId(user?.id!);
+      const restrictions = await fetchDietaryRestrictions(
+        userId ? userId.id : "",
+      );
       setDietaryRestrictions(restrictions);
     } catch (error) {
       console.error("Error fetching dietary restrictions:", error);

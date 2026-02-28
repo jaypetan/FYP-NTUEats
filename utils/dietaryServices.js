@@ -56,7 +56,7 @@ export const updateStallDietary = async (stall_id, dietaryInfo) => {
     if (isEmpty) {
       // Delete all matching documents
       const deletePromises = querySnapshot.docs.map((d) =>
-        deleteDoc(doc(db, "stalls_dietary", d.id))
+        deleteDoc(doc(db, "stalls_dietary", d.id)),
       );
       await Promise.all(deletePromises);
       return "deleted";
@@ -87,7 +87,7 @@ export const updateStallDietary = async (stall_id, dietaryInfo) => {
 
 // Function to fetch all stalls with a selected dietary restriction
 export const fetchAllStallsWithSelectedRestriction = async (
-  selectedRestriction
+  selectedRestriction,
 ) => {
   try {
     const dietaryRef = collection(db, "stalls_dietary");
@@ -149,7 +149,7 @@ export const updateRecipeDietary = async (recipe_id, dietaryInfo) => {
     if (isEmpty) {
       // Delete all matching documents
       const deletePromises = querySnapshot.docs.map((d) =>
-        deleteDoc(doc(db, "recipes_dietary", d.id))
+        deleteDoc(doc(db, "recipes_dietary", d.id)),
       );
       await Promise.all(deletePromises);
       return "deleted";
@@ -175,5 +175,24 @@ export const updateRecipeDietary = async (recipe_id, dietaryInfo) => {
   } catch (error) {
     console.error("Error updating recipe dietary info:", error);
     return "error";
+  }
+};
+
+// Function to fetch all recipes with a selected dietary restriction
+export const fetchAllRecipesWithSelectedRestriction = async (
+  selectedRestriction,
+) => {
+  try {
+    const dietaryRef = collection(db, "recipes_dietary");
+    const q = query(dietaryRef, where(selectedRestriction, "==", true));
+    const querySnapshot = await getDocs(q);
+
+    const recipesWithSelectedRestriction = querySnapshot.docs.map((doc) => ({
+      id: doc.data().recipe_id,
+    }));
+    return recipesWithSelectedRestriction;
+  } catch (error) {
+    console.error("Error fetching recipes with selected restriction: ", error);
+    return [];
   }
 };
