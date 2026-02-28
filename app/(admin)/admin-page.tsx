@@ -19,7 +19,7 @@ export default function AdminPage() {
   const [adminCurrentPage, setAdminCurrentPage] = useState("default");
   const [propId, setPropId] = useState(""); // to pass ids to edit page
   const [content, setContent] = useState(
-    <AdminDefault setAdminCurrentPage={setAdminCurrentPage} />
+    <AdminDefault setAdminCurrentPage={setAdminCurrentPage} />,
   );
   const [page, setPage] = useState(1); // used to trigger re-render for animation
 
@@ -36,7 +36,7 @@ export default function AdminPage() {
           <StallList
             setAdminCurrentPage={setAdminCurrentPage}
             setPropId={setPropId}
-          />
+          />,
         );
         setPage(1);
         break;
@@ -46,7 +46,7 @@ export default function AdminPage() {
           <StallEdit
             setAdminCurrentPage={setAdminCurrentPage}
             propId={propId}
-          />
+          />,
         );
         setPage(2);
         break;
@@ -79,7 +79,7 @@ export default function AdminPage() {
           key={page}
           entering={FadeInLeft}
           exiting={FadeOutRight}
-          className="px-8 pb-8"
+          className="w-full h-full px-8"
         >
           {content}
         </Animated.View>

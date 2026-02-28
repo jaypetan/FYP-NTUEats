@@ -31,6 +31,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [menuData, setMenuData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [viewerInstanceKey, setViewerInstanceKey] = useState(0);
 
   const fetchMenuData = useCallback(async () => {
     if (selectedId) {
@@ -83,6 +84,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
                     onPress={() => {
                       setSelectedImageIndex(index);
                       setEnlargedImageVisible(true);
+                      setViewerInstanceKey((prev) => prev + 1);
                     }}
                     className="mr-4"
                   >
@@ -106,9 +108,15 @@ const MenuModal: React.FC<MenuModalProps> = ({
           </View>
         </View>
         <ImageViewing
-          images={menuData.map((menu) => ({ uri: menu.image }))}
-          imageIndex={selectedImageIndex}
+          key={viewerInstanceKey}
+          images={
+            menuData[selectedImageIndex]
+              ? [{ uri: menuData[selectedImageIndex].image }]
+              : []
+          }
+          imageIndex={0}
           visible={enlargedImageVisible}
+          swipeToCloseEnabled={true}
           onRequestClose={() => setEnlargedImageVisible(false)}
         />
       </BlurView>

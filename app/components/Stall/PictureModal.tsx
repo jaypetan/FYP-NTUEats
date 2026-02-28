@@ -29,6 +29,7 @@ const PictureModal: React.FC<PictureModalProps> = ({
   const [pictureData, setPictureData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [viewerInstanceKey, setViewerInstanceKey] = useState(0);
 
   useEffect(() => {
     if (pictureModalVisible) {
@@ -74,6 +75,7 @@ const PictureModal: React.FC<PictureModalProps> = ({
                 <Pressable
                   onPress={() => {
                     setSelectedImageIndex(index);
+                    setViewerInstanceKey((prev) => prev + 1);
                     setEnlargedImageVisible(true);
                   }}
                   className="mr-4 border-2 border-blue rounded-lg overflow-hidden"
@@ -95,9 +97,13 @@ const PictureModal: React.FC<PictureModalProps> = ({
           )}
         </View>
         <ImageViewing
-          images={images}
-          imageIndex={selectedImageIndex}
+          key={viewerInstanceKey}
+          images={
+            images[selectedImageIndex] ? [images[selectedImageIndex]] : []
+          }
+          imageIndex={0}
           visible={enlargedImageVisible}
+          swipeToCloseEnabled={true}
           onRequestClose={() => setEnlargedImageVisible(false)}
         />
       </BlurView>

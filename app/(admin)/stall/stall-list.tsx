@@ -52,54 +52,52 @@ const StallList: React.FC<StallListProps> = ({
   };
 
   return (
-    <View className="flex-col items-center">
+    <View className="flex-col items-center h-[600px]">
       <Text className="text-2xl font-koulen py-2 px-4 text-blue">
         Stall List
       </Text>
-      <View className="h-5/6">
-        <ScrollView>
-          <View className="flex-row gap-4 flex-wrap justify-center">
-            {stalls.map((stall) => (
-              <View
-                key={stall.id}
-                className="w-44 bg-white rounded-lg p-4 my-2 flex-col border-2 justify-between border-blue"
-              >
-                <View className="flex-col gap-1">
-                  <View className="w-36 h-24 mb-2 self-center rounded-md overflow-hidden">
-                    <ImageLoader
-                      image={stall.stall_pic}
-                      className="w-36 h-24 rounded-md"
-                      small
-                    />
-                  </View>
-                  <Text className="font-semibold text-blue">{stall.name}</Text>
-                  <Text className="text-blue text-sm leading-4 w-full text-start">
-                    &quot;{stall.description}&quot;
-                  </Text>
-                  <Text className="text-blue text-sm leading-4 w-full text-start">
-                    Price: {stall.price_symbol}
-                  </Text>
-                  <Text className="text-blue text-sm leading-4 w-full text-start">
-                    Location: {stall.location}
-                  </Text>
+      <ScrollView>
+        <View className="flex-row gap-4 flex-wrap justify-center">
+          {stalls.map((stall) => (
+            <View
+              key={stall.id}
+              className="w-44 bg-white rounded-lg p-4 my-2 flex-col border-2 justify-between border-blue"
+            >
+              <View className="flex-col gap-1">
+                <View className="w-36 h-24 mb-2 self-center rounded-md overflow-hidden">
+                  <ImageLoader
+                    image={stall.stall_pic}
+                    className="w-36 h-24 rounded-md"
+                    small
+                  />
                 </View>
-                <View className="flex-row justify-between mt-4">
-                  <TouchableScale onPress={() => editStall(stall.id)}>
-                    <View className="rounded-2xl border-2 border-blue bg-green/80 px-4 py-2">
-                      <FontAwesome name="edit" size={20} color="black" />
-                    </View>
-                  </TouchableScale>
-                  <TouchableScale onPress={() => handleDelete(stall.id)}>
-                    <View className="rounded-2xl border-2 border-blue bg-red px-4 py-2">
-                      <FontAwesome name="trash" size={20} color="black" />
-                    </View>
-                  </TouchableScale>
-                </View>
+                <Text className="font-semibold text-blue">{stall.name}</Text>
+                <Text className="text-blue text-sm leading-4 w-full text-start">
+                  &quot;{stall.description}&quot;
+                </Text>
+                <Text className="text-blue text-sm leading-4 w-full text-start">
+                  Price: {stall.price_symbol}
+                </Text>
+                <Text className="text-blue text-sm leading-4 w-full text-start">
+                  Location: {stall.location}
+                </Text>
               </View>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
+              <View className="flex-row justify-between mt-4">
+                <TouchableScale onPress={() => editStall(stall.id)}>
+                  <View className="rounded-2xl border-2 border-blue bg-green/80 px-4 py-2">
+                    <FontAwesome name="edit" size={20} color="black" />
+                  </View>
+                </TouchableScale>
+                <TouchableScale onPress={() => handleDelete(stall.id)}>
+                  <View className="rounded-2xl border-2 border-blue bg-red px-4 py-2">
+                    <FontAwesome name="trash" size={20} color="black" />
+                  </View>
+                </TouchableScale>
+              </View>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };

@@ -120,7 +120,7 @@ const StallEdit: React.FC<StallEditProps> = ({
       <Text className="text-2xl font-koulen py-2 px-4 text-blue">
         Edit Stall
       </Text>
-      <ScrollView className="px-8 w-full">
+      <ScrollView className="px-4 w-full">
         <LabeledInput
           label="Stall Name"
           maxLength={30}
@@ -176,7 +176,7 @@ const StallEdit: React.FC<StallEditProps> = ({
         <Text className="text-xl pt-2">Stall Image</Text>
         <TouchableOpacity
           onPress={pickImage}
-          className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2"
+          className="w-64 h-64 border-2 border-blue bg-white flex items-center justify-center mb-2 overflow-hidden"
         >
           <ImageLoader
             image={details.stall_pic}
