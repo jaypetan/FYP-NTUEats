@@ -1,8 +1,13 @@
 // React Native core
+import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+
+// Utilities
+import { fetchDietaryRestrictions } from "@/utils/userServices";
+import { useUser } from "@clerk/clerk-expo";
 
 // Components
 import DietryButton from "@/app/components/Profile/ProfileContent/DietryButton";
@@ -13,15 +18,32 @@ interface ProfileContentProps {
   setActiveTab: (tab: string) => void;
 }
 const ProfileContent: React.FC<ProfileContentProps> = ({ setActiveTab }) => {
+  const { user } = useUser();
+
+  const [dietaryRestrictions, setDietaryRestrictions] = useState<any[]>([]);
+  const fetchDietaryRestrictionsData = async () => {
+    try {
+      const restrictions = await fetchDietaryRestrictions(user?.id!);
+      setDietaryRestrictions(restrictions);
+    } catch (error) {
+      console.error("Error fetching dietary restrictions:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDietaryRestrictionsData();
+  }, []);
+
   const dietaryPreferences = [
     {
       label: "Halal",
+      restriction: "halal",
       icon: (
         <MaterialCommunityIcons name="food-halal" size={24} color="green" />
       ),
     },
     {
       label: "Vegetarian",
+      restriction: "vegetarian",
       icon: <MaterialCommunityIcons name="leaf" size={24} color="green" />,
     },
   ];
@@ -71,6 +93,10 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ setActiveTab }) => {
               key={preference.label}
               label={preference.label}
               icon={preference.icon}
+              restriction={preference.restriction}
+              selected={dietaryRestrictions.some(
+                (r) => r[preference.restriction] === true,
+              )}
             />
           ))}
         </View>
