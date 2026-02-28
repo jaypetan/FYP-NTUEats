@@ -5,7 +5,6 @@ import { Text, TouchableOpacity, View } from "react-native";
 // External libraries
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
-import ImageViewing from "react-native-image-viewing";
 
 // Utilities
 import {
@@ -18,6 +17,7 @@ import { fetchUserByClerkId } from "@/utils/userServices";
 
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
+import SimpleViewer from "@/app/components/SimpleViewer";
 
 interface StallReviewCardProps {
   reviewID: string;
@@ -39,7 +39,7 @@ const StallReviewCard = ({
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [like, setLike] = useState(false);
   const [reviewLikesCount, setReviewLikesCount] = useState(0);
-  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
 
   // Check if the user has liked the review
   const checkUserLikeStatus = useCallback(async () => {
@@ -129,18 +129,17 @@ const StallReviewCard = ({
         >
           {reviewImage && (
             <View className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-blue">
-              <TouchableOpacity onPress={() => setIsImageViewVisible(true)}>
+              <TouchableOpacity onPress={() => setEnlargedImageVisible(true)}>
                 <ImageLoader
                   image={reviewImage}
                   className="w-48 h-48"
                   loaderClassName="w-full h-full absolute"
                 />
               </TouchableOpacity>
-              <ImageViewing
-                images={[{ uri: reviewImage }]}
-                imageIndex={0}
-                visible={isImageViewVisible}
-                onRequestClose={() => setIsImageViewVisible(false)}
+              <SimpleViewer
+                visible={enlargedImageVisible}
+                source={reviewImage}
+                onClose={() => setEnlargedImageVisible(false)}
               />
             </View>
           )}

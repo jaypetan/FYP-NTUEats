@@ -5,7 +5,6 @@ import { FlatList, Modal, Pressable, Text, View } from "react-native";
 // External libraries
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import ImageViewing from "react-native-image-viewing";
 
 // Utilities
 import { getMenusArranged } from "@/utils/menuServices";
@@ -14,6 +13,7 @@ import { getMenusArranged } from "@/utils/menuServices";
 import { useAppContext } from "@/app/components/AppContext";
 
 // Components
+import SimpleViewer from "@/app/components/SimpleViewer";
 import MenuCard from "@/app/components/Stall/Menu/MenuCard";
 
 interface MenuModalProps {
@@ -31,7 +31,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [menuData, setMenuData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [viewerInstanceKey, setViewerInstanceKey] = useState(0);
 
   const fetchMenuData = useCallback(async () => {
     if (selectedId) {
@@ -84,7 +83,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
                     onPress={() => {
                       setSelectedImageIndex(index);
                       setEnlargedImageVisible(true);
-                      setViewerInstanceKey((prev) => prev + 1);
                     }}
                     className="mr-4"
                   >
@@ -101,23 +99,16 @@ const MenuModal: React.FC<MenuModalProps> = ({
           <View className="flex-row w-full justify-end pt-4">
             <Pressable
               onPress={openMenuUploadModal}
-              className="rounded-2xl flex justify-center bg-green px-4 pt-4 pb-2 mx-4 mb-4"
+              className="rounded-md flex justify-center bg-green px-4 pt-4 pb-2 mx-4 mb-4 border-2 border-blue"
             >
               <Text className="font-koulen text-xl text-blue">Upload Menu</Text>
             </Pressable>
           </View>
         </View>
-        <ImageViewing
-          key={viewerInstanceKey}
-          images={
-            menuData[selectedImageIndex]
-              ? [{ uri: menuData[selectedImageIndex].image }]
-              : []
-          }
-          imageIndex={0}
+        <SimpleViewer
           visible={enlargedImageVisible}
-          swipeToCloseEnabled={true}
-          onRequestClose={() => setEnlargedImageVisible(false)}
+          source={menuData[selectedImageIndex]?.image || null}
+          onClose={() => setEnlargedImageVisible(false)}
         />
       </BlurView>
     </Modal>

@@ -84,9 +84,9 @@ const MenuUploadModal: React.FC<MenuUploadModalProps> = ({
               <TouchableScale
                 onPress={handleSubmit}
                 disabled={isProcessing}
-                className="bg-green rounded-md py-2 px-4 items-center mt-4"
+                className="bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue"
               >
-                <Text className="text-blue font-semibold text-base">
+                <Text className="text-blue font-semibold text-xl">
                   {isProcessing ? "Uploading..." : "Submit"}
                 </Text>
               </TouchableScale>

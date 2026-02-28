@@ -5,7 +5,6 @@ import { FlatList, Modal, Pressable, Text, View } from "react-native";
 // External libraries
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import ImageViewing from "react-native-image-viewing";
 
 // Utilities
 import { fetchReviewImagesByStallId } from "@/utils/reviewServices";
@@ -15,6 +14,7 @@ import { useAppContext } from "@/app/components/AppContext";
 
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
+import SimpleViewer from "@/app/components/SimpleViewer";
 
 interface PictureModalProps {
   setPictureModalVisible: (visible: boolean) => void;
@@ -29,7 +29,6 @@ const PictureModal: React.FC<PictureModalProps> = ({
   const [pictureData, setPictureData] = useState<any[]>([]);
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [viewerInstanceKey, setViewerInstanceKey] = useState(0);
 
   useEffect(() => {
     if (pictureModalVisible) {
@@ -75,7 +74,6 @@ const PictureModal: React.FC<PictureModalProps> = ({
                 <Pressable
                   onPress={() => {
                     setSelectedImageIndex(index);
-                    setViewerInstanceKey((prev) => prev + 1);
                     setEnlargedImageVisible(true);
                   }}
                   className="mr-4 border-2 border-blue rounded-lg overflow-hidden"
@@ -96,15 +94,10 @@ const PictureModal: React.FC<PictureModalProps> = ({
             </View>
           )}
         </View>
-        <ImageViewing
-          key={viewerInstanceKey}
-          images={
-            images[selectedImageIndex] ? [images[selectedImageIndex]] : []
-          }
-          imageIndex={0}
+        <SimpleViewer
           visible={enlargedImageVisible}
-          swipeToCloseEnabled={true}
-          onRequestClose={() => setEnlargedImageVisible(false)}
+          source={images[selectedImageIndex]?.uri || null}
+          onClose={() => setEnlargedImageVisible(false)}
         />
       </BlurView>
     </Modal>
