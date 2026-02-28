@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
@@ -35,7 +35,7 @@ export default function RecipePage() {
   const { selectedId } = useAppContext();
 
   // Fetch Data based on selectedId
-  const fetchRecipeData = async () => {
+  const fetchRecipeData = useCallback(async () => {
     if (selectedId) {
       const recipe = await getRecipeById(selectedId);
       const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
@@ -45,20 +45,20 @@ export default function RecipePage() {
         vegetarian: dietaryInfo?.vegetarian || false,
       });
     }
-  };
+  }, [selectedId]);
 
   // Fetch Comments Data based on selectedId
-  const fetchCommentsData = async () => {
+  const fetchCommentsData = useCallback(async () => {
     if (selectedId) {
       const data = await getRecipeCommentsArranged(selectedId);
       setCommentsData(data);
     }
-  };
+  }, [selectedId]);
 
   useEffect(() => {
     fetchRecipeData();
     fetchCommentsData();
-  }, [selectedId]);
+  }, [fetchRecipeData, fetchCommentsData]);
 
   useEffect(() => {
     // Reset scroll position to the top when the page changes
@@ -83,8 +83,8 @@ export default function RecipePage() {
           page === "about"
             ? "rounded-tr-2xl"
             : page === "steps"
-            ? "rounded-t-2xl"
-            : "rounded-tl-2xl"
+              ? "rounded-t-2xl"
+              : "rounded-tl-2xl"
         }`}
       >
         <Animated.View
@@ -94,6 +94,8 @@ export default function RecipePage() {
         >
           {page === "about" ? (
             <RecipeAbout
+              chefName={recipeData.chef_name}
+              cookingTime={recipeData.cooking_time}
               desc={recipeData.description}
               ingredients={recipeData.ingredients}
             />

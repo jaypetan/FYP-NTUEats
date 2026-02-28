@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 // Utilities
@@ -33,33 +33,34 @@ const StallButtons: React.FC<StallButtonsProps> = ({
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   // Get current user ID
-  const getCurrentUserId = async () => {
+  const getCurrentUserId = useCallback(async () => {
     if (user) {
       const userData = await fetchUserByClerkId(user.id);
       setCurrentUserId(userData ? userData.id : null);
       return userData ? userData.id : null;
     }
     return null;
-  };
+  }, [user]);
 
   // Check if the user has liked the menu
-  const checkUserLikeStatus = async () => {
+  const checkUserLikeStatus = useCallback(async () => {
     const userHasLiked = await hasUserLikedItem(
       "stalls_saved",
       "stall_id",
       stallId,
-      currentUserId
+      currentUserId,
     );
     setSaved(userHasLiked);
-  };
+  }, [stallId, currentUserId]);
 
   // Check user like status when currentUserId changes
   useEffect(() => {
     getCurrentUserId();
-  }, []);
+  }, [getCurrentUserId, stallId]);
+
   useEffect(() => {
     checkUserLikeStatus();
-  }, [currentUserId]);
+  }, [checkUserLikeStatus]);
 
   const handleSave = () => {
     if (saved) {

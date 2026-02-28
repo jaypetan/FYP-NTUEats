@@ -53,7 +53,7 @@ const ProfileReviewCommentsCard: React.FC<ProfileReviewCommentsCardProps> = ({
           </View>
         </View>
         <Text className="text-blue text-lg mb-4 max-w-72">
-          "{comment.title}"
+          &quot;{comment.title}&quot;
         </Text>
         {comment.review_pic && (
           <View className="h-48 w-48 mb-4 border-2 border-blue rounded-xl overflow-hidden">

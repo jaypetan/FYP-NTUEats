@@ -1,5 +1,5 @@
 // React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 // External libraries
@@ -29,26 +29,29 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
   const [recipes, setRecipes] = useState<any[]>([]);
   const [maxLength, setMaxLength] = useState(0);
 
+  // Fetch and set recipe
+  const fetchAndSetRecipes = useCallback(
+    async (arrangement: string, length: number) => {
+      // Implementation for fetching recipes goes here
+      if (userId) {
+        const fetchedRecipes = await getRecipesByUserIdArranged(
+          userId,
+          arrangement,
+          length,
+        );
+        if (fetchedRecipes) {
+          setRecipes(fetchedRecipes.content);
+          setMaxLength(fetchedRecipes.total);
+        }
+      }
+    },
+    [userId],
+  );
+
   // Fetch recipes when userId changes
   useEffect(() => {
     fetchAndSetRecipes("most_recent", 4);
-  }, [userId, editModalVisible]);
-
-  // Fetch and set recipe
-  const fetchAndSetRecipes = async (arrangement: string, length: number) => {
-    // Implementation for fetching recipes goes here
-    if (userId) {
-      const fetchedRecipes = await getRecipesByUserIdArranged(
-        userId,
-        arrangement,
-        length
-      );
-      if (fetchedRecipes) {
-        setRecipes(fetchedRecipes.content);
-        setMaxLength(fetchedRecipes.total);
-      }
-    }
-  };
+  }, [editModalVisible, fetchAndSetRecipes]);
 
   const reviewCard = recipes.map((recipe) => (
     <View key={recipe.id}>

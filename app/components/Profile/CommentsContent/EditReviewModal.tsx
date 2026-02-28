@@ -1,6 +1,6 @@
 // React and React Native imports
 import { BlurView } from "expo-blur";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
 // External libraries
@@ -38,7 +38,7 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
   const [isProcessing, setIsProcessing] = useState("");
 
   // Fetch review details
-  const fetchReviewDetails = async () => {
+  const fetchReviewDetails = useCallback(async () => {
     if (selectedId) {
       const reviewData = await getReviewDataById(selectedId);
       if (reviewData) {
@@ -49,14 +49,14 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
         });
       }
     }
-  };
+  }, [selectedId]);
 
   useEffect(() => {
     if (editModalVisible === "review") {
       fetchReviewDetails();
       setIsProcessing("");
     }
-  }, [editModalVisible]);
+  }, [editModalVisible, fetchReviewDetails]);
 
   // Handle submit and delete functions can be added here
   const handleSubmitChanges = () => {
@@ -104,7 +104,7 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
               });
           },
         },
-      ]
+      ],
     );
   };
 

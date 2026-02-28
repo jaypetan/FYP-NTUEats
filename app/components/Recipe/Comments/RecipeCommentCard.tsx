@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
@@ -36,14 +36,14 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
   const { user } = useUser();
 
   // Get current user ID
-  const getCurrentUserId = async () => {
+  const getCurrentUserId = useCallback(async () => {
     if (user) {
       const userData = await fetchUserByClerkId(user.id);
       setCurrentUserId(userData ? userData.id : "");
       return userData ? userData.id : "";
     }
     return null;
-  };
+  }, [user]);
 
   // Fetch username based on user_id
   useEffect(() => {
@@ -59,38 +59,38 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
   }, [comment.user_id]);
 
   // Check if the user has liked the comment
-  const checkUserLikeStatus = async () => {
+  const checkUserLikeStatus = useCallback(async () => {
     const userHasLiked = await hasUserLikedItem(
       "recipe_comments_likes",
       "recipe_comment_id",
       comment.id,
-      currentUserId
+      currentUserId,
     );
     setLike(userHasLiked);
-  };
+  }, [comment.id, currentUserId]);
 
   // Get total likes for the comment
-  const fetchLikes = async () => {
+  const fetchLikes = useCallback(async () => {
     const likes = await fetchTotalLikesByItemId(
       "recipe_comments_likes",
       "recipe_comment_id",
-      comment.id
+      comment.id,
     );
     setCommentsLikesCount(likes);
-  };
+  }, [comment.id]);
 
   // Fetch like status and total likes on component mount
   useEffect(() => {
     getCurrentUserId();
-    fetchLikes();
-  }, []);
-  useEffect(() => {
-    checkUserLikeStatus();
-  }, [currentUserId]);
+  }, [getCurrentUserId, comment.id]);
+
   useEffect(() => {
     fetchLikes();
+  }, [fetchLikes]);
+
+  useEffect(() => {
     checkUserLikeStatus();
-  }, [comment]);
+  }, [checkUserLikeStatus]);
 
   // Update likes count when like state changes
   const likeCommentHandler = async () => {
@@ -99,14 +99,14 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
         "recipe_comments_likes",
         "recipe_comment_id",
         comment.id,
-        currentUserId
+        currentUserId,
       );
     } else {
       await unlikeItem(
         "recipe_comments_likes",
         "recipe_comment_id",
         comment.id,
-        currentUserId
+        currentUserId,
       );
     }
     setLike(!like);

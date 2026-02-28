@@ -1,5 +1,5 @@
 // React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 import { fetchLikedItemsByUserId } from "@/utils/likeServices";
@@ -21,68 +21,68 @@ const FavouriteContent: React.FC<FavouriteContentProps> = ({ userId }) => {
   const [favouriteItems, setFavouriteItems] = useState<any[]>([]);
   const [maxLength, setMaxLength] = useState(0);
 
+  // Fetch favourite stalls
+  const fetchFavouriteStalls = useCallback(
+    async (limitNumber: number) => {
+      if (userId) {
+        const fetchedFavourites = await fetchLikedItemsByUserId(
+          "stalls_saved",
+          "stall_id",
+          userId,
+          limitNumber,
+        );
+        const fetchedFavouritesWithData = await Promise.all(
+          fetchedFavourites.items.map(async (favourite) => {
+            const stallData = await getStallDataById(favourite);
+            return {
+              stallData,
+            };
+          }),
+        );
+        setMaxLength(fetchedFavourites.maxLength);
+        setFavouriteItems(fetchedFavouritesWithData);
+      }
+    },
+    [userId],
+  );
+
+  // Fetch favourite recipes
+  const fetchFavouriteRecipes = useCallback(
+    async (limitNumber: number) => {
+      if (userId) {
+        const fetchedFavourites = await fetchLikedItemsByUserId(
+          "recipes_likes",
+          "recipe_id",
+          userId,
+          limitNumber,
+        );
+        const fetchedFavouritesWithData = await Promise.all(
+          fetchedFavourites.items.map(async (favourite) => {
+            const recipeData = await getRecipeById(favourite);
+            return {
+              recipeData,
+            };
+          }),
+        );
+        setMaxLength(fetchedFavourites.maxLength);
+        setFavouriteItems(fetchedFavouritesWithData);
+      }
+    },
+    [userId],
+  );
+
   useEffect(() => {
     if (pageInfo === "recipes") {
       fetchFavouriteRecipes(4);
     } else if (pageInfo === "stalls") {
       fetchFavouriteStalls(4);
     }
-  }, [userId]);
-
-  // Fetch favourite stalls
-  const fetchFavouriteStalls = async (limitNumber: number) => {
-    if (userId) {
-      const fetchedFavourites = await fetchLikedItemsByUserId(
-        "stalls_saved",
-        "stall_id",
-        userId,
-        limitNumber
-      );
-      const fetchedFavouritesWithData = await Promise.all(
-        fetchedFavourites.items.map(async (favourite) => {
-          const stallData = await getStallDataById(favourite);
-          return {
-            stallData,
-          };
-        })
-      );
-      setMaxLength(fetchedFavourites.maxLength);
-      setFavouriteItems(fetchedFavouritesWithData);
-    }
-  };
-
-  // Fetch favourite recipes
-  const fetchFavouriteRecipes = async (limitNumber: number) => {
-    if (userId) {
-      const fetchedFavourites = await fetchLikedItemsByUserId(
-        "recipes_likes",
-        "recipe_id",
-        userId,
-        limitNumber
-      );
-      const fetchedFavouritesWithData = await Promise.all(
-        fetchedFavourites.items.map(async (favourite) => {
-          const recipeData = await getRecipeById(favourite);
-          return {
-            recipeData,
-          };
-        })
-      );
-      setMaxLength(fetchedFavourites.maxLength);
-      setFavouriteItems(fetchedFavouritesWithData);
-    }
-  };
+  }, [pageInfo, fetchFavouriteRecipes, fetchFavouriteStalls]);
 
   const handlePageInfoChange = () => {
     setFavouriteItems(["loading"]);
     const newPageInfo = pageInfo === "recipes" ? "stalls" : "recipes";
     setPageInfo(newPageInfo);
-    // Fetch data based on new page info
-    if (newPageInfo === "recipes") {
-      fetchFavouriteRecipes(4);
-    } else if (newPageInfo === "stalls") {
-      fetchFavouriteStalls(4);
-    }
   };
 
   const stallFavouriteCard = favouriteItems.map((item, index) => (

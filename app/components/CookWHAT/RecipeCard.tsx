@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
@@ -54,43 +54,47 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   const { user } = useUser();
 
   // Get current user ID
-  const getCurrentUserId = async () => {
+  const getCurrentUserId = useCallback(async () => {
     if (user) {
       const userData = await fetchUserByClerkId(user.id);
       setCurrentUserId(userData ? userData.id : "");
       return userData ? userData.id : "";
     }
     return null;
-  };
+  }, [user]);
 
   // Check if the user has liked the comment
-  const checkUserLikeStatus = async () => {
+  const checkUserLikeStatus = useCallback(async () => {
     const userHasLiked = await hasUserLikedItem(
       "recipes_likes",
       "recipe_id",
       recipeId,
-      currentUserId
+      currentUserId,
     );
     setLike(userHasLiked);
-  };
+  }, [recipeId, currentUserId]);
 
   // Fetch current likes
-  const fetchLikes = async () => {
+  const fetchLikes = useCallback(async () => {
     fetchTotalLikesByItemId("recipes_likes", "recipe_id", recipeId).then(
       (totalLikes) => {
         setRecipeLikesCount(totalLikes);
-      }
+      },
     );
-  };
+  }, [recipeId]);
 
   // Fetch like status and total likes on component mount
   useEffect(() => {
     getCurrentUserId();
+  }, [getCurrentUserId, recipeId]);
+
+  useEffect(() => {
     fetchLikes();
-  }, []);
+  }, [fetchLikes]);
+
   useEffect(() => {
     checkUserLikeStatus();
-  }, [currentUserId]);
+  }, [checkUserLikeStatus]);
 
   const likeRecipeHandler = async () => {
     if (like) {

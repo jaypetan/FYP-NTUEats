@@ -53,7 +53,7 @@ const CommentUploadModal: React.FC<CommentUploadModalProps> = ({
       alert("Comment submitted successfully!");
       // Refresh comments data
       await fetchCommentsData();
-    } catch (error) {
+    } catch {
       alert("Error submitting comment. Please try again.");
     } finally {
       // Reset form

@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
@@ -16,33 +16,42 @@ interface StallReviewProps {
   selectedId: string | null;
 }
 
-const StallReview: React.FC<StallReviewProps> = (selectedId) => {
+const StallReview: React.FC<StallReviewProps> = ({ selectedId }) => {
   const [numOfReviews, setNumOfReviews] = useState(3);
   const [arrangement, setArrangement] = useState("most_liked");
   // Get reviews from backend based on selectedId
   const [reviewsData, setReviewsData] = useState<any[]>([]);
   const [reviewsLength, setReviewsLength] = useState(0);
 
+  // Get names from user IDs in reviewsData, and format dates
+  const arrangeReviews = useCallback(
+    async (nextArrangement: string, nextNumOfReviews: number) => {
+      if (!selectedId) {
+        setReviewsData([]);
+        setReviewsLength(0);
+        return;
+      }
+
+      const data = await getReviewArranged(
+        selectedId,
+        nextArrangement,
+        nextNumOfReviews,
+      );
+
+      if (data && Array.isArray(data.data)) {
+        setReviewsData(data.data);
+        setReviewsLength(data.length);
+      } else {
+        setReviewsData([]);
+      }
+    },
+    [selectedId],
+  );
+
   // Fetch reviews when selectedId changes
   useEffect(() => {
-    if (selectedId.selectedId) {
-      arrangeReviews(arrangement, numOfReviews);
-    }
-  }, [selectedId.selectedId, arrangement, numOfReviews]);
-
-  // Get names from user IDs in reviewsData, and format dates
-  const arrangeReviews = (arrangement: string, numOfReviews: number) => {
-    getReviewArranged(selectedId.selectedId, arrangement, numOfReviews).then(
-      async (data) => {
-        if (data && Array.isArray(data.data)) {
-          setReviewsData(data.data);
-          setReviewsLength(data.length);
-        } else {
-          setReviewsData([]);
-        }
-      }
-    );
-  };
+    arrangeReviews(arrangement, numOfReviews);
+  }, [arrangement, numOfReviews, arrangeReviews]);
 
   const handleMoreReviews = () => {
     let newNumOfReviews = numOfReviews + 2;

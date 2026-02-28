@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
@@ -42,52 +42,48 @@ const StallReviewCard = ({
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
 
   // Check if the user has liked the review
-  const checkUserLikeStatus = async () => {
+  const checkUserLikeStatus = useCallback(async () => {
     const userHasLiked = await hasUserLikedItem(
       "reviews_likes",
       "review_id",
       reviewID,
-      currentUserId
+      currentUserId,
     );
     setLike(userHasLiked);
-  };
+  }, [reviewID, currentUserId]);
 
   // Fetch total likes for the review
-  const fetchLikes = async () => {
+  const fetchLikes = useCallback(async () => {
     const likes = await fetchTotalLikesByItemId(
       "reviews_likes",
       "review_id",
-      reviewID
+      reviewID,
     );
     setReviewLikesCount(likes);
-  };
+  }, [reviewID]);
 
   // Get current user ID
-  const getCurrentUserId = async () => {
+  const getCurrentUserId = useCallback(async () => {
     if (user) {
       const userData = await fetchUserByClerkId(user.id);
       setCurrentUserId(userData ? userData.id : null);
       return userData ? userData.id : null;
     }
     return null;
-  };
+  }, [user]);
 
   // Fetch like status and total likes on component mount
   useEffect(() => {
-    getCurrentUserId();
     fetchLikes();
-  }, []);
+  }, [fetchLikes]);
+
+  useEffect(() => {
+    getCurrentUserId();
+  }, [getCurrentUserId, reviewID]);
+
   useEffect(() => {
     checkUserLikeStatus();
-  }, [currentUserId]);
-
-  // Fetch updated likes when data updates
-  useEffect(() => {
-    getCurrentUserId().then(() => {
-      checkUserLikeStatus();
-    });
-    fetchLikes();
-  }, [reviewID]);
+  }, [checkUserLikeStatus]);
 
   // Handle like button press
   const likeReviewHandler = async () => {

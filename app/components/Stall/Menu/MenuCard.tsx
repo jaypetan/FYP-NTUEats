@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 // External libraries
@@ -32,44 +32,48 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
   const [menuLikesCount, setMenuLikesCount] = useState(0);
 
   // Get current user ID
-  const getCurrentUserId = async () => {
+  const getCurrentUserId = useCallback(async () => {
     if (user) {
       const userData = await fetchUserByClerkId(user.id);
       setCurrentUserId(userData ? userData.id : null);
       return userData ? userData.id : null;
     }
     return null;
-  };
+  }, [user]);
 
   // Fetch total likes for the menu
-  const fetchLikes = async () => {
+  const fetchLikes = useCallback(async () => {
     const likes = await fetchTotalLikesByItemId(
       "menus_likes",
       "menu_id",
-      item.id
+      item.id,
     );
     setMenuLikesCount(likes);
-  };
+  }, [item.id]);
 
   // Check if the user has liked the menu
-  const checkUserLikeStatus = async () => {
+  const checkUserLikeStatus = useCallback(async () => {
     const userHasLiked = await hasUserLikedItem(
       "menus_likes",
       "menu_id",
       item.id,
-      currentUserId
+      currentUserId,
     );
     setLike(userHasLiked);
-  };
+  }, [item.id, currentUserId]);
 
   // Fetch like status and total likes on component mount
   useEffect(() => {
-    getCurrentUserId();
     fetchLikes();
-  }, []);
+  }, [fetchLikes]);
+
+  useEffect(() => {
+    getCurrentUserId();
+  }, [getCurrentUserId, item.id]);
+
   useEffect(() => {
     checkUserLikeStatus();
-  }, [currentUserId]);
+  }, [checkUserLikeStatus]);
 
   // Handle like button press
   const likeMenuHandler = async () => {

@@ -146,8 +146,14 @@ export const getRecipeById = async (recipeId) => {
   try {
     const recipeDoc = doc(db, "recipes", recipeId);
     const snapshot = await getDoc(recipeDoc);
+    const data = snapshot.data();
+    const chefData = await fetchUserByDocId(data.user_id);
     if (snapshot.exists()) {
-      return { id: snapshot.id, ...snapshot.data() };
+      return {
+        id: snapshot.id,
+        ...snapshot.data(),
+        chef_name: chefData ? chefData.username : "Unknown Chef",
+      };
     } else {
       console.log("No such recipe!");
       return {
@@ -159,6 +165,7 @@ export const getRecipeById = async (recipeId) => {
         instructions: [],
         recipe_pic: "",
         user_id: "",
+        chef_name: "Unknown Chef",
         timestamp: null,
       };
     }
@@ -173,6 +180,7 @@ export const getRecipeById = async (recipeId) => {
       instructions: [],
       recipe_pic: "",
       user_id: "",
+      chef_name: "Unknown Chef",
       timestamp: null,
     };
   }

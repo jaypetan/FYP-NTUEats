@@ -83,7 +83,7 @@ export default function UploadRecipePage() {
       setIngredients([""]);
       setInstructions([""]);
       setCurrentPage("home-page");
-    } catch (error) {
+    } catch {
       alert("Failed to submit recipe. Please try again.");
     }
   };

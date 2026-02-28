@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
 
 // External libraries
@@ -32,18 +32,18 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [enlargedImageVisible, setEnlargedImageVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  useEffect(() => {
-    if (menuModalVisible) {
-      fetchMenuData();
-    }
-  }, [menuModalVisible, selectedId]);
-
-  const fetchMenuData = async () => {
+  const fetchMenuData = useCallback(async () => {
     if (selectedId) {
       const menus = await getMenusArranged(selectedId);
       setMenuData(menus);
     }
-  };
+  }, [selectedId]);
+
+  useEffect(() => {
+    if (menuModalVisible) {
+      fetchMenuData();
+    }
+  }, [menuModalVisible, fetchMenuData]);
 
   const openMenuUploadModal = () => {
     setMenuModalVisible(false);

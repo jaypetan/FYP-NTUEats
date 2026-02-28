@@ -1,6 +1,6 @@
 // React and React Native imports
 import { BlurView } from "expo-blur";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
 // External libraries
@@ -37,7 +37,7 @@ const EditRecipeCommentModal: React.FC<EditRecipeCommentModalProps> = ({
   const [isProcessing, setIsProcessing] = useState("");
 
   // Fetch comment details
-  const fetchCommentDetails = async () => {
+  const fetchCommentDetails = useCallback(async () => {
     if (selectedId) {
       const commentData = await getRecipeCommentById(selectedId);
       if (commentData) {
@@ -47,14 +47,14 @@ const EditRecipeCommentModal: React.FC<EditRecipeCommentModalProps> = ({
         });
       }
     }
-  };
+  }, [selectedId]);
 
   useEffect(() => {
     if (editModalVisible === "comment") {
       fetchCommentDetails();
       setIsProcessing("");
     }
-  }, [editModalVisible]);
+  }, [editModalVisible, fetchCommentDetails]);
 
   // Handle submit and delete functions can be added here
   const handleSubmitChanges = () => {
@@ -102,7 +102,7 @@ const EditRecipeCommentModal: React.FC<EditRecipeCommentModalProps> = ({
               });
           },
         },
-      ]
+      ],
     );
   };
 
