@@ -93,6 +93,13 @@ export default function EatWhat({
     }
   }, []);
 
+  //Fetch restrictions on page load
+  useEffect(() => {
+    if (currentPage === "eat-what") {
+      fetchUserDietaryRestrictions();
+    }
+  }, [currentPage]);
+
   // Function to fetch stalls based on arrangement and limit
   const fetchStallFunction = useCallback(
     async (arrangement: string, limitNumber: number) => {
@@ -125,13 +132,6 @@ export default function EatWhat({
     },
     [arrangement, restrictionsFilter, searchData],
   );
-
-  //Fetch restrictions on page load
-  useEffect(() => {
-    if (currentPage === "eat-what") {
-      fetchUserDietaryRestrictions();
-    }
-  }, [currentPage]);
 
   // Fetch stalls when arrangement or restrictions filter changes
   useEffect(() => {

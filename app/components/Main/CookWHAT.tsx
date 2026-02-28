@@ -113,7 +113,7 @@ export default function CookWhat({
               recipesToShow,
               restrictionsFilter,
             );
-      const recipesWithDietary = await Promise.all(
+      const updatedRecipes = await Promise.all(
         content.map(async (recipe: any) => {
           const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
           return {
@@ -123,7 +123,7 @@ export default function CookWhat({
           };
         }),
       );
-      setRecipesData(recipesWithDietary);
+      setRecipesData(updatedRecipes);
       setRecipesDataLength(length);
     },
     [arrangement, restrictionsFilter, searchData],
@@ -134,13 +134,13 @@ export default function CookWhat({
     if (currentPage !== "cook-what") return;
     const recipesToShow = 4; // Reset stalls shown when leaving the page
     setRecipesShown(recipesToShow);
-  }, [currentPage, arrangement, restrictionsFilter]);
+  }, [currentPage, arrangement, restrictionsFilter, searchData]);
 
   // Fetch recipes whenever arrangement or recipesShown changes
   useEffect(() => {
     if (currentPage !== "cook-what") return;
     fetchRecipesFunction(arrangement, recipesShown);
-  }, [currentPage, arrangement, recipesShown, searchData]);
+  }, [currentPage, arrangement, restrictionsFilter, recipesShown, searchData]);
 
   // Fetch more recipes
   const loadMoreRecipes = () => {
