@@ -1,50 +1,121 @@
-# Welcome to your Expo app 👋
+# NTUEats
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+NTUEats is an Expo + React Native application focused on food discovery and sharing.
+The app includes stall and recipe browsing, reviews, likes, profiles, and admin management flows.
 
-## Get started
+## Tech Stack
 
-1. Install dependencies
+- Expo SDK 54 + Expo Router
+- React Native + TypeScript
+- Firebase (Firestore + Storage)
+- Clerk authentication
+- NativeWind (Tailwind-style utility classes)
 
-   ```bash
-   npm install
-   ```
+## Main Features
 
-2. Start the app
+- Stall discovery and details
+- Menu and photo viewing
+- Recipe browsing and upload flows
+- Reviews and likes
+- User profile and favourites
+- Admin pages for stall and menu management
 
-   ```bash
-   npx expo start
-   ```
+## Project Structure
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+app/
+  (auth)/            # Sign-in / sign-up routes
+  (home)/            # Main user-facing routes
+  (admin)/           # Admin-only routes
+  components/        # Shared and feature components
+utils/               # Firebase + domain service functions
+interfaces/          # Shared TS interfaces/types
+assets/              # Fonts, images, sample data
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Prerequisites
 
-## Learn more
+- Node.js 18+
+- npm
+- Expo CLI via `npx` (no global install required)
 
-To learn more about developing your project with Expo, look at the following resources:
+## Environment Variables
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Copy `.env.example` to `.env` and fill in your values:
 
-## Join the community
+```bash
+cp .env.example .env
+```
 
-Join our community of developers creating universal apps.
+Required variables:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```env
+# App
+BACKEND_API=
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=
+
+# Firebase
+FIREBASE_API_KEY=
+FIREBASE_AUTH_DOMAIN=
+FIREBASE_PROJECT_ID=
+FIREBASE_STORAGE_BUCKET=
+FIREBASE_MESSAGING_SENDER_ID=
+FIREBASE_APP_ID=
+FIREBASE_MEASUREMENT_ID=
+```
+
+## Installation
+
+```bash
+npm install
+```
+
+## Run Locally
+
+Start development server:
+
+```bash
+npm run start
+```
+
+Platform commands:
+
+```bash
+npm run android
+npm run ios
+npm run web (currently unavailable)
+```
+
+If Metro behaves unexpectedly, clear cache:
+
+```bash
+npx expo start --clear
+```
+
+## Lint
+
+```bash
+npm run lint
+```
+
+## Notes
+
+- Firebase config is loaded from environment variables through `expo-constants` fallback handling in `utils/firebase.js`.
+- Ensure your Firestore security rules and Clerk setup match your deployment environment.
+
+## Security Checklist (Before Public GitHub)
+
+- Do not commit `.env` (already ignored in `.gitignore`).
+- Use `.env.example` for placeholders only.
+- Rotate keys immediately if any real key was ever committed.
+- Use production Clerk publishable key for production deployments.
+
+## Roadmap Ideas
+
+- Add automated tests for service functions and key UI flows
+- Add CI checks for lint and type safety
+- Improve role-based admin access guards
+
+## License
+
+Add your preferred license here (e.g., MIT) before publishing publicly.
