@@ -25,7 +25,7 @@ export const addNewRecipe = async (recipeData) => {
       const sanitize = (str) => str.toLowerCase().replace(/[^a-z0-9]+/g, "-");
       const timestamp = Date.now();
       const path = `cookWHAT/recipe-${sanitize(
-        recipeData.title
+        recipeData.title,
       )}-${timestamp}.jpeg`;
       const imageUrl = await uploadImageAsync(recipeData.recipe_pic, path);
       recipeData.recipe_pic = imageUrl;
@@ -62,7 +62,7 @@ export const getRecipes = async () => {
         const likes = await fetchTotalLikesByItemId(
           "recipes_likes",
           "recipe_id",
-          doc.id
+          doc.id,
         );
         const chefData = await fetchUserByDocId(data.user_id);
         return {
@@ -71,7 +71,7 @@ export const getRecipes = async () => {
           chef_name: chefData.username,
           ...data,
         };
-      })
+      }),
     );
     return recipes;
   } catch (error) {
@@ -110,12 +110,12 @@ export const getRecipesArranged = async (arrangementType, limitNum) => {
 export const getRecipesByUserIdArranged = async (
   userId,
   arrangementType,
-  limitNum
+  limitNum,
 ) => {
   try {
     const allRecipes = await getRecipes();
     const userRecipes = allRecipes.filter(
-      (recipe) => recipe.user_id === userId
+      (recipe) => recipe.user_id === userId,
     );
     // Sort by arrangementType
     if (arrangementType === "most_likes") {
@@ -205,7 +205,7 @@ export const deleteRecipeById = async (recipeId) => {
 export const searchRecipesByTitleArranged = async (
   keyword,
   arrangementType,
-  limitNum
+  limitNum,
 ) => {
   try {
     const lowerKeyword = keyword.toLowerCase();
@@ -213,7 +213,7 @@ export const searchRecipesByTitleArranged = async (
 
     // Filter by title
     const filteredRecipes = recipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(lowerKeyword)
+      recipe.title.toLowerCase().includes(lowerKeyword),
     );
 
     // Sort by arrangementType
@@ -221,6 +221,19 @@ export const searchRecipesByTitleArranged = async (
       filteredRecipes.sort((a, b) => b.likes - a.likes);
     } else if (arrangementType === "most_recent") {
       filteredRecipes.sort((a, b) => b.timestamp - a.timestamp);
+    } else if (arrangementType === "prep_time_short_to_long") {
+      filteredRecipes.sort((a, b) => a.cooking_time - b.cooking_time);
+    } else if (arrangementType === "prep_time_long_to_short") {
+      filteredRecipes.sort((a, b) => b.cooking_time - a.cooking_time);
+    } else {
+      // Default: Random shuffle using Fisher-Yates algorithm
+      for (let i = filteredRecipes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filteredRecipes[i], filteredRecipes[j]] = [
+          filteredRecipes[j],
+          filteredRecipes[i],
+        ];
+      }
     }
 
     const total = filteredRecipes.length;
@@ -254,7 +267,7 @@ export const getRecipeCommentsByRecipeId = async (recipeId) => {
       comment.likes = await fetchTotalLikesByItemId(
         "recipe_comments_likes",
         "recipe_comment_id",
-        comment.id
+        comment.id,
       );
     }
 
@@ -294,7 +307,7 @@ export const getRecipeCommentsByUserId = async (userId) => {
       comment.likes = await fetchTotalLikesByItemId(
         "recipe_comments_likes",
         "recipe_comment_id",
-        comment.id
+        comment.id,
       );
     }
 
@@ -309,7 +322,7 @@ export const getRecipeCommentsByUserId = async (userId) => {
 export const arrangeRecipeCommentsByUserId = async (
   userId,
   arrangementType,
-  limitNum
+  limitNum,
 ) => {
   try {
     const comments = await getRecipeCommentsByUserId(userId);
@@ -341,10 +354,10 @@ export const addRecipeComment = async (commentData) => {
     if (commentData.comment_pic) {
       // Upload comment image and get URL
       const recipeName = await getRecipeById(commentData.recipe_id).then(
-        (recipe) => (recipe ? recipe.title : "unknown-recipe")
+        (recipe) => (recipe ? recipe.title : "unknown-recipe"),
       );
       const commentNumber = await getRecipeCommentsByRecipeId(
-        commentData.recipe_id
+        commentData.recipe_id,
       ).then((comments) => comments.length + 1);
 
       const path = `cookWHAT/comment-${recipeName}-${commentNumber}.jpeg`;

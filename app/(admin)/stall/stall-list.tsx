@@ -47,7 +47,7 @@ const StallList: React.FC<StallListProps> = ({
           },
         },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   };
 
@@ -65,16 +65,16 @@ const StallList: React.FC<StallListProps> = ({
                 className="w-44 bg-white rounded-lg p-4 my-2 flex-col border-2 justify-between border-blue"
               >
                 <View className="flex-col gap-1">
-                  <View className="w-36 h-24 mb-2 self-center">
+                  <View className="w-36 h-24 mb-2 self-center rounded-md overflow-hidden">
                     <ImageLoader
                       image={stall.stall_pic}
                       className="w-36 h-24 rounded-md"
-                      loaderClassName="absolute w-36 h-24 rounded-md scale-50"
+                      small
                     />
                   </View>
                   <Text className="font-semibold text-blue">{stall.name}</Text>
                   <Text className="text-blue text-sm leading-4 w-full text-start">
-                    "{stall.description}"
+                    &quot;{stall.description}&quot;
                   </Text>
                   <Text className="text-blue text-sm leading-4 w-full text-start">
                     Price: {stall.price_symbol}

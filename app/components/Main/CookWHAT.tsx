@@ -1,5 +1,5 @@
 // React and React Native core
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
 // Assets
@@ -17,10 +17,18 @@ import { useAppContext } from "@/app/components/AppContext";
 
 // Components
 import RecipeCard from "@/app/components/CookWHAT/RecipeCard";
+import RecipeFilter from "@/app/components/CookWHAT/RecipeFilter";
 import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 import SearchBar from "@/app/components/SearchBar";
+import Animated, {
+  FadeInRight,
+  FadeInUp,
+  FadeOutLeft,
+  FadeOutUp,
+  LinearTransition,
+} from "react-native-reanimated";
 
 interface CookWhatProps {
   backgroundColor: string;
@@ -34,38 +42,57 @@ export default function CookWhat({
   widthClass,
 }: CookWhatProps) {
   const { currentPage, setCurrentPage } = useAppContext();
+  const [arrangement, setArrangement] = useState<string>("");
   const [recipesData, setRecipesData] = useState<any[]>([]);
   const [recipesShown, setRecipesShown] = useState(4);
   const [recipesDataLength, setRecipesDataLength] = useState(0);
 
-  // Fetch all recipes on component mount
-  const fetchRecipesFunction = async (recipesToShow: number) => {
-    const recipes = await getRecipesArranged("most_likes", recipesToShow);
-    const recipesWithDietary = await Promise.all(
-      recipes.content.map(async (recipe: any) => {
-        const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
-        return {
-          ...recipe,
-          halal: dietaryInfo?.halal || false,
-          vegetarian: dietaryInfo?.vegetarian || false,
-        };
-      })
-    );
-    setRecipesData(recipesWithDietary);
-    setRecipesDataLength(recipes.length);
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+
+  const handleFilterDropdown = () => {
+    setFilterDropdown(!filterDropdown);
   };
+
+  // Fetch all recipes on component mount
+  const fetchRecipesFunction = useCallback(
+    async (recipesToShow: number) => {
+      const recipes = await getRecipesArranged(arrangement, recipesToShow);
+      const recipesWithDietary = await Promise.all(
+        recipes.content.map(async (recipe: any) => {
+          const dietaryInfo = await fetchDietaryByRecipeId(recipe.id);
+          return {
+            ...recipe,
+            halal: dietaryInfo?.halal || false,
+            vegetarian: dietaryInfo?.vegetarian || false,
+          };
+        }),
+      );
+      setRecipesData(recipesWithDietary);
+      setRecipesDataLength(recipes.length);
+    },
+    [arrangement],
+  );
+
+  // If currentPage changes to "cook-what", reset recipesShown
   useEffect(() => {
     if (currentPage !== "cook-what") return;
     const recipesToShow = 4; // Reset stalls shown when leaving the page
     setRecipesShown(recipesToShow);
-    fetchRecipesFunction(recipesToShow);
   }, [currentPage]);
+
+  // Fetch recipes whenever arrangement or recipesShown changes
+  useEffect(() => {
+    if (currentPage !== "cook-what") return;
+    fetchRecipesFunction(recipesShown);
+  }, [currentPage, recipesShown, fetchRecipesFunction]);
 
   // Fetch more recipes
   const loadMoreRecipes = () => {
-    const recipesToShow = recipesShown + 4;
+    let recipesToShow = recipesShown + 4;
+    if (recipesToShow >= recipesDataLength) {
+      recipesToShow = recipesDataLength; // Don't exceed total recipes
+    }
     setRecipesShown(recipesToShow);
-    fetchRecipesFunction(recipesToShow);
   };
 
   // Search bar functionality
@@ -75,10 +102,10 @@ export default function CookWhat({
     if (query.trim() === "") {
       fetchRecipesFunction(recipesShown);
     } else {
-      searchRecipesByTitleArranged(query, "most_likes", recipesShown).then(
+      searchRecipesByTitleArranged(query, arrangement, recipesShown).then(
         (results) => {
           setRecipesData(results.content);
-        }
+        },
       );
     }
   };
@@ -121,23 +148,47 @@ export default function CookWhat({
             <Text className="text-4xl font-koulen pt-4 text-blue">
               What are we cooking today?
             </Text>
+
+            {/* Search Bar & Filter */}
             <SearchBar
               handleSearch={handleSearch}
               searchTerm={searchTerm}
               handleScroll={handleScroll}
+              handleFilterDropdown={() => handleFilterDropdown()}
             />
+            {filterDropdown && (
+              <Animated.View
+                className="w-full"
+                entering={FadeInUp}
+                exiting={FadeOutUp}
+              >
+                <RecipeFilter
+                  arrangement={arrangement}
+                  setArrangement={setArrangement}
+                />
+              </Animated.View>
+            )}
+
+            {/* Recipes */}
             <View className="min-h-[50vh] flex-col gap-4 mt-6">
               {recipesData.map((recipe, index) => (
-                <RecipeCard
-                  key={index}
-                  recipeId={recipe.id}
-                  foodImage={recipe.recipe_pic}
-                  foodName={recipe.title}
-                  chefName={recipe.chef_name}
-                  duration={recipe.cooking_time}
-                  halal={recipe.halal}
-                  vegetarian={recipe.vegetarian}
-                />
+                <Animated.View
+                  entering={FadeInRight.delay(100 + index * 100)}
+                  exiting={FadeOutLeft}
+                  layout={LinearTransition}
+                  key={recipe.id}
+                >
+                  <RecipeCard
+                    key={index}
+                    recipeId={recipe.id}
+                    foodImage={recipe.recipe_pic}
+                    foodName={recipe.title}
+                    chefName={recipe.chef_name}
+                    duration={recipe.cooking_time}
+                    halal={recipe.halal}
+                    vegetarian={recipe.vegetarian}
+                  />
+                </Animated.View>
               ))}
             </View>
             {recipesDataLength > recipesShown && (
