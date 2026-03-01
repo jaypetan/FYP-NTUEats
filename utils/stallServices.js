@@ -13,6 +13,17 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+// Utility functions for randomization with seed
+const getDeterministicHash = (value) => {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash +=
+      (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return hash >>> 0;
+};
+
 // Function to add a new stall
 export const addNewStall = async (stallData) => {
   try {
@@ -112,11 +123,31 @@ export const getStallsArranged = async (
   limitNum,
   restrictions,
   otherData,
+  randomSeed,
 ) => {
   try {
+    let resolvedOtherData = otherData;
+    let resolvedRandomSeed = randomSeed;
+    let resolvedNoRandom = false;
+
+    if (typeof otherData === "string" && randomSeed === undefined) {
+      resolvedRandomSeed = otherData;
+      resolvedOtherData = undefined;
+    }
+
+    if (typeof otherData === "boolean" && randomSeed === undefined) {
+      resolvedNoRandom = otherData;
+      resolvedOtherData = undefined;
+    }
+
+    if (typeof randomSeed === "boolean") {
+      resolvedNoRandom = randomSeed;
+      resolvedRandomSeed = undefined;
+    }
+
     // Fetch stalls with restrictions applied if restrictions exist, otherwise get all stalls.
-    const stallsData = otherData
-      ? await getStallsWithRestrictions(restrictions, otherData) // use pre-filtered data if provided (e.g., from search results)
+    const stallsData = Array.isArray(resolvedOtherData)
+      ? await getStallsWithRestrictions(restrictions, resolvedOtherData) // use pre-filtered data if provided (e.g., from search results)
       : await getStallsWithRestrictions(restrictions);
 
     // Then arrange the filtered stalls based on the selected arrangement
@@ -136,13 +167,12 @@ export const getStallsArranged = async (
         (a, b) => priceOrder[b.price_symbol] - priceOrder[a.price_symbol],
       );
     } else {
-      // Default: Random shuffle using Fisher-Yates algorithm
-      for (let i = arrangedStalls.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arrangedStalls[i], arrangedStalls[j]] = [
-          arrangedStalls[j],
-          arrangedStalls[i],
-        ];
+      if (typeof resolvedRandomSeed === "string" && resolvedRandomSeed) {
+        arrangedStalls.sort((a, b) => {
+          const hashA = getDeterministicHash(`${resolvedRandomSeed}:${a.id}`);
+          const hashB = getDeterministicHash(`${resolvedRandomSeed}:${b.id}`);
+          return hashA - hashB;
+        });
       }
     }
 

@@ -60,6 +60,8 @@ export default function EatWhat({
 
   const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
   const [searchData, setSearchData] = useState<any[]>([]); // State for search results
+  const randomSeedRef = useRef<string>(`${Date.now()}-${Math.random()}`);
+  const hasEnteredEatWhatRef = useRef<boolean>(false);
 
   const handleFilterDropdown = () => {
     setFilterDropdown(!filterDropdown);
@@ -103,6 +105,7 @@ export default function EatWhat({
   // Function to fetch stalls based on arrangement and limit
   const fetchStallFunction = useCallback(
     async (arrangement: string, limitNumber: number) => {
+      const randomSeed = arrangement ? "" : randomSeedRef.current;
       const { data, length } =
         searchData.length > 0 && searchTerm.trim() !== ""
           ? await getStallsArranged(
@@ -110,11 +113,14 @@ export default function EatWhat({
               limitNumber,
               restrictionsFilter,
               searchData, // Pass search results for further filtering and arrangement
+              randomSeed,
             )
           : await getStallsArranged(
               arrangement,
               limitNumber,
               restrictionsFilter,
+              undefined,
+              randomSeed,
             );
       // Fetch dietary info for each stall
       const updatedStalls = await Promise.all(
@@ -130,16 +136,39 @@ export default function EatWhat({
       setStallData(updatedStalls);
       setStallDataLength(length);
     },
-    [arrangement, restrictionsFilter, searchData],
+    [restrictionsFilter, searchData, searchTerm],
   );
 
-  // Fetch stalls when arrangement or restrictions filter changes
+  useEffect(() => {
+    if (currentPage === "eat-what" && !hasEnteredEatWhatRef.current) {
+      randomSeedRef.current = `${Date.now()}-${Math.random()}`;
+      hasEnteredEatWhatRef.current = true;
+    }
+
+    if (currentPage !== "eat-what") {
+      hasEnteredEatWhatRef.current = false;
+    }
+  }, [currentPage]);
+
+  // Reset stalls shown only when entering EatWHAT page
   useEffect(() => {
     if (currentPage !== "eat-what") return;
     const stallsToShow = 4; // Reset stalls shown when leaving the page
     setStallsShown(stallsToShow);
-    fetchStallFunction(arrangement, stallsToShow);
-  }, [currentPage, arrangement, restrictionsFilter, searchData]);
+  }, [currentPage]);
+
+  // Fetch stalls whenever arrangement or stallsShown changes
+  useEffect(() => {
+    if (currentPage !== "eat-what") return;
+    fetchStallFunction(arrangement, stallsShown);
+  }, [
+    currentPage,
+    arrangement,
+    restrictionsFilter,
+    stallsShown,
+    searchData,
+    fetchStallFunction,
+  ]);
 
   // Function to fetch more stalls
   const loadMoreStalls = () => {
@@ -148,7 +177,6 @@ export default function EatWhat({
       newLimit = stallDataLength; // Don't exceed total stalls available
     }
     setStallsShown(newLimit);
-    fetchStallFunction(arrangement, newLimit);
   };
 
   // Search bar functionality

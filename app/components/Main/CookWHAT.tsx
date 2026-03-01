@@ -132,7 +132,7 @@ export default function CookWhat({
   // If currentPage changes to "cook-what", reset recipesShown
   useEffect(() => {
     if (currentPage !== "cook-what") return;
-    const recipesToShow = 4; // Reset stalls shown when leaving the page
+    const recipesToShow = 4; // Reset recipes shown when leaving the page
     setRecipesShown(recipesToShow);
   }, [currentPage, arrangement, restrictionsFilter, searchData]);
 
@@ -144,11 +144,11 @@ export default function CookWhat({
 
   // Fetch more recipes
   const loadMoreRecipes = () => {
-    let recipesToShow = recipesShown + 4;
-    if (recipesToShow >= recipesDataLength) {
-      recipesToShow = recipesDataLength; // Don't exceed total recipes
+    let newLimit = recipesShown + 4;
+    if (newLimit >= recipesDataLength) {
+      newLimit = recipesDataLength; // Don't exceed total recipes
     }
-    setRecipesShown(recipesToShow);
+    setRecipesShown(newLimit);
   };
 
   // Search bar functionality

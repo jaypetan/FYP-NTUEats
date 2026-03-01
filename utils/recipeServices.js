@@ -136,11 +136,12 @@ export const getRecipesArranged = async (
     } else if (arrangementType === "most_recent") {
       recipes.sort((a, b) => b.timestamp - a.timestamp);
     } else {
+      // TODO: Implement randomizer
       // Default: Random shuffle using Fisher-Yates algorithm
-      for (let i = recipes.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [recipes[i], recipes[j]] = [recipes[j], recipes[i]];
-      }
+      // for (let i = recipes.length - 1; i > 0; i--) {
+      //   const j = Math.floor(Math.random() * (i + 1));
+      //   [recipes[i], recipes[j]] = [recipes[j], recipes[i]];
+      // }
     }
 
     // Get length before slicing for limit
