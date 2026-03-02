@@ -36,13 +36,11 @@ const FoodCard: React.FC<FoodCardProps> = ({
           <ImageLoader
             image={imageSource}
             className="w-full h-full rounded-2xl absolute p-2"
-            loaderClassName="w-full h-full rounded-2xl"
           />
         ) : (
           <ImageLoader
             image={stallImage}
             className="w-full h-full rounded-2xl absolute p-2"
-            loaderClassName="w-full h-full rounded-2xl"
           />
         )}
         <View className="absolute h-full w-full  py-6 px-4 flex-col justify-end">

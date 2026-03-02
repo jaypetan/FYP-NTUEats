@@ -10,6 +10,7 @@ import HomeEatWHAT from "@/app/components/Home/HomeEatWHAT";
 import HomeNav from "@/app/components/Home/HomeNav";
 import HomeProfile from "@/app/components/Home/HomeProfile";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
+import HomeRandomizer from "../Home/HomeRandomizer";
 
 interface HomePageProps {
   backgroundColor: string;
@@ -46,6 +47,7 @@ export default function HomePage({
             <HomeProfile />
             <HomeEatWHAT />
             <HomeCookWHAT />
+            <HomeRandomizer />
             <Text className="py-24" />
           </OptimizedScrollView>
         </View>

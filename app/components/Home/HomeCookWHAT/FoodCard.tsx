@@ -34,7 +34,7 @@ const FoodCard: React.FC<FoodCardProps> = ({
   };
 
   return (
-    <View className="mr-4 relative w-44 h-64 rounded-2xl bg-green/50 border-2 border-blue">
+    <View className="mr-4 relative w-44 h-64 rounded-2xl bg-green/50 border-2 border-blue overflow-hidden">
       <TouchableScale onPress={() => handlePress()}>
         <ImageLoader
           image={imageSource}
