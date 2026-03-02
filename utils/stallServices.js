@@ -128,21 +128,10 @@ export const getStallsArranged = async (
   try {
     let resolvedOtherData = otherData;
     let resolvedRandomSeed = randomSeed;
-    let resolvedNoRandom = false;
 
     if (typeof otherData === "string" && randomSeed === undefined) {
       resolvedRandomSeed = otherData;
       resolvedOtherData = undefined;
-    }
-
-    if (typeof otherData === "boolean" && randomSeed === undefined) {
-      resolvedNoRandom = otherData;
-      resolvedOtherData = undefined;
-    }
-
-    if (typeof randomSeed === "boolean") {
-      resolvedNoRandom = randomSeed;
-      resolvedRandomSeed = undefined;
     }
 
     // Fetch stalls with restrictions applied if restrictions exist, otherwise get all stalls.

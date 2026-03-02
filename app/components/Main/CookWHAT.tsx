@@ -60,6 +60,8 @@ export default function CookWhat({
 
   const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
   const [searchData, setSearchData] = useState<any[]>([]); // State for search results
+  const randomSeedRef = useRef<string>(`${Date.now()}-${Math.random()}`);
+  const hasEnteredCookWhatRef = useRef<boolean>(false);
 
   const handleFilterDropdown = () => {
     setFilterDropdown(!filterDropdown);
@@ -100,6 +102,7 @@ export default function CookWhat({
   // Fetch all recipes on component mount
   const fetchRecipesFunction = useCallback(
     async (arrangement: string, recipesToShow: number) => {
+      const randomSeed = arrangement ? "" : randomSeedRef.current;
       const { content, length } =
         searchData.length > 0 && searchTerm.trim() !== ""
           ? await getRecipesArranged(
@@ -107,11 +110,14 @@ export default function CookWhat({
               recipesToShow,
               restrictionsFilter,
               searchData, // Pass search results for further filtering and arrangement
+              randomSeed,
             )
           : await getRecipesArranged(
               arrangement,
               recipesToShow,
               restrictionsFilter,
+              undefined,
+              randomSeed,
             );
       const updatedRecipes = await Promise.all(
         content.map(async (recipe: any) => {
@@ -126,8 +132,19 @@ export default function CookWhat({
       setRecipesData(updatedRecipes);
       setRecipesDataLength(length);
     },
-    [arrangement, restrictionsFilter, searchData],
+    [restrictionsFilter, searchData, searchTerm],
   );
+
+  useEffect(() => {
+    if (currentPage === "cook-what" && !hasEnteredCookWhatRef.current) {
+      randomSeedRef.current = `${Date.now()}-${Math.random()}`;
+      hasEnteredCookWhatRef.current = true;
+    }
+
+    if (currentPage !== "cook-what") {
+      hasEnteredCookWhatRef.current = false;
+    }
+  }, [currentPage]);
 
   // If currentPage changes to "cook-what", reset recipesShown
   useEffect(() => {

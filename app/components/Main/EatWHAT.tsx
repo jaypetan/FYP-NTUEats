@@ -161,14 +161,7 @@ export default function EatWhat({
   useEffect(() => {
     if (currentPage !== "eat-what") return;
     fetchStallFunction(arrangement, stallsShown);
-  }, [
-    currentPage,
-    arrangement,
-    restrictionsFilter,
-    stallsShown,
-    searchData,
-    fetchStallFunction,
-  ]);
+  }, [currentPage, arrangement, restrictionsFilter, stallsShown, searchData]);
 
   // Function to fetch more stalls
   const loadMoreStalls = () => {

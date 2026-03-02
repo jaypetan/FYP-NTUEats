@@ -17,6 +17,17 @@ import {
   where,
 } from "firebase/firestore";
 
+// Utility functions for randomization with seed
+const getDeterministicHash = (value) => {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash +=
+      (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return hash >>> 0;
+};
+
 // Function to add a new recipe
 export const addNewRecipe = async (recipeData) => {
   try {
@@ -123,11 +134,20 @@ export const getRecipesArranged = async (
   limitNum,
   restrictions,
   otherData,
+  randomSeed,
 ) => {
   try {
+    let resolvedOtherData = otherData;
+    let resolvedRandomSeed = randomSeed;
+
+    if (typeof otherData === "string" && randomSeed === undefined) {
+      resolvedRandomSeed = otherData;
+      resolvedOtherData = undefined;
+    }
+
     // Get recipes with restrictions applied if restrictions exist, otherwise get all recipes
-    const recipes = otherData
-      ? await getRecipesWithRestrictions(restrictions, otherData)
+    const recipes = resolvedOtherData
+      ? await getRecipesWithRestrictions(restrictions, resolvedOtherData)
       : await getRecipesWithRestrictions(restrictions);
 
     // Sort by arrangementType
@@ -136,12 +156,13 @@ export const getRecipesArranged = async (
     } else if (arrangementType === "most_recent") {
       recipes.sort((a, b) => b.timestamp - a.timestamp);
     } else {
-      // TODO: Implement randomizer
-      // Default: Random shuffle using Fisher-Yates algorithm
-      // for (let i = recipes.length - 1; i > 0; i--) {
-      //   const j = Math.floor(Math.random() * (i + 1));
-      //   [recipes[i], recipes[j]] = [recipes[j], recipes[i]];
-      // }
+      if (typeof resolvedRandomSeed === "string" && resolvedRandomSeed) {
+        recipes.sort((a, b) => {
+          const hashA = getDeterministicHash(`${resolvedRandomSeed}:${a.id}`);
+          const hashB = getDeterministicHash(`${resolvedRandomSeed}:${b.id}`);
+          return hashA - hashB;
+        });
+      }
     }
 
     // Get length before slicing for limit
