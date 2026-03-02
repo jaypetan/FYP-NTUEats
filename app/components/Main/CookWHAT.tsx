@@ -14,7 +14,6 @@ import {
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
-import { useUser } from "@clerk/clerk-expo";
 
 // Components
 import RecipeCard from "@/app/components/CookWHAT/RecipeCard";
@@ -23,10 +22,6 @@ import HomeNav from "@/app/components/Home/HomeNav";
 import LoadMore from "@/app/components/LoadMore";
 import OptimizedScrollView from "@/app/components/OptimizedScrollView";
 import SearchBar from "@/app/components/SearchBar";
-import {
-  fetchDietaryRestrictions,
-  fetchUserByClerkId,
-} from "@/utils/userServices";
 import Animated, {
   FadeInRight,
   FadeInUp,
@@ -46,7 +41,7 @@ export default function CookWhat({
   backgroundColorHex,
   widthClass,
 }: CookWhatProps) {
-  const { currentPage, setCurrentPage } = useAppContext();
+  const { currentPage, setCurrentPage, restrictions } = useAppContext();
   const [arrangement, setArrangement] = useState<string>("");
   const [recipesData, setRecipesData] = useState<any[]>([]);
   const [recipesShown, setRecipesShown] = useState(4);
@@ -67,35 +62,14 @@ export default function CookWhat({
     setFilterDropdown(!filterDropdown);
   };
 
-  // Fetch restrictions for current user
-  const { user } = useUser();
-  const fetchUserDietaryRestrictions = useCallback(async () => {
-    if (!user) {
-      console.error("User is not authenticated");
-      return;
-    }
-    const userId = await fetchUserByClerkId(user?.id!);
-    const restrictions = await fetchDietaryRestrictions(userId?.id!);
-    if (restrictions.length > 0) {
-      const userRestrictions = restrictions[0]; // Assuming one restriction document per user
-      setRestrictionsFilter({
-        vegetarian:
-          "vegetarian" in userRestrictions
-            ? userRestrictions.vegetarian
-            : false,
-        halal: "halal" in userRestrictions ? userRestrictions.halal : false,
-      });
-    } else {
-      setRestrictionsFilter({
-        vegetarian: false,
-        halal: false,
-      });
-    }
-  }, []);
-
+  // Fetch restrictions on page load
   useEffect(() => {
     if (currentPage === "cook-what") {
-      fetchUserDietaryRestrictions();
+      setRestrictionsFilter((prev) => ({
+        ...prev,
+        vegetarian: restrictions.vegetarian,
+        halal: restrictions.halal,
+      }));
     }
   }, [currentPage]);
 
@@ -256,6 +230,14 @@ export default function CookWhat({
                   />
                 </Animated.View>
               ))}
+              {recipesData.length === 0 && (
+                <View className="items-center mt-8">
+                  <Text className="text-blue text-xl">No recipes found.</Text>
+                  <Text className="text-blue text-lg">
+                    Try adjusting your search or filters.
+                  </Text>
+                </View>
+              )}
             </View>
             {recipesDataLength > recipesShown && (
               <LoadMore onClick={loadMoreRecipes} />

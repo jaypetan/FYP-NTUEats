@@ -21,23 +21,23 @@ import FoodCard from "@/app/components/Home/HomeEatWHAT/FoodCard";
 import VerticalWordButton from "@/app/components/Home/SharedComponents/VerticalWordButton";
 
 const HomeEatWHAT = () => {
-  const { setCurrentPage } = useAppContext();
+  const { setCurrentPage, restrictions } = useAppContext();
   const [swiped, setSwiped] = useState(false); // To remove instructions after swipe
   const [stallData, setStallData] = useState<any[]>([]);
 
   useEffect(() => {
     // Fetch only 4 stalls
-    getStallsArranged("most_saved", 4).then(async (data) => {
+    getStallsArranged("most_saved", 4, restrictions).then(async (data) => {
       // Fetch review images for each stall
       const stallsWithImages = await Promise.all(
         data.data.map(async (stall) => {
           const reviewImage = await fetchTopReviewImageByStallId(stall.id);
           return { ...stall, reviewImage };
-        })
+        }),
       );
       setStallData(stallsWithImages);
     });
-  }, []);
+  }, [restrictions]);
 
   return (
     <View className="mt-8">
@@ -65,13 +65,22 @@ const HomeEatWHAT = () => {
             storeId={stall.id}
           />
         ))}
-        <VerticalWordButton
-          text="More Options"
-          setCurrentPage={setCurrentPage}
-          desiredPage={"eat-what"}
-        />
+        {stallData.length === 4 ? (
+          <VerticalWordButton
+            text="More Options"
+            setCurrentPage={setCurrentPage}
+            desiredPage={"eat-what"}
+          />
+        ) : stallData.length === 0 ? (
+          <View className="justify-center">
+            <Text className="text-blue text-2xl">No stalls found.</Text>
+            <Text className="text-blue text-lg">
+              Try adjusting your dietary preferences.
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
-      {!swiped && (
+      {stallData.length > 2 && !swiped && (
         <Animated.View
           className="absolute -bottom-8 right-0 flex-row items-center"
           exiting={FadeOut.duration(1000)}

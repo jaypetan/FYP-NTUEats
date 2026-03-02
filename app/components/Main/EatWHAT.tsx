@@ -8,14 +8,9 @@ import EatWHATLogo from "@/assets/images/logos/EatWHAT-logo.png";
 // Utilities
 import { fetchDietaryByStallId } from "@/utils/dietaryServices";
 import { getStallsArranged, searchStallsByName } from "@/utils/stallServices";
-import {
-  fetchDietaryRestrictions,
-  fetchUserByClerkId,
-} from "@/utils/userServices";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
-import { useUser } from "@clerk/clerk-expo";
 
 // Components
 import StallCard from "@/app/components/EatWHAT/StallCard";
@@ -43,7 +38,7 @@ export default function EatWhat({
   backgroundColorHex,
   widthClass,
 }: EatWhatProps) {
-  const { currentPage, setCurrentPage } = useAppContext();
+  const { currentPage, setCurrentPage, restrictions } = useAppContext();
 
   // Fetch stall data from Firebase Firestore
   const [stallData, setStallData] = useState<any[]>([]);
@@ -67,38 +62,14 @@ export default function EatWhat({
     setFilterDropdown(!filterDropdown);
   };
 
-  // Function to fetch user dietry restrictions
-  const { user } = useUser();
-  const fetchUserDietaryRestrictions = useCallback(async () => {
-    if (!user) {
-      console.error("User is not authenticated");
-      return;
-    }
-    const userId = await fetchUserByClerkId(user?.id!);
-    const restrictions = await fetchDietaryRestrictions(userId?.id!);
-    if (restrictions.length > 0) {
-      const userRestrictions = restrictions[0]; // Assuming one restriction document per user
-      setRestrictionsFilter({
-        canteen: "",
-        vegetarian:
-          "vegetarian" in userRestrictions
-            ? userRestrictions.vegetarian
-            : false,
-        halal: "halal" in userRestrictions ? userRestrictions.halal : false,
-      });
-    } else {
-      setRestrictionsFilter({
-        canteen: "",
-        vegetarian: false,
-        halal: false,
-      });
-    }
-  }, []);
-
-  //Fetch restrictions on page load
+  // Fetch restrictions on page load
   useEffect(() => {
     if (currentPage === "eat-what") {
-      fetchUserDietaryRestrictions();
+      setRestrictionsFilter((prev) => ({
+        ...prev,
+        vegetarian: restrictions.vegetarian,
+        halal: restrictions.halal,
+      }));
     }
   }, [currentPage]);
 
@@ -139,6 +110,7 @@ export default function EatWhat({
     [restrictionsFilter, searchData, searchTerm],
   );
 
+  // Generate new random seed when entering EatWHAT page for the first time (For randomizer)
   useEffect(() => {
     if (currentPage === "eat-what" && !hasEnteredEatWhatRef.current) {
       randomSeedRef.current = `${Date.now()}-${Math.random()}`;
@@ -264,6 +236,14 @@ export default function EatWhat({
                   />
                 </Animated.View>
               ))}
+              {stallData.length === 0 && (
+                <View className="items-center mt-8">
+                  <Text className="text-blue text-xl">No stalls found.</Text>
+                  <Text className="text-blue text-lg">
+                    Try adjusting your search or filters.
+                  </Text>
+                </View>
+              )}
             </View>
             {stallDataLength > stallsShown && (
               <LoadMore onClick={loadMoreStalls} />

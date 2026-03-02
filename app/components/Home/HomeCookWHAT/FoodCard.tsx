@@ -17,7 +17,6 @@ interface FoodCardProps {
   foodName: string;
   halal?: boolean;
   vegetarian?: boolean;
-  spicy?: boolean;
   recipeId: string;
 }
 
@@ -26,7 +25,6 @@ const FoodCard: React.FC<FoodCardProps> = ({
   foodName,
   halal,
   vegetarian,
-  spicy,
   recipeId,
 }) => {
   const { setCurrentPage, setSelectedId } = useAppContext();
@@ -45,14 +43,6 @@ const FoodCard: React.FC<FoodCardProps> = ({
         />
         <View className="absolute p-4 h-full w-full flex-col justify-between">
           <View className="flex-row justify-end gap-1">
-            {spicy && (
-              <MaterialCommunityIcons
-                name="fire"
-                size={16}
-                color="white"
-                className="p-2 rounded-full bg-red/80"
-              />
-            )}
             {vegetarian && (
               <FontAwesome
                 name="leaf"

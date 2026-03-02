@@ -19,20 +19,20 @@ import { useAppContext } from "@/app/components/AppContext";
 import FoodCard from "@/app/components/Home/HomeCookWHAT/FoodCard";
 import VerticalWordButton from "@/app/components/Home/SharedComponents/VerticalWordButton";
 
-const HomeEatWHAT = () => {
-  const { setCurrentPage } = useAppContext();
+const HomeCookWHAT = () => {
+  const { setCurrentPage, restrictions } = useAppContext();
   const [swiped, setSwiped] = useState(false); // To remove instructions after swipe
+  const [recipeData, setRecipeData] = useState<any[]>([]);
 
   // Fetch and display food cards
-  const [recipeData, setRecipeData] = useState<any[]>([]);
   const fetchRecipeData = async () => {
-    const data = await getRecipesArranged("most_likes", 4);
+    const data = await getRecipesArranged("most_likes", 4, restrictions);
     setRecipeData(data.content);
   };
 
   useEffect(() => {
     fetchRecipeData();
-  }, []);
+  }, [restrictions]);
 
   return (
     <View className="mt-8">
@@ -59,17 +59,25 @@ const HomeEatWHAT = () => {
             foodName={card.title}
             halal={card.halal}
             vegetarian={card.vegetarian}
-            spicy={card.spicy}
             recipeId={card.id}
           />
         ))}
-        <VerticalWordButton
-          text="More Options"
-          setCurrentPage={setCurrentPage}
-          desiredPage={"cook-what"}
-        />
+        {recipeData.length === 4 ? (
+          <VerticalWordButton
+            text="More Options"
+            setCurrentPage={setCurrentPage}
+            desiredPage={"cook-what"}
+          />
+        ) : recipeData.length === 0 ? (
+          <View className="justify-center">
+            <Text className="text-blue text-2xl">No recipes found.</Text>
+            <Text className="text-blue text-lg">
+              Try adjusting your dietary preferences.
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
-      {!swiped && (
+      {recipeData.length > 2 && !swiped && (
         <Animated.View
           className="absolute -bottom-8 right-0 flex-row items-center"
           exiting={FadeOut.duration(1000)}
@@ -88,4 +96,4 @@ const HomeEatWHAT = () => {
   );
 };
 
-export default HomeEatWHAT;
+export default HomeCookWHAT;
