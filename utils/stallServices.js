@@ -162,6 +162,8 @@ export const getStallsArranged = async (
           const hashB = getDeterministicHash(`${resolvedRandomSeed}:${b.id}`);
           return hashA - hashB;
         });
+      } else {
+        arrangedStalls.sort(() => Math.random() - 0.5);
       }
     }
 

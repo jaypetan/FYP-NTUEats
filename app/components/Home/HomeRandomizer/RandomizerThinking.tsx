@@ -20,17 +20,20 @@ interface RandomizerThinkingProps {
     React.SetStateAction<"initial" | "thinking" | "result">
   >;
   Randomizer2: any;
+  pickLoaded: boolean;
 }
 
 const RandomimerThinking = ({
   selectedOption,
   setImageState,
   Randomizer2,
+  pickLoaded,
 }: RandomizerThinkingProps) => {
   // Animation Configurations for spinning card
-  const SPIN_DURATION = 1800;
+  const MIN_SPIN_DURATION = 1800;
   const cardRotation = useSharedValue(0);
-  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [isMinSpinDone, setIsMinSpinDone] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true); // To show the loading indicator with image fade-in
 
   const cardAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ perspective: 1000 }, { rotateY: `${cardRotation.value}deg` }],
@@ -38,23 +41,29 @@ const RandomimerThinking = ({
 
   useEffect(() => {
     cardRotation.value = 0;
+    setIsMinSpinDone(false);
     setIsImageLoading(true);
     cardRotation.value = withTiming(1080, {
-      duration: SPIN_DURATION,
+      duration: MIN_SPIN_DURATION,
       easing: Easing.linear,
     });
 
     const timer = setTimeout(() => {
-      setImageState("result");
-    }, SPIN_DURATION);
+      setIsMinSpinDone(true);
+    }, MIN_SPIN_DURATION);
 
     return () => clearTimeout(timer);
-  }, [cardRotation, setImageState]);
+  }, [cardRotation]);
+
+  useEffect(() => {
+    if (isMinSpinDone && pickLoaded) {
+      setImageState("result");
+    }
+  }, [isMinSpinDone, pickLoaded, setImageState]);
 
   const CardIcon = [
     { icon: "silverware-fork-knife", value: "eat" },
     { icon: "chef-hat", value: "cook" },
-    { icon: "infinity", value: "both" },
   ];
   return (
     <View className="flex-row items-end mt-2">

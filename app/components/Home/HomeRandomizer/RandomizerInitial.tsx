@@ -1,5 +1,5 @@
 import { Image, Text, View } from "react-native";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import Animated, { FadeIn, SlideOutDown } from "react-native-reanimated";
 
 // External Libraries
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -55,9 +55,9 @@ const RandomizerInitial = ({
     <View className="flex-row items-end mt-2">
       {/* LHS */}
       <Animated.View
-        entering={SlideInDown.delay(100)}
+        entering={FadeIn.delay(200)}
         exiting={SlideOutDown.duration(300)}
-        className="flex-col gap-2 mt-2 h-64"
+        className="flex-col gap-2 h-64"
       >
         {ButtonOptionsChoices.map((option, index) =>
           ButtonOpions(option.icon, option.text, option.value, index),
@@ -66,7 +66,7 @@ const RandomizerInitial = ({
 
       {/* RHS */}
       <Animated.View
-        entering={SlideInDown.delay(100)}
+        entering={FadeIn.delay(200)}
         exiting={SlideOutDown.duration(300)}
       >
         <Image

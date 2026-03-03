@@ -162,6 +162,8 @@ export const getRecipesArranged = async (
           const hashB = getDeterministicHash(`${resolvedRandomSeed}:${b.id}`);
           return hashA - hashB;
         });
+      } else {
+        recipes.sort(() => Math.random() - 0.5);
       }
     }
 
