@@ -15,7 +15,7 @@ import {
 export const fetchTotalLikesByItemId = async (
   collectionName,
   itemIdField,
-  itemId
+  itemId,
 ) => {
   try {
     const likeRef = collection(db, collectionName);
@@ -37,7 +37,7 @@ export const fetchLikedItemsByUserId = async (
   collectionName,
   itemIdField,
   user_id,
-  limitCount
+  limitCount,
 ) => {
   try {
     const likeRef = collection(db, collectionName);
@@ -66,14 +66,14 @@ export const hasUserLikedItem = async (
   collectionName,
   itemIdField,
   itemId,
-  user_id
+  user_id,
 ) => {
   try {
     const likeRef = collection(db, collectionName);
     const q = query(
       likeRef,
       where(itemIdField, "==", itemId),
-      where("user_id", "==", user_id)
+      where("user_id", "==", user_id),
     );
     const querySnapshot = await getDocs(q);
     return !querySnapshot.empty;
@@ -88,7 +88,7 @@ export const likeItem = async (
   collectionName,
   itemIdField,
   itemId,
-  user_id
+  user_id,
 ) => {
   try {
     const likeRef = collection(db, collectionName);
@@ -96,7 +96,7 @@ export const likeItem = async (
       collectionName,
       itemIdField,
       itemId,
-      user_id
+      user_id,
     );
     if (!hasLiked) {
       await addDoc(likeRef, {
@@ -120,14 +120,14 @@ export const unlikeItem = async (
   collectionName,
   itemIdField,
   itemId,
-  user_id
+  user_id,
 ) => {
   try {
     const likeRef = collection(db, collectionName);
     const q = query(
       likeRef,
       where(itemIdField, "==", itemId),
-      where("user_id", "==", user_id)
+      where("user_id", "==", user_id),
     );
     const querySnapshot = await getDocs(q);
     if (querySnapshot.docs.length > 0) {
@@ -143,5 +143,3 @@ export const unlikeItem = async (
     return false;
   }
 };
-
-// Get ID of like document
