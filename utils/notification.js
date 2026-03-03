@@ -95,8 +95,6 @@ const checkLikesSinceLatestLog = async ({
     const sourceSnapshot = await getDocs(sourceQuery);
     const ownedIds = sourceSnapshot.docs.map((sourceDoc) => sourceDoc.id);
 
-    console.log("Owned item IDs for", sourceCollectionName, ownedIds);
-
     // If the user doesn't own any items, return early with empty counts
     if (ownedIds.length === 0) {
       return {
@@ -116,12 +114,6 @@ const checkLikesSinceLatestLog = async ({
       const idChunk = ownedIds.slice(index, index + 10); // Firestore 'in' queries can only handle up to 10 items
       const likesQuery = query(likesRef, where(likeTargetField, "in", idChunk));
       const likesSnapshot = await getDocs(likesQuery);
-      console.log(
-        `Fetched likes for ${sourceCollectionName} items with IDs:`,
-        idChunk,
-        "Total likes fetched:",
-        likesSnapshot.size,
-      );
 
       // Count likes by item ID
       likesSnapshot.forEach((likeDoc) => {

@@ -20,6 +20,8 @@ interface AppContextType {
   returnToPreviousPage: () => void;
   selectedId: string | null;
   setSelectedId: Dispatch<React.SetStateAction<string | null>>;
+  selectedSecondaryId: string | null;
+  setSelectedSecondaryId: Dispatch<React.SetStateAction<string | null>>;
   restrictions: { vegetarian: boolean; halal: boolean };
   setRestrictions: Dispatch<
     React.SetStateAction<{ vegetarian: boolean; halal: boolean }>
@@ -32,11 +34,15 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // Create Provider Componenet
 const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // States to manage the current page
+  // Current pages include: "home-page", "profile-page", "stall-page", "recipe-page", "review-page"
   const [currentPage, setCurrentPage] = useState("home-page");
   const [prevPage, setPrevPage] = useState({ prev: "", next: "home-page" });
 
   // State for selected ID (stall or review)
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedSecondaryId, setSelectedSecondaryId] = useState<string | null>(
+    null,
+  );
 
   // State for dietary restrictions
   const [restrictions, setRestrictions] = useState({
@@ -94,6 +100,8 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         returnToPreviousPage,
         selectedId,
         setSelectedId,
+        selectedSecondaryId,
+        setSelectedSecondaryId,
         restrictions,
         setRestrictions,
       }}

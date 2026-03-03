@@ -87,7 +87,7 @@ export const fetchReviewsByStallId = async (stallId) => {
           name: userName,
           reviewDate: formattedDate,
         };
-      })
+      }),
     );
 
     return { data: updatedReviews, length: updatedReviews.length };
@@ -105,7 +105,7 @@ export const getReviewArranged = async (stallId, arrangeBy, limitNum) => {
   // Sort reviews based on arrangement criteria
   if (arrangeBy === "most_recent") {
     sortedReviews = sortedReviews.sort(
-      (a, b) => b.timestamp?.toMillis() - a.timestamp?.toMillis()
+      (a, b) => b.timestamp?.toMillis() - a.timestamp?.toMillis(),
     );
   } else if (arrangeBy === "most_liked") {
     sortedReviews = sortedReviews.sort((a, b) => b.likes - a.likes);
@@ -167,12 +167,12 @@ export const fetchTopReviewImageByStallId = async (stallId) => {
     const reviews = await getReviewArranged(stallId, "most_liked");
     // Filter reviews with a valid review_pic
     const reviewsWithPic = reviews.data.filter(
-      (r) => r.review_pic && r.review_pic !== ""
+      (r) => r.review_pic && r.review_pic !== "",
     );
     if (reviewsWithPic.length === 0) return null;
     // Find the review with the maximum likes
     const topReview = reviewsWithPic.reduce((max, review) =>
-      review.likes > max.likes ? review : max
+      review.likes > max.likes ? review : max,
     );
     return topReview.review_pic || null;
   } catch (error) {
@@ -194,7 +194,7 @@ export const getReviewsByUserId = async (userId) => {
         const likes = await fetchTotalLikesByItemId(
           "reviews_likes",
           "review_id",
-          reviewDoc.id
+          reviewDoc.id,
         );
         const stallSnap = await getDoc(doc(db, "stalls", data.stall_id));
         const stallData = stallSnap.data();
@@ -205,7 +205,7 @@ export const getReviewsByUserId = async (userId) => {
           stall_name: stallName,
           ...data,
         };
-      })
+      }),
     );
 
     return reviews;
@@ -219,7 +219,7 @@ export const getReviewsByUserId = async (userId) => {
 export const arrangeReviewsByUserId = async (
   userId,
   arrangementType,
-  limitNum
+  limitNum,
 ) => {
   try {
     const reviews = await getReviewsByUserId(userId);
@@ -292,5 +292,23 @@ export const deleteReviewById = async (reviewId) => {
   } catch (error) {
     console.error("Error deleting review: ", error);
     return false;
+  }
+};
+
+// Function to get stall ID associated with a review ID
+export const getStallIdByReviewId = async (reviewId) => {
+  try {
+    const reviewRef = doc(db, "reviews", reviewId);
+    const reviewSnap = await getDoc(reviewRef);
+    if (reviewSnap.exists()) {
+      const reviewData = reviewSnap.data();
+      return reviewData.stall_id || null;
+    } else {
+      console.log("No such review!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting stall ID by review ID: ", error);
+    return null;
   }
 };

@@ -485,3 +485,21 @@ export const getRecipeCommentById = async (commentId) => {
     return null;
   }
 };
+
+// Get Recipe ID by Comment ID
+export const fetchRecipeIdByCommentId = async (commentId) => {
+  try {
+    const commentDoc = doc(db, "recipe_comments", commentId);
+    const snapshot = await getDoc(commentDoc);
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data.recipe_id;
+    } else {
+      console.log("No such recipe comment!");
+      return "";
+    }
+  } catch (error) {
+    console.error("Error fetching recipe by comment ID: ", error);
+    return "";
+  }
+};
