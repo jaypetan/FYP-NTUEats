@@ -5,6 +5,14 @@ import { Text, TouchableOpacity, View } from "react-native";
 // External libraries
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
 
 // Utilities
 import {
@@ -18,6 +26,9 @@ import { fetchUserByClerkId, fetchUserByDocId } from "@/utils/userServices";
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
 
+// App Context
+import { useAppContext } from "../../AppContext";
+
 interface RecipeCommentCardProps {
   comment: {
     id: string;
@@ -29,11 +40,13 @@ interface RecipeCommentCardProps {
 }
 
 const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
+  const { user } = useUser();
+  const { selectedSecondaryId, setSelectedSecondaryId } = useAppContext();
+
   const [currentUserId, setCurrentUserId] = useState("");
   const [commentUser, setCommentUser] = useState("");
   const [like, setLike] = useState(false);
   const [commentsLikesCount, setCommentsLikesCount] = useState(0);
-  const { user } = useUser();
 
   // Get current user ID
   const getCurrentUserId = useCallback(async () => {
@@ -113,8 +126,41 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
     await fetchLikes(); // Fetch updated likes after action
   };
 
+  // Flicker animation when selectedSecondaryId matches comment.id
+  const flickerOpacity = useSharedValue(1); // For flicker animation when comment is selected
+  useEffect(() => {
+    if (selectedSecondaryId === comment.id) {
+      flickerOpacity.value = withDelay(
+        1000, // delay before start (ms)
+        withRepeat(
+          withTiming(0.35, {
+            duration: 120,
+            easing: Easing.linear,
+          }),
+          10, // number of repetitions
+          true,
+        ),
+      );
+      setTimeout(() => {
+        setSelectedSecondaryId(null); // Reset after animation
+      }, 2200); // Total duration of the flicker animation
+    } else {
+      flickerOpacity.value = withTiming(1, {
+        duration: 120,
+        easing: Easing.linear,
+      });
+    }
+  }, [selectedSecondaryId, comment.id, flickerOpacity]);
+
+  const flickerAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: flickerOpacity.value,
+  }));
+
   return (
-    <View className="mb-4 border-b border-blue pb-2">
+    <Animated.View
+      style={flickerAnimatedStyle}
+      className="mb-4 border-b border-blue pb-2"
+    >
       <View className="flex-row items-center justify-between">
         <Text className="text-2xl pt-2 text-blue font-koulen">
           {commentUser}:
@@ -146,7 +192,7 @@ const RecipeCommentCard: React.FC<RecipeCommentCardProps> = ({ comment }) => {
           </View>
         )}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

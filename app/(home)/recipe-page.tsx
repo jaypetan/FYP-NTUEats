@@ -32,7 +32,7 @@ export default function RecipePage() {
     instructions: [],
   });
   const [commentsData, setCommentsData] = useState<any[]>([]);
-  const { selectedId } = useAppContext();
+  const { selectedId, selectedSecondaryId } = useAppContext();
 
   // Fetch Data based on selectedId
   const fetchRecipeData = useCallback(async () => {
@@ -58,7 +58,43 @@ export default function RecipePage() {
   useEffect(() => {
     fetchRecipeData();
     fetchCommentsData();
-  }, [fetchRecipeData, fetchCommentsData]);
+  }, [selectedId]);
+
+  // Move selected comment to top when selectedSecondaryId changes or comments finish loading
+  useEffect(() => {
+    if (!selectedSecondaryId || commentsData.length === 0) return;
+
+    // Find the index of the selected comment
+    const selectedIndex = commentsData.findIndex(
+      (comment) => comment.id === selectedSecondaryId,
+    );
+
+    // If the selected comment is already at the top or doesn't exist, do nothing
+    if (selectedIndex <= 0) return;
+
+    // Move the selected comment to the top of the list
+    setCommentsData((prevData) => {
+      const currentIndex = prevData.findIndex(
+        (comment) => comment.id === selectedSecondaryId,
+      );
+
+      if (currentIndex <= 0) {
+        return prevData;
+      }
+
+      const reorderedData = [...prevData];
+      const [selectedComment] = reorderedData.splice(currentIndex, 1);
+      reorderedData.unshift(selectedComment);
+      return reorderedData;
+    });
+
+    // Automatically switch to comments page if not already there
+    if (page !== "comments") {
+      const timer = setTimeout(() => {
+        setPage("comments");
+      }, 1000);
+    }
+  }, [selectedSecondaryId, commentsData, page]);
 
   useEffect(() => {
     // Reset scroll position to the top when the page changes

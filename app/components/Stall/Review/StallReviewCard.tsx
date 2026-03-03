@@ -5,6 +5,14 @@ import { Text, TouchableOpacity, View } from "react-native";
 // External libraries
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
 
 // Utilities
 import {
@@ -18,6 +26,7 @@ import { fetchUserByClerkId } from "@/utils/userServices";
 // Components
 import ImageLoader from "@/app/components/ImageLoader";
 import SimpleViewer from "@/app/components/SimpleViewer";
+import { useAppContext } from "../../AppContext";
 
 interface StallReviewCardProps {
   reviewID: string;
@@ -36,6 +45,8 @@ const StallReviewCard = ({
   reviewDescription,
 }: StallReviewCardProps) => {
   const { user } = useUser();
+  const { selectedSecondaryId, setSelectedSecondaryId } = useAppContext();
+
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [like, setLike] = useState(false);
   const [reviewLikesCount, setReviewLikesCount] = useState(0);
@@ -96,8 +107,41 @@ const StallReviewCard = ({
     await fetchLikes(); // Fetch updated likes after action
   };
 
+  // Flicker animation when selectedSecondaryId matches comment.id
+  const flickerOpacity = useSharedValue(1); // For flicker animation when comment is selected
+  useEffect(() => {
+    if (selectedSecondaryId === reviewID) {
+      flickerOpacity.value = withDelay(
+        1000, // delay before start (ms)
+        withRepeat(
+          withTiming(0.35, {
+            duration: 120,
+            easing: Easing.linear,
+          }),
+          10, // number of repetitions
+          true,
+        ),
+      );
+      setTimeout(() => {
+        setSelectedSecondaryId(null); // Reset after animation
+      }, 2200); // Total duration of the flicker animation
+    } else {
+      flickerOpacity.value = withTiming(1, {
+        duration: 120,
+        easing: Easing.linear,
+      });
+    }
+  }, [selectedSecondaryId, reviewID, flickerOpacity]);
+
+  const flickerAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: flickerOpacity.value,
+  }));
+
   return (
-    <View className="bg-green/50 rounded-xl p-4 flex-col gap-4 border-2 border-blue w-full">
+    <Animated.View
+      style={flickerAnimatedStyle}
+      className="bg-green/50 rounded-xl p-4 flex-col gap-4 border-2 border-blue w-full"
+    >
       <View className="flex-col w-full justify-between gap-4">
         <View>
           <View className="flex-row justify-between">
@@ -157,7 +201,7 @@ const StallReviewCard = ({
           </View>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

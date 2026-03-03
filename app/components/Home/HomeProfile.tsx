@@ -130,7 +130,7 @@ const HomeProfile = () => {
         const recipeId = await fetchRecipeIdByCommentId(itemId);
         setSelectedId(recipeId);
         setSelectedSecondaryId(itemId);
-        setCurrentPage("comment-page");
+        setCurrentPage("recipe-page");
       };
       fetchAndSetCommentRecipeId();
     } else if (type === "Review") {
