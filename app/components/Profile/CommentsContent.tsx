@@ -77,7 +77,7 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
       const userComments = await arrangeRecipeCommentsByUserId(
         userId,
         "most_recent",
-        limitNumber
+        limitNumber,
       );
 
       // Type assertion to specify the type of content
@@ -106,7 +106,7 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
             };
           }
           return comment;
-        })
+        }),
       );
       setComments(commentsWithRecipeComments);
     }
@@ -118,7 +118,7 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
       const userComments = await arrangeReviewsByUserId(
         userId,
         "most_recent",
-        limitNumber
+        limitNumber,
       );
 
       // Type assertion to specify the type of content
@@ -148,7 +148,7 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
             };
           }
           return comment;
-        })
+        }),
       );
       setComments(commentsWithReviewComments);
     }
@@ -186,7 +186,7 @@ const CommentsContent: React.FC<CommentsContentProps> = ({
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="flex-col w-full max-h-[500px]"
+        className="flex-col w-full max-h-[450px]"
       >
         {comments.length === 0 ? (
           <Text className="text-center text-lg text-blue mt-8">

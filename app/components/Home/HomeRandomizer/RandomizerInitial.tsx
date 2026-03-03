@@ -36,7 +36,7 @@ const RandomizerInitial = ({
   ) => {
     return (
       <TouchableScale key={key} onPress={() => handlePress(value)}>
-        <View className="border-2 border-blue rounded-full self-start flex-row gap-2 justify-center items-center px-4">
+        <View className="border-2 border-blue bg-green/50 rounded-2xl self-start flex-row gap-2 justify-center items-center px-4">
           {icon && (
             <MaterialCommunityIcons name={icon} size={28} color="#264653" />
           )}

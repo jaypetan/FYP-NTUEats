@@ -76,7 +76,7 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
         </TouchableScale>
       </View>
       <Animatable.View animation="fadeInUpBig" className="w-full">
-        <ScrollView className="flex-col w-full max-h-[500px]">
+        <ScrollView className="flex-col w-full max-h-[450px]">
           {recipes.length === 0 ? (
             <Text className="text-center text-lg text-blue mt-8">
               No recipes yet.

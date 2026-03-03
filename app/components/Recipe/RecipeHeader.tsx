@@ -31,7 +31,7 @@ const RecipeHeader: React.FC<RecipeHeaderProps> = ({
         <ImageLoader
           image={recipeImage}
           className="w-full h-full rounded-t-[2rem]"
-          loaderClassName="absolute w-full h-full"
+          loaderClassName="absolute w-full h-full rounded-t-[2rem] overflow-hidden"
         />
         <FoodPreference
           halal={halal}

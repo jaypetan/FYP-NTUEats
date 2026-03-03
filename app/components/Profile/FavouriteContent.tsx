@@ -101,7 +101,7 @@ const FavouriteContent: React.FC<FavouriteContentProps> = ({ userId }) => {
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="flex-col w-full max-h-[500px]"
+        className="flex-col w-full max-h-[450px]"
       >
         {favouriteItems.length === 0 ? (
           <Text className="text-center text-lg text-blue mt-8">
