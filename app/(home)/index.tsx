@@ -22,6 +22,7 @@ import MainPage from "@/app/(home)/main-page";
 import NavPage from "@/app/(home)/nav-page";
 import ProfilePage from "@/app/(home)/profile-page";
 import RecipePage from "@/app/(home)/recipe-page";
+import ReportPage from "@/app/(home)/report-page";
 import StallPage from "@/app/(home)/stall-page";
 import UploadRecipePage from "@/app/(home)/upload-recipe-page";
 import NavButton from "@/app/components/Nav/NavButton";
@@ -64,6 +65,10 @@ export default function Page() {
       case "upload-recipe-page":
         setContent(<UploadRecipePage />);
         setPage(6);
+        break;
+      case "report-page":
+        setContent(<ReportPage />);
+        setPage(7);
         break;
       default:
         // home-page, eat-what, and cook-what will set to default

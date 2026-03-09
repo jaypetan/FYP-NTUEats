@@ -61,6 +61,7 @@ export default function NavPage({ closeDrawer }: NavPageProps) {
       {NavDirectButton("cook-what", "CookWHAT")}
       {NavDirectButton("profile-page", "Profile")}
       {NavDirectButton("upload-recipe-page", "Upload Recipe")}
+      {NavDirectButton("report-page", "Report")}
       {isAdmin && NavDirectButton("admin-page", "Admin Panel")}
 
       <SignOutButton />
