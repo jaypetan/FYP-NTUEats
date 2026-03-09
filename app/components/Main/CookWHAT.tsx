@@ -71,7 +71,7 @@ export default function CookWhat({
         halal: restrictions.halal,
       }));
     }
-  }, [currentPage]);
+  }, [currentPage, restrictions]);
 
   // Fetch all recipes on component mount
   const fetchRecipesFunction = useCallback(

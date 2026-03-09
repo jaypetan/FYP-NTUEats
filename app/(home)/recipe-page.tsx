@@ -90,7 +90,7 @@ export default function RecipePage() {
 
     // Automatically switch to comments page if not already there
     if (page !== "comments") {
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         setPage("comments");
       }, 1000);
     }
