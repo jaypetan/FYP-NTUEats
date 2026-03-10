@@ -52,9 +52,12 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     // Update previous page when currentPage changes
-    if (currentPage === "profile-page") {
-      // Reset to home-page when navigating to profile-page
-      setPrevPage({ prev: "home-page", next: "profile-page" });
+    if (
+      currentPage === "profile-page" ||
+      currentPage === "report-page" ||
+      currentPage === prevPage.next
+    ) {
+      // If navigating to profile page, report page or going back to the same page, do nothing
       return;
     } else {
       setPrevPage((prev) => ({ prev: prev.next, next: currentPage }));
@@ -62,7 +65,12 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [currentPage]);
 
   const returnToPreviousPage = () => {
-    setCurrentPage(prevPage.prev);
+    if (currentPage === "profile-page" || currentPage === "report-page") {
+      setCurrentPage(prevPage.next);
+      return;
+    } else {
+      setCurrentPage(prevPage.prev);
+    }
   };
 
   // Function to fetch user dietary restrictions

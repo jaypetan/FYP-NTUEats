@@ -11,12 +11,12 @@ const ReportHeader = () => {
       </Text>
       <Image
         source={ReportLogo}
-        className="w-full h-48 mb-4"
+        className="w-full h-48 "
         resizeMode="contain"
       />
-      <Text className="font-inter text-xl text-blue text-center">
-        You can report any issues, bug or information that requires updating
-        here.
+      <Text className="font-inter text-lg text-blue text-center leading-6">
+        Help us keep NTUeats accurate. Report closed stalls, recipe errors, or
+        inappropriate content here.
       </Text>
     </View>
   );

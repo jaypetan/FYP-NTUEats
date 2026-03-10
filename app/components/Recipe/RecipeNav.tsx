@@ -21,7 +21,7 @@ const pages = [
 
 const RecipeNav: React.FC<RecipeNavProps> = ({ page, setPage }) => {
   return (
-    <View className="flex-row items-end absolute bottom-0 w-full justify-center">
+    <View className="flex-row items-end absolute bottom-0 w-full overflow-hidden justify-center">
       {pages.map((p, index) => (
         <TouchableWithoutFeedback key={p.name} onPress={() => setPage(p.name)}>
           <View
@@ -52,8 +52,8 @@ const RecipeNav: React.FC<RecipeNavProps> = ({ page, setPage }) => {
                 index === 0
                   ? { borderTopLeftRadius: 16 }
                   : index === 2
-                  ? { borderTopRightRadius: 16 }
-                  : {},
+                    ? { borderTopRightRadius: 16 }
+                    : {},
                 {
                   zIndex: 10,
                   flexDirection: "row",

@@ -7,6 +7,7 @@ export const handleReportSubmit = async (userFeedback) => {
     const docRef = await addDoc(collection(db, "reports"), {
       text: userFeedback, // Firebase extension looks for this 'text' field
       status: "pending",
+      adminResponse: "",
       timestamp: serverTimestamp(),
     });
 
