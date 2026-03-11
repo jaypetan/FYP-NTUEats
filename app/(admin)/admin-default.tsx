@@ -62,6 +62,18 @@ const AdminDefault: React.FC<AdminDefaultProps> = ({ setAdminCurrentPage }) => {
             />
           }
         />
+        <ListItem
+          itemPage="report-list"
+          itemText="View User Reports"
+          setAdminCurrentPage={setAdminCurrentPage}
+          icon={
+            <MaterialCommunityIcons
+              name="alert-circle-outline"
+              size={24}
+              color="#264653"
+            />
+          }
+        />
       </View>
     </View>
   );

@@ -15,7 +15,7 @@ const ClosePage: React.FC<ClosePageProps> = ({ right }) => {
   return (
     <View className={`absolute top-0 ${right ? right : "right-0"} z-10`}>
       <TouchableOpacity
-        className="flex-row items-center justify-center aspect-square border-4 border-white bg-red p-2 rounded-full "
+        className="flex-row items-center justify-center aspect-square border-4 border-cream bg-red p-2 rounded-full"
         onPress={() => returnToPreviousPage()}
       >
         <FontAwesome name="times" size={24} color="white" />

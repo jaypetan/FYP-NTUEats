@@ -11,6 +11,7 @@ import TouchableScale from "@/app/components/TouchableScale";
 
 // Internal Components
 import AdminDefault from "@/app/(admin)/admin-default";
+import ReportList from "@/app/(admin)/report/report-list";
 import StallAdd from "@/app/(admin)/stall/stall-add";
 import StallEdit from "@/app/(admin)/stall/stall-edit";
 import StallList from "@/app/(admin)/stall/stall-list";
@@ -49,6 +50,10 @@ export default function AdminPage() {
           />,
         );
         setPage(2);
+        break;
+      case "report-list":
+        setContent(<ReportList />);
+        setPage(3);
         break;
       default:
         setContent(<AdminDefault setAdminCurrentPage={setAdminCurrentPage} />);
