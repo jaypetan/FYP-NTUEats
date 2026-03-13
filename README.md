@@ -97,25 +97,3 @@ npx expo start --clear
 ```bash
 npm run lint
 ```
-
-## Notes
-
-- Firebase config is loaded from environment variables through `expo-constants` fallback handling in `utils/firebase.js`.
-- Ensure your Firestore security rules and Clerk setup match your deployment environment.
-
-## Security Checklist (Before Public GitHub)
-
-- Do not commit `.env` (already ignored in `.gitignore`).
-- Use `.env.example` for placeholders only.
-- Rotate keys immediately if any real key was ever committed.
-- Use production Clerk publishable key for production deployments.
-
-## Roadmap Ideas
-
-- Add automated tests for service functions and key UI flows
-- Add CI checks for lint and type safety
-- Improve role-based admin access guards
-
-## License
-
-Add your preferred license here (e.g., MIT) before publishing publicly.
