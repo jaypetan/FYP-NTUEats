@@ -1,20 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Text, TextInput, View } from "react-native";
 
 // Utilities
 import { handleReportSubmit } from "@/utils/reportServices";
+import { fetchUserByClerkId } from "@/utils/userServices";
 
 // Components
 import TouchableScale from "@/app/components/TouchableScale";
 
 // App Context
 import { useAppContext } from "@/app/components/AppContext";
+import { useUser } from "@clerk/clerk-expo";
 
 const ReportForm = () => {
+  const { user } = useUser();
+  const [userId, setUserId] = useState("");
   const { returnToPreviousPage } = useAppContext();
   const [reportText, setReportText] = useState("");
   const placeholderText =
     "E.g., 'The Western stall in Hall 2 is closed' or 'Bob made an offensive comment in the Laksa recipe.'";
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      if (user) {
+        let fetchedUser = await fetchUserByClerkId(user.id);
+        setUserId(fetchedUser ? fetchedUser.id : "");
+      }
+    };
+    fetchUserId();
+  }, [user]);
 
   const handleSubmit = () => {
     // Validate that the report text is not empty
@@ -36,7 +50,7 @@ const ReportForm = () => {
           text: "Submit",
           onPress: () => {
             // Call the report submission function, then return to the previous page
-            handleReportSubmit(reportText);
+            handleReportSubmit(userId, reportText);
             setReportText("");
             returnToPreviousPage();
           },

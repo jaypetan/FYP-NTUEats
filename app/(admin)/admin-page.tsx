@@ -1,6 +1,6 @@
 // React and React Native core imports
 import { useEffect, useState } from "react";
-import { Keyboard, Text, TouchableWithoutFeedback, View } from "react-native";
+import { Text, View } from "react-native";
 
 // External libraries
 import { FontAwesome } from "@expo/vector-icons";
@@ -62,7 +62,7 @@ export default function AdminPage() {
   }, [adminCurrentPage]);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <View>
       <View className="h-full w-full items-center bg-darkcream mt-4 rounded-3xl relative">
         <Text className="font-koulen text-3xl pt-4 px-4 mt-8 mb-4 text-blue border-b-2 border-blue">
           Admin Dashboard
@@ -89,6 +89,6 @@ export default function AdminPage() {
           {content}
         </Animated.View>
       </View>
-    </TouchableWithoutFeedback>
+    </View>
   );
 }
