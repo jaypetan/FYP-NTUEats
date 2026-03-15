@@ -57,10 +57,9 @@ const ReportList = () => {
           return (
             <View className="bg-white p-4 rounded-2xl mb-2 w-full border-2 border-blue">
               <Text className="font-bold">Report ID: {item.id}</Text>
-              <Text>Report Text: {item.text || "-"}</Text>
-              <Text>Category: {analysis.category || "-"}</Text>
-              <Text>Type: {analysis.type || "-"}</Text>
-              <Text>Summary: {analysis.summary || "-"}</Text>
+              <Text className="text-xl py-4">{analysis.summary || "-"}</Text>
+              <Text>Report Text: </Text>
+              <Text>{item.text || "-"}</Text>
               <Text>Created At: {formatTimestamp(item.timestamp)}</Text>
             </View>
           );
