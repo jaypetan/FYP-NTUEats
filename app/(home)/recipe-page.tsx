@@ -130,6 +130,7 @@ export default function RecipePage() {
         >
           {page === "about" ? (
             <RecipeAbout
+              recipeId={recipeData.id}
               chefName={recipeData.chef_name}
               cookingTime={recipeData.cooking_time}
               desc={recipeData.description}

@@ -117,7 +117,6 @@ const ReportList = () => {
             handleSearch={handleSearch}
             searchTerm={searchTerm}
             handleFilterDropdown={handleFilterDropdown}
-            title={false}
           />
           {filterDropdownVisible && (
             <Animated.View

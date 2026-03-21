@@ -1,5 +1,5 @@
 // React Native core
-import { Text, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 
 // External libraries
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -12,7 +12,6 @@ interface SearchBarProps {
   searchTerm: string;
   handleScroll?: () => void;
   handleFilterDropdown: () => void;
-  title?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -20,17 +19,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchTerm,
   handleScroll,
   handleFilterDropdown,
-  title = true,
 }) => {
   return (
     <View className="flex-col gap-2">
-      {title && (
-        <View className="flex-row justify-between items-center w-full">
-          <Text className="text-2xl font-bold font-inter text-blue">
-            Your Top Picks
-          </Text>
-        </View>
-      )}
       <View className="flex-row justify-between items-center w-full">
         <TextInput
           className="text-blue text-lg font-semibold border-2 border-blue leading-5 p-3 rounded-full w-80"
