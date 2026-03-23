@@ -98,7 +98,7 @@ const RecipeAbout: React.FC<RecipeAboutProps> = ({
             }`}
           >
             {liked ? (
-              <FontAwesome name="heart" size={20} color="#323232" solid />
+              <FontAwesome name="heart" size={20} color="#E76F51" solid />
             ) : (
               <FontAwesome name="heart" size={20} color="#323232" />
             )}

@@ -107,7 +107,7 @@ const CommentUploadModal: React.FC<CommentUploadModalProps> = ({
             <View className="flex-row w-full justify-end">
               <TouchableScale
                 onPress={handleSubmit}
-                className="bg-green rounded-md py-2 px-4 items-center mt-4"
+                className="bg-green rounded-md py-2 px-4 items-center mt-4 border-2 border-blue"
                 disabled={isProcessing}
               >
                 <Text className="text-blue font-semibold text-base">
