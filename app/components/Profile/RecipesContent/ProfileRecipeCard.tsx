@@ -57,7 +57,7 @@ const ProfileRecipeCard: React.FC<ProfileRecipeCardProps> = ({
           className="text-blue text-lg mb-4 max-w-72 leading-5 mt-2"
           numberOfLines={3}
         >
-          "{recipe.description}"
+          &quot;{recipe.description}&quot;
         </Text>
         {recipe.recipe_pic && (
           <View className="h-48 w-48 mb-4 border-2 border-blue rounded-xl overflow-hidden">

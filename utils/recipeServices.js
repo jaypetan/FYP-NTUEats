@@ -197,7 +197,7 @@ export const getRecipesByUserIdArranged = async (
     if (arrangementType === "most_likes") {
       userRecipes.sort((a, b) => b.likes - a.likes);
     } else if (arrangementType === "most_recent") {
-      userRecipes.sort((a, b) => b.timestamp - a.timestamp);
+      userRecipes.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
     }
     // Get total before limiting
     const total = userRecipes.length;
@@ -208,7 +208,7 @@ export const getRecipesByUserIdArranged = async (
 
     // Get formatted date for each recipe
     limitedRecipes.forEach((recipe) => {
-      recipe.formatted_date = formatDate(recipe.timestamp);
+      recipe.formatted_date = formatDate(recipe.timestamp.seconds);
     });
     return { content: limitedRecipes, total };
   } catch (error) {

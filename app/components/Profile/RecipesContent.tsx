@@ -53,7 +53,7 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
     fetchAndSetRecipes("most_recent", 4);
   }, [editModalVisible, fetchAndSetRecipes]);
 
-  const reviewCard = recipes.map((recipe) => (
+  const recipeCard = recipes.map((recipe) => (
     <View key={recipe.id}>
       <ProfileRecipeCard
         toggleModalVisibility={toggleModalVisibility}
@@ -83,7 +83,7 @@ const RecipesContent: React.FC<RecipesContentProps> = ({
             </Text>
           ) : (
             <ListWithSeeMore
-              content={reviewCard}
+              content={recipeCard}
               fetchFn={(arrangement, limitNumber) =>
                 fetchAndSetRecipes(arrangement, limitNumber)
               }
