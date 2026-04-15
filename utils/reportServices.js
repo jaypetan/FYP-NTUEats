@@ -85,7 +85,9 @@ export const fetchFilteredReports = async (
     // Apply search term filter if provided
     if (term) {
       const normalizedTerm = term.trim().toLowerCase();
-      const userIds = [...new Set(reports.map((report) => report.userId).filter(Boolean))];
+      const userIds = [
+        ...new Set(reports.map((report) => report.userId).filter(Boolean)),
+      ];
       const users = await Promise.all(
         userIds.map(async (userId) => {
           const user = await fetchUserByDocId(userId);
@@ -95,7 +97,8 @@ export const fetchFilteredReports = async (
       const usernamesById = Object.fromEntries(users);
 
       reports = reports.filter((report) => {
-        const reportText = typeof report.text === "string" ? report.text.toLowerCase() : "";
+        const reportText =
+          typeof report.text === "string" ? report.text.toLowerCase() : "";
         const creatorName = usernamesById[report.userId] || "";
 
         return (
@@ -104,6 +107,9 @@ export const fetchFilteredReports = async (
         );
       });
     }
+
+    // Arrange reports by time
+    reports.sort((a, b) => b.timestamp?.toMillis() - a.timestamp?.toMillis());
 
     return reports;
   } catch (error) {
