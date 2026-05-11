@@ -36,21 +36,21 @@ const HomeProfile = () => {
   const appStateRef = useRef(AppState.currentState); // To track the current app state
   const resolvedUserIdRef = useRef<string | null>(null); // To store the resolved user ID after fetching from Clerk
   const [notifications, setNotifications] = useState<
-    Array<{
+    {
       type: string;
       itemId: string;
       likes_count: number;
-    }>
+    }[]
   >([]);
 
   // Fetch notifications when the component mounts
   useEffect(() => {
     // Variable to hold combined notifications
-    let combinedNotifications: Array<{
+    let combinedNotifications: {
       type: string;
       itemId: string;
       likes_count: number;
-    }> = [];
+    }[] = [];
 
     // Fetch notifications when the component mounts
     const fetchNotifications = async () => {
